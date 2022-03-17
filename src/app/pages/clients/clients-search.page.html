@@ -1,0 +1,51 @@
+<!-- [formGroup]="editForm" -->
+<div class="p-8" [formGroup]="editForm">
+    <div fxLayout="column" fxLayoutGap="8px">
+
+        <div fxLayout="column" fxLayout.gt-xs="row" fxLayoutGap="8px" fxLayoutGap.gt-xs="8px">
+
+            <mat-form-field fxFlex="30%" appearance="outline">
+                <mat-label>{{'CLIENTS.FIELDS.NAME' | translate}}</mat-label>
+                <input autocomplete="off" matInput formControlName="name" />
+            </mat-form-field>
+
+            <mat-form-field fxFlex="40%" appearance="outline">
+                <mat-label>{{'CLIENTS.FIELDS.LAST_NAME' | translate}}</mat-label>
+                <input autocomplete="off" matInput formControlName="last_name" />
+            </mat-form-field>
+
+            <mat-form-field fxFlex="40%" appearance="outline">
+                <mat-label>{{'CLIENTS.FIELDS.EMAIL' | translate}}</mat-label>
+                <input autocomplete="off" matInput formControlName="email" />
+            </mat-form-field>
+
+        </div>
+
+        <div fxLayout="column" fxLayout.gt-xs="row" fxLayoutGap="8px" fxLayoutGap.gt-xs="8px">
+
+            <mat-form-field fxFlex="40%" appearance="outline">
+                <mat-label>{{'CLIENTS.FIELDS.RFC' | translate}}</mat-label>
+                <input autocomplete="off" matInput formControlName="rfc" />
+            </mat-form-field>
+
+            <!-- <mat-form-field fxFlex="30%" appearance="outline">
+          <mat-label>Fecha Inicial</mat-label>
+          <input autocomplete="off" matInput [matDatepicker]="dpIni" formControlName="fechaInicial" />
+          <mat-datepicker-toggle matSuffix [for]="dpIni"></mat-datepicker-toggle>
+          <mat-datepicker #dpIni></mat-datepicker>
+        </mat-form-field> -->
+
+        </div>
+
+        <div fxLayout="column" fxLayout.gt-xs="row" fxLayoutGap="8px" fxLayoutGap.gt-xs="8px">
+            <mat-dialog-actions fxLayoutGap="8px" fxLayoutAlign="end" fxFlex="100%">
+                <!-- <button color="warn" mat-raised-button type="button" (click)="cancelar()" ><mat-icon>cancel</mat-icon>&nbsp;<span>Cancelar</span></button> -->
+                <!-- [disabled]="disableForm()" -->
+                <button color="primary" mat-raised-button type="button" (click)="search()">
+          <mat-icon>search</mat-icon>&nbsp;<span>{{'CLIENTS.FIELDS.SEARCH' | translate}}</span>
+        </button>
+            </mat-dialog-actions>
+        </div>
+
+    </div>
+</div>

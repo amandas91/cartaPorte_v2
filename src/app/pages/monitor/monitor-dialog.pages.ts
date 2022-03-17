@@ -1,0 +1,201 @@
+import { Component, Inject, Input, OnInit, ViewChild, EventEmitter, Output } from '@angular/core';
+import { FormGroup, FormBuilder } from '@angular/forms';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
+import { locale as english } from "app/i18n/en/clients";
+import { locale as spanish } from "app/i18n/es/clients";
+import { ICatLista } from 'app/models/catalogos/cat-lista.model';
+import { ListaService } from 'app/services/catalogos/cat-listas.service';
+import { ClientsDetailPage } from '../clients/clients-detail.page';
+import { map } from "rxjs/operators";
+import { HttpResponse, HttpHeaders } from "@angular/common/http";
+import { IMonitoreo, Monitoreo } from 'app/models/core/monitoreo.model';
+import Swal from 'sweetalert2';
+import { Observable } from 'rxjs';
+import { MonitoreoService } from 'app/services/core/monitoreo.servce';
+import { DatePipe } from '@angular/common';
+
+
+export interface Cancelacion {
+  
+  IdComprobante: number;
+  TipoComprobante: string;
+  RfcEmisor: string;
+  RfcReceptor: string;
+  FechaCFDI: string;
+  UUID: string;
+  Total: number;
+  Motivo: string;
+  FolioSustitucion: string;
+  
+}
+
+const MaxItems = 2000;
+@Component({
+  selector: 'app-monitor-dialog',
+  templateUrl: './monitor-dialog.pages.html',
+  styleUrls: ['./monitor-dialog.pages.scss']
+})
+
+
+
+
+export class MonitorDialogPages implements OnInit {
+  parentForm: FormGroup;
+  title:string;
+  monitoreo:any;
+  cancelacion: Cancelacion;
+  getPac:any;
+
+  editForm = this.fb.group({
+    motivo: [null, []],
+    FolioSustitucion:[null, []],
+    });
+
+  @Input()
+  value: Monitoreo;
+
+  @Output()
+  auxSaves: EventEmitter<boolean> = new EventEmitter();
+
+
+  isSaving = false;
+
+  @ViewChild(ClientsDetailPage, { static: false })
+  updateComponent?: ClientsDetailPage;
+  tipoMotivo:ICatLista[];
+
+
+
+  constructor(
+    public dialogRef: MatDialogRef<any>,
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private fb: FormBuilder,
+    private _fuseTranslationLoaderService: FuseTranslationLoaderService,
+    private catTipoListaService:ListaService,
+    private valueService:MonitoreoService
+  ) {
+    this.parentForm = this.fb.group({});
+    this._fuseTranslationLoaderService.loadTranslations(english, spanish);
+    if (data) {
+     
+      this.title = data.title;
+      this.value = data.value;
+      this.monitoreo = this.value;
+      console.log('#### DATOS: ', this.monitoreo);
+    }
+  }
+  ngOnInit(): void {
+    
+    this.editForm.controls['FolioSustitucion'].setValue(this.monitoreo.Referencia);
+    this.catTipoListaService.query({ size: MaxItems },  "MOTIVO_CANCELACION")
+    .pipe(
+        map((res: HttpResponse<ICatLista[]>) => {
+            return res.body ? res.body : [];
+        })
+    )
+    .subscribe((resBody: ICatLista[]) => (
+        this.tipoMotivo = resBody
+        
+    ));
+
+    this.valueService.findMotivo('T', this.monitoreo.Folio)
+    .pipe(
+        map((res: HttpResponse<any>) => {
+            return res.body ? res.body : [];
+        })
+    )
+    .subscribe((resBody: any) => (
+      this.getPac = resBody,
+      console.log(this.getPac.Emisor.Rfc) 
+    ));
+
+
+  }
+
+  auxSave(scr: any): void {
+    if (scr) {
+      this.dialogRef.close(scr);
+    }
+  }
+
+  saveCancel(){
+    Swal.fire({
+      allowOutsideClick: false,
+      text: 'Cargando...',
+    });
+
+    
+
+    Swal.showLoading();
+    const value = this.createFromForm();
+
+    this.subscribeToSaveResponse(this.valueService.create(value));
+    
+  }
+
+  private createFromForm(): any {
+    let tmpDate =this.getPac.Fecha;
+    const datepipe: DatePipe = new DatePipe('en-US');
+    let formattedDate = datepipe.transform(tmpDate, 'dd/MM/YYYY');
+    this.cancelacion  = {
+      IdComprobante: this.monitoreo.SerieTimbrado+this.monitoreo.FolioTimbrado,
+      TipoComprobante: this.getPac.Serie,
+      RfcEmisor: this.getPac.Emisor.Rfc,
+      RfcReceptor: this.getPac.Receptor.Rfc,
+      FechaCFDI: formattedDate,
+      UUID: this.monitoreo.Referencia,
+      Total: 0,
+      Motivo:  this.editForm.controls['motivo'].value,
+      FolioSustitucion: this.editForm.controls['FolioSustitucion'].value
+    };
+
+    let aux = {Cancelacion: this.cancelacion};
+    return {
+      ...aux
+    };
+  }
+
+  onSelectEvent(value: any){
+    console.log(value);
+    this.monitoreo.Motivo = value.Valor;
+  }
+
+  protected subscribeToSaveResponse(result: Observable<HttpResponse<any>>): void {
+    result.subscribe(
+      () => this.onSaveSuccess(),
+      () => this.onSaveError()
+    );
+  }
+
+
+  protected onSaveSuccess(): void {
+    this.isSaving = true;
+    if (this.auxSaves) {
+      Swal.close();
+      Swal.fire({
+        icon: 'success',
+        timer: 1500,
+      });
+      this.auxSaves.emit(true);
+    }
+  }
+
+  
+
+  protected onSaveError(): void {
+    this.isSaving = false;
+    if (this.auxSaves) {
+      this.auxSaves.emit(false);
+    }
+
+    Swal.fire({
+      title: 'Conflicto',
+      text: 'No fue Posible Realizar la Acción',
+      icon: 'warning',
+      showCloseButton: true,
+      });
+  }
+
+
+}

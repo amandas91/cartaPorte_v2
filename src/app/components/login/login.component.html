@@ -1,0 +1,73 @@
+<div id="login" fxLayout="column">
+
+    <div id="login-form-wrapper" fxLayout="column" fxLayoutAlign="center center">
+
+        <div id="login-form" [@animate]="{value:'*',params:{duration:'300ms',y:'100px'}}">
+
+            <div class="logo">
+                <img src="assets/images/logos/gepp-blanco.png">
+            </div>
+
+            <div class="title" style="color: white;">LOGIN TO YOUR ACCOUNT</div>
+
+            <form name="form" [formGroup]="form" novalidate style="color: white;">
+
+                <!-- <mat-form-field appearance="outline">
+                    <mat-label style="color: white;">User</mat-label>
+                    <input matInput formControlName="email" autocomplete="off">
+                    <mat-icon style="color: white;" matSuffix class="secondary-text">User</mat-icon>
+                    <mat-error *ngIf="form.get('email').hasError('required')">
+                        User is required
+                    </mat-error>
+                    <mat-error *ngIf="!form.get('email').hasError('required') &&
+                                form.get('email').hasError('email')">
+                        Please enter a valid user address
+                    </mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                    <mat-label style="color: white;">Password</mat-label>
+                    <input style="color: white;" matInput type="password" formControlName="password">
+                    <mat-icon style="color: white;" matSuffix class="secondary-text">vpn_key</mat-icon>
+                    <mat-error>
+                        Password is required
+                    </mat-error>
+                </mat-form-field> -->
+
+
+                <mat-form-field appearance="outline">
+                    <mat-label style="color: white;">User</mat-label>
+                    <input matInput formControlName="Username" autocomplete="off">
+                    <mat-icon style="color: white;" matSuffix class="secondary-text">User</mat-icon>
+                    
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                    <mat-label style="color: white;">Password</mat-label>
+                    <input style="color: white;" matInput type="password" formControlName="Password">
+                    <mat-icon style="color: white;" matSuffix class="secondary-text">vpn_key</mat-icon>
+                    <mat-error>
+                        Password is required
+                    </mat-error>
+                </mat-form-field>
+
+               
+
+                <button mat-raised-button color="accent" (click)="send()" class="submit-button" aria-label="LOG IN" [disabled]="form.invalid">
+                    LOGIN
+                </button>
+
+            </form>
+
+            <div class="separator">
+                <span class="text" style="color: white;">México</span>
+            </div>
+
+
+
+
+        </div>
+
+    </div>
+
+</div>

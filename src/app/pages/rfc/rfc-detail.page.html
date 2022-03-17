@@ -1,0 +1,37 @@
+<!-- FIXME EN IF CAMBIAR POR EL OBJETO QUE CORRESPONDA CAANDO SE TENGA. -->
+<div *ngIf="true" [formGroup]="editForm">
+    <div fxLayout="column" fxLayoutGap="8px">
+        <div fxLayout="column" fxLayout.gt-xs="row" fxLayoutGap="8px" fxLayoutGap.gt-xs="24px">
+
+            <mat-form-field fxFlex="33%" appearance="outline">
+                <mat-label>RFC</mat-label>
+                <input autocomplete="off" matInput formControlName="rfc" [validation]="false" mask="M{60}" [dropSpecialCharacters]="false" [patterns]="NUMBERS_LETTERS" />
+            </mat-form-field>
+            <mat-form-field fxFlex="33%" appearance="outline">
+                <mat-label>{{'RFC.FIELDS.RAZON_SOCIAL' | translate}}</mat-label>
+                <input autocomplete="off" matInput formControlName="razon_social" [validation]="false" mask="N{45}" [dropSpecialCharacters]="false" [patterns]="LATIN_PATTERNS"  />
+            </mat-form-field>
+            <mat-form-field fxFlex="33%" appearance="outline">
+                <mat-label>{{'RFC.FIELDS.POSTAL_CODE' | translate}}</mat-label>
+                <input autocomplete="off" matInput formControlName="postal_code" [validation]="false" mask="Q{5}" [dropSpecialCharacters]="false" [patterns]="NATURAL_NUMBERS" />
+            </mat-form-field>
+
+        </div>
+
+        <div fxLayout="column" fxLayout.gt-xs="row" fxLayoutGap="8px" fxLayoutGap.gt-xs="24px">
+
+            <mat-form-field fxFlex="50%" appearance="outline">
+                <mat-label>{{'RFC.FIELDS.ADDRESS' | translate}}</mat-label>
+                <input autocomplete="off" matInput formControlName="address" [validation]="false" mask="N{45}" [dropSpecialCharacters]="false" [patterns]="LATIN_PATTERNS"  />
+            </mat-form-field>
+
+            <mat-form-field fxFlex="50%" appearance="outline">
+                <mat-label>{{'RFC.FIELDS.MUNICIPALITY' | translate}}</mat-label>
+                <input autocomplete="off" matInput formControlName="municipality" [validation]="false" mask="N{45}" [dropSpecialCharacters]="false" [patterns]="LATIN_PATTERNS"  />
+            </mat-form-field>
+
+        </div>
+
+
+    </div>
+</div>

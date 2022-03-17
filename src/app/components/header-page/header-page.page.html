@@ -1,0 +1,47 @@
+<div class="mb-24 mb-sm-0 primary" style="margin-top: 15px;">
+
+    <mat-icon *ngIf="hasBack" (click)="back()" style="cursor: pointer"
+        class="logo-icon s-32 mr-16"
+        [@animate]="{value:'*',params:{delay:'50ms',scale:'0.2'}}">
+        arrow_back_ios
+    </mat-icon>
+    <mat-icon
+        class="logo-icon s-32 mr-16"
+        [@animate]="{value:'*',params:{delay:'50ms',scale:'0.2'}}">
+        {{icon}}
+    </mat-icon>
+    <span
+        class="h1"
+        [@animate]="{value:'*',params:{delay:'100ms',x:'-25px'}}"> {{ title }} </span>
+    <div class="page-layout blank" fusePerfectScrollbar *ngIf="subTitle" style="margin:3px;">
+        {{ subTitle }}
+    </div>
+</div>
+
+
+<!-- <div
+    class="header primary"
+    fxLayout="column"
+    fxLayoutAlign="center center"
+    fxLayout.gt-xs="row"
+    fxLayoutAlign.gt-xs="space-between center">
+
+    <div
+        class="logo mb-24 mb-sm-0"
+        fxLayout="row"
+        fxLayoutAlign="start center"
+        style="margin-top: 15px; ">
+        <mat-icon
+            class="logo-icon s-32 mr-16"
+            [@animate]="{value:'*',params:{delay:'50ms',scale:'0.2'}}">
+            {{icon}}
+        </mat-icon>
+        <span
+            class=" h1"
+            [@animate]="{value:'*',params:{delay:'100ms',x:'-25px'}}"> {{ title }} </span>
+        <div class="page-layout blank p-24" fusePerfectScrollbar>
+            pruebas de sub titulo
+        </div>
+    </div>
+
+</div> -->

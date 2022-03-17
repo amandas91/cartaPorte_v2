@@ -1,0 +1,19 @@
+<div fxLayout="row" fxLayoutAlign="start center" mat-dialog-title>
+    <h2 class="headline m-0" fxFlex="auto">{{title}}</h2>
+    <button class="text-secondary" mat-dialog-close mat-icon-button type="button">
+        <mat-icon>close</mat-icon>
+    </button>
+</div>
+
+<mat-divider class="-mx-6 text-border"></mat-divider>
+
+<form novalidate (ngSubmit)="updateComponent?.save()" [formGroup]="parentForm">
+    <mat-dialog-content fxLayout="column">
+        <app-cat-rates-detail [value]="value" (auxSave)="auxSave($event)"></app-cat-rates-detail>
+    </mat-dialog-content>
+
+    <mat-dialog-actions fxLayoutAlign="end">
+        <button mat-raised-button mat-dialog-close type="button" color="warn"><mat-icon>block</mat-icon>&nbsp;<span>{{'CATALOGS.DIALOG.BUTTONS.CANCEL' | translate}}</span></button>
+        <button color="primary" mat-raised-button type="submit" [disabled]="!parentForm.valid"><mat-icon>save</mat-icon>&nbsp;<span>{{'CATALOGS.DIALOG.BUTTONS.ADD' | translate}}</span></button>
+    </mat-dialog-actions>
+</form>

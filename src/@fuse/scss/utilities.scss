@@ -1,0 +1,15 @@
+    // AJUSTE DE LA SEPARACIÒN DE ACCIONES EN LAS TABLAS.
+    .fixbuttons {
+        margin-left: 15px !important;
+    }
+    
+    // QUITAR FORMAS TABS
+    .invisible-tabs {
+        >.mat-tab-header {
+            display: none !important;
+        }
+    }
+    
+    .border-detail {
+        border: 1px solid #000 !important;
+    }

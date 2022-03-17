@@ -1,0 +1,35 @@
+<div id="orders" class="page-layout carded fullwidth overflow-y:scroll">
+    <!-- TOP BACKGROUND -->
+    <div class="top-bg primary"></div>
+    <!-- / TOP BACKGROUND -->
+
+    <!-- CENTER -->
+    <div class="center">
+
+
+        <!-- CONTENT CARD -->
+        <!-- <div class="content-card"> -->
+        <div class="sidenav-content">
+            <!-- HEADER -->
+            <div
+                class="header primary"
+                fxLayout="column"
+                fxLayoutAlign="center center"
+                fxLayout.gt-xs="row"
+                fxLayoutAlign.gt-xs="space-between center">
+
+                <app-header-page [title]="'NAV.APP.TRIPS'| translate"
+                    [icon]="'card_travel'"></app-header-page>
+            </div>
+            <!-- / HEADER -->
+            <app-trips-list 
+            [hasCollections]="!hasRol([Authority.LEISURE, Authority.LEISURE_DMC, Authority.AEREOS])"
+            [hasPayments]="!hasRol([Authority.LEISURE, Authority.LEISURE_DMC, Authority.AEREOS])"
+            [hasEdit]="hasRol([Authority.ADMIN, Authority.FINANZAS, Authority.LEISURE, Authority.LEISURE_DMC, Authority.AEREOS])"
+            [hasNew]="!hasRol([Authority.AEREOS])" 
+            ></app-trips-list>
+        </div>
+        <!-- / CONTENT CARD -->
+    </div>
+    <!-- / CENTER -->
+</div>

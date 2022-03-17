@@ -1,0 +1,37 @@
+<div fxLayout="column" fxLayout.gt-xs="row" fxLayoutGap="8px" fxLayoutGap.gt-xs="24px" fxLayoutAlign="end">
+
+    <!-- FIXME EN ESPERA DE DATOS DE SERVICIO NO SON FIJOS -->
+    <div fxLayout="column" fxLayout.gt-xs="row" fxLayoutGap="8px" fxLayoutGap.gt-xs="24px" fxFlex="25%">
+
+        <mat-chip-list fxFlex="90%">
+            <mat-chip>{{'PAYMENTS.BORDER_DETAILS.OUTSTANDING'| translate}}
+                <mat-chip color="primary" selected>$ {{ outstanding }} </mat-chip>
+            </mat-chip>
+        </mat-chip-list>
+        <!-- <div fxFlex="50%">
+            <strong>{{'PAYMENTS.BORDER_DETAILS.OUTSTANDING'| translate}}</strong>
+        </div>
+        <div fxFlex="50%">
+            <span>US$ 19,800</span>
+        </div> -->
+    </div>
+
+
+</div>
+<div *ngIf="listPage" class="mat-elevation-z8" style="margin-top: 25px">
+    <fuse-table 
+        [columns]="columns" 
+        [data]="listPage" 
+        [totalItems]="totalItems" 
+        [pageSize]="itemsPerPage" 
+        [pageSizeOptions]="pageSizeOptions" 
+        [headerProperties]="headerProperties" 
+        [buttons]="buttons" 
+        (paginatorEvents)="loadPage($event)" 
+        (buttonsEvents)="buttonsEvents($event)"
+        (addEvent)="newItem()">
+    </fuse-table>
+</div>
+<div *ngIf="!listPage" class="mat-elevation-z8" style="margin-top: 25px">
+    <skeleton-loader-table></skeleton-loader-table>
+</div>

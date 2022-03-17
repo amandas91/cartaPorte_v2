@@ -1,0 +1,29 @@
+<div fxLayout="column" fxLayout.gt-xs="row" fxLayoutGap="8px" fxLayoutGap.gt-xs="8px">
+    <h1>Cancelar CFDI</h1>
+</div>
+<div class="p-8" [formGroup]="editForm" >
+    <div fxLayout="column" fxLayout.gt-xs="row" fxLayoutGap="8px" fxLayoutGap.gt-xs="8px">
+        <mat-form-field fxFlex="100%" appearance="outline">
+            <mat-label>Folio de Sustitución</mat-label>
+            <input style="color: black;" autocomplete="off" matInput formControlName="FolioSustitucion"  />
+        </mat-form-field>
+
+        <mat-form-field fxFlex="100%" appearance="outline">
+            <mat-label>Motivo de Cancelación</mat-label>
+            <mat-select name="tipoMotivo" formControlName="motivo" (selectionChange)="onSelectEvent($event.value)">
+                <mat-option *ngFor="let item of tipoMotivo" [value]="item.Valor">
+                    {{item.Descripcion}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        
+    </div>
+    <div fxLayout="column" fxLayout.gt-xs="row" fxLayoutGap="8px" fxLayoutGap.gt-xs="8px">
+        <button mat-flat-button color="primary" (click)="saveCancel()"  fxFlex="100%">
+            <mat-icon>save</mat-icon> Guardar
+        </button>
+          &nbsp;&nbsp;
+
+    </div>
+</div>

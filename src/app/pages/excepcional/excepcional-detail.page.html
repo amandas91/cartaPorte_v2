@@ -1,0 +1,86 @@
+<!-- FIXME EN IF CAMBIAR POR EL OBJETO QUE CORRESPONDA CAANDO SE TENGA. -->
+<div *ngIf="true" [formGroup]="editForm">
+    <div fxLayout="column" fxLayoutGap="8px">
+        <div fxLayout="column" fxLayout.gt-xs="row" fxLayoutGap="8px" fxLayoutGap.gt-xs="30px">
+
+            <!-- CAMPO REFERENCE-->
+            <mat-form-field fxFlex="100%" appearance="outline">
+                <mat-label>{{'PAYMENTS.OUTSTANDING_COLUMNS.REFERENCE' | translate}}</mat-label>
+                <input autocomplete="off" matInput formControlName="reference" [validation]="false" [dropSpecialCharacters]="false"/>
+            </mat-form-field>
+
+            <!-- CAMPO Name-->
+            <mat-form-field fxFlex="100%" appearance="outline">
+                <mat-label>{{'PAYMENTS.OUTSTANDING_COLUMNS.CONCEPT' | translate}}</mat-label>
+                <input autocomplete="off" matInput formControlName="concept" [validation]="false" mask="N{45}" [dropSpecialCharacters]="false" [patterns]="LATIN_PATTERNS" />
+            </mat-form-field>
+
+            <!--CAMPO VAT-->
+            <mat-form-field fxFlex="100%" appearance="outline" >
+                <mat-label>VAT</mat-label>
+                <input autocomplete="off" matInput formControlName="vat" [validation]="false" [dropSpecialCharacters]="false" />
+            </mat-form-field>
+        </div>
+
+        <div fxLayout="column" fxLayout.gt-xs="row" fxLayoutGap="8px" fxLayoutGap.gt-xs="30px">
+            <!-- CAMPO SUPPLIER-->
+            <mat-form-field fxFlex="33%" appearance="outline">
+                <mat-label>{{'PAYMENTS.OUTSTANDING_COLUMNS.SUPPLIER' | translate}}</mat-label>
+                <!-- <input autocomplete="off" matInput formControlName="name" [validation]="false" mask="N{45}" [dropSpecialCharacters]="false" [patterns]="LATIN_PATTERNS" /> -->
+                <input matInput formControlName="name" ngx-google-places-autocomplete #places="ngx-places" (onAddressChange)="onChange($event)" />
+            </mat-form-field>
+            <!--CAMPO LOCATION-->
+            <mat-form-field fxFlex="33%" appearance="outline">
+                <mat-label>{{'PAYMENTS.OUTSTANDING_COLUMNS.LOCATION' | translate}}</mat-label>
+                <input autocomplete="off" matInput formControlName="ubication" [validation]="false" mask="N{45}" [dropSpecialCharacters]="false" [patterns]="LATIN_PATTERNS" />
+            </mat-form-field>
+            <!--CAMPO COUNTRY-->
+            <mat-form-field fxFlex="33%" appearance="outline">
+                <mat-label>{{'PAYMENTS.OUTSTANDING_COLUMNS.COUNTRY' | translate}}</mat-label>
+                <input autocomplete="off" matInput formControlName="name_country" [validation]="false" mask="N{45}" [dropSpecialCharacters]="false" [patterns]="LATIN_PATTERNS" />
+            </mat-form-field>
+
+        </div>
+
+        <div fxLayout="column" fxLayout.gt-xs="row" fxLayoutGap="8px" fxLayoutGap.gt-xs="30px">
+            <!-- CAMPO USE AMOUNT-->
+            <mat-form-field fxFlex="100%" appearance="outline">
+                <mat-label>{{'PAYMENTS.OUTSTANDING_COLUMNS.US_AMOUNT' | translate}}</mat-label>
+                <input autocomplete="off" matInput formControlName="amount" [validation]="false" mask="Q{10}" [dropSpecialCharacters]="false" [patterns]="NATURAL_NUMBERS" />
+            </mat-form-field>
+
+            <!-- CAMPO CUR-->
+            <mat-form-field fxFlex="100%" appearance="outline">
+                <mat-label>{{'PAYMENTS.OUTSTANDING_COLUMNS.CUR' | translate}}</mat-label>
+                <mat-select name="catCurrency" formControlName="currency_id">
+                    <mat-option *ngFor="let item of catCurrency" [value]="item.id">
+                        {{item.name}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+
+            <mat-form-field appearance="fill" fxFlex="25%">
+                <mat-label>{{'PAYMENTS.OUTSTANDING_COLUMNS.REQUEST_DATE' | translate}}</mat-label>
+                <input matInput [matDatepicker]="dp1" disabled formControlName="due_date">
+                <mat-datepicker-toggle matSuffix [for]="dp1"></mat-datepicker-toggle>
+                <mat-datepicker #dp1 disabled="false"></mat-datepicker>
+            </mat-form-field>
+            
+            <!-- <mat-form-field appearance="outline" fxFlex="50%">
+                <mat-label>Enter a date range</mat-label>
+                <mat-date-range-input [rangePicker]="picker">
+                    <input matStartDate formControlName="starting_date" placeholder="Start date">
+                    <input matEndDate formControlName="ending_date" placeholder="End date">
+                </mat-date-range-input>
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-date-range-picker #picker></mat-date-range-picker>
+                <mat-error *ngIf="editForm.controls.starting_date.hasError('matStartDateInvalid')">Invalid start date</mat-error>
+                <mat-error *ngIf="editForm.controls.ending_date.hasError('matEndDateInvalid')">Invalid end date</mat-error>
+            </mat-form-field> -->
+
+        </div>
+        <div fxLayout="column" fxLayout.gt-xs="row" fxLayoutGap="8px" fxLayoutGap.gt-xs="30px">
+
+        </div>
+    </div>
+</div>

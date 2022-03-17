@@ -1,0 +1,33 @@
+<div class="p-8" [formGroup]="editForm">
+    <div fxLayout="column" fxLayoutGap="8px">
+
+        <mat-form-field fxFlex="50%" appearance="outline">
+            <mat-label>Comprobante</mat-label>
+            <input autocomplete="off" matInput formControlName="comprobante" />
+        </mat-form-field>
+
+        <div fxLayout="column" fxLayout.gt-xs="row" fxLayoutGap="8px" fxLayoutGap.gt-xs="8px">
+            <button color="primary" mat-raised-button type="button" (click)="loadPage()" class="btn btn-primary btn-lg">
+                <mat-icon>search</mat-icon>&nbsp;<span>{{'CLIENTS.FIELDS.SEARCH' | translate}}</span>
+            </button>
+        </div>
+    </div>
+</div>
+
+<div *ngIf="listPage" class="mat-elevation-z8" style="margin-top: 25px">
+    <fuse-table
+        [columns]="columns"
+        [data]="listPage"
+        [totalItems]="totalItems"
+        [pageSize]="itemsPerPage"
+        [pageSizeOptions]="pageSizeOptions"
+        [headerProperties]="headerProperties"
+        [buttons]="buttons"
+        (paginatorEvents)="loadPage($event)"
+        (buttonsEvents)="buttonsEvents($event)">
+    </fuse-table>
+</div>
+
+<div *ngIf="listPage === undefined">
+    <skeleton-loader-table></skeleton-loader-table>
+</div>

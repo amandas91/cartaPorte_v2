@@ -1,0 +1,522 @@
+
+<mat-vertical-stepper [linear]="isLinear" #stepper [selectedIndex]="index" [@fadeInOut]="{value:'*',params:{delay:'300ms',scale:'100', opacity:'0.5'}}">
+    <!-- change default 'edit' icon -->
+    <ng-template matStepperIcon="budget">
+        <mat-icon>border_color</mat-icon>
+    </ng-template>
+
+    <ng-template matStepperIcon="receptor">
+        <mat-icon>face</mat-icon>
+    </ng-template>
+
+    <ng-template matStepperIcon="collection">
+        <mat-icon>face</mat-icon>
+    </ng-template>
+
+
+    <ng-template matStepperIcon="payments">
+        <mat-icon>airport_shuttle</mat-icon>
+    </ng-template>
+
+    <ng-template matStepperIcon="commissions">
+        <mat-icon>monitor_weight</mat-icon>
+    </ng-template>
+
+    <ng-template matStepperIcon="ubicacion_origen">
+        <mat-icon>fmd_good</mat-icon>
+    </ng-template>
+
+    <ng-template matStepperIcon="generacion_carta">
+        <mat-icon>description</mat-icon>
+    </ng-template>
+    <!-- --------------------------------- -->
+    
+    <!-- [stepControl]="firstFormGroup" -->
+    <mat-step label="{{'TRIPS.STEPS.BUDGET' | translate}}" state="budget">
+
+        <div class="mt-4" fxLayout="column" fxLayoutGap="8px" [formGroup]="editForm" >
+            <h1>Emisor</h1>
+            
+            <div fxLayout="column" fxLayout.gt-xs="row" fxLayoutGap="8px" fxLayoutGap.gt-xs="24px" fxLayoutAlign="end">
+                <mat-form-field fxFlex="33%" appearance="outline">
+                    <mat-label>RFC</mat-label>
+                    <mat-select name="Rfc" formControlName="Rfc" (selectionChange)="onSelectEvent($event.value, 'rfcemisor')"  >
+                        <mat-option *ngFor="let item of emisor" [value]="item">
+                            {{item.Rfc}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <mat-form-field fxFlex="33%" appearance="outline">
+                    <mat-label >Nombre</mat-label>
+                    <input style="color: black;" autocomplete="off" matInput formControlName="Nombre" />
+                </mat-form-field>
+                
+                <mat-form-field fxFlex="33%" appearance="outline">
+                    <mat-label >Regimen Fiscal</mat-label>
+                    <input style="color: black;" autocomplete="off" matInput formControlName="RegimenFiscal"  />
+                </mat-form-field>
+                
+               
+            </div>
+
+            <h1>Expedido</h1>
+            <div fxLayout="column" fxLayout.gt-xs="row" fxLayoutGap="8px" fxLayoutGap.gt-xs="24px" fxLayoutAlign="end">
+                
+                <mat-form-field fxFlex="35%" appearance="outline">
+                    <mat-label>País</mat-label>
+                    <mat-select name="catPaises" formControlName="Pais" (selectionChange)="onSelectEvent($event.value, 'pais')">
+                        <mat-option *ngFor="let item of catPaises" [value]="item">
+                            {{item.Nombre}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <mat-form-field fxFlex="35%" appearance="outline">
+                    <mat-label>Estado</mat-label>
+                    <mat-select name="catEstados" formControlName="Estado" (selectionChange)="onSelectEvent($event.value, 'estado')">
+                        <mat-option *ngFor="let item of catEstados" [value]="item">
+                            {{item.Nombre}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <mat-form-field fxFlex="35%" appearance="outline">
+                    <mat-label>Municipio</mat-label>
+                    <mat-select name="catMunicipios" formControlName="Municipio" (selectionChange)="onSelectEvent($event.value, 'municipio')">
+                        <mat-option *ngFor="let item of catMunicipios" [value]="item">
+                            {{item.Descripcion}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <mat-form-field fxFlex="35%" appearance="outline">
+                    <mat-label>CP</mat-label>
+                    <input style="color: black;" autocomplete="off" matInput formControlName="CodigoPostal"  />
+                </mat-form-field> 
+                
+            </div>
+        </div>
+
+    </mat-step>
+ 
+    <mat-step label="{{'TRIPS.STEPS.RECEPTOR' | translate}}" state="receptor">
+        <div class="mt-4" fxLayout="column" fxLayoutGap="8px" [formGroup]="editForm" >
+           
+            <div fxLayout="column" fxLayout.gt-xs="row" fxLayoutGap="8px" fxLayoutGap.gt-xs="24px" fxLayoutAlign="end">
+            
+                <mat-form-field fxFlex="33%" appearance="outline">
+                    <mat-label>RFC</mat-label>
+                    <!-- <input style="color: black;" autocomplete="off" matInput formControlName="RfcReceptor" /> -->
+                    <mat-select name="Rfc" formControlName="RfcReceptor"  (selectionChange)="onSelectEvent($event.value, 'rfcreceptor')">
+                        <mat-option *ngFor="let item of receptor" [value]="item">
+                            {{item.Rfc}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <mat-form-field fxFlex="40%" appearance="outline">
+                    <mat-label >Nombre</mat-label>
+                    <input style="color: black;" autocomplete="off" matInput formControlName="NombreReceptor"  />
+                </mat-form-field>
+                <mat-form-field fxFlex="40%" appearance="outline">
+                    <mat-label >Uso CFDI</mat-label>
+                    <input style="color: black;" autocomplete="off" matInput formControlName="UsoCFDI"  />
+                </mat-form-field>
+            </div>
+        </div>
+    </mat-step>
+
+  
+    <mat-step label="{{'TRIPS.STEPS.COLLECTIONS_INVOICING' |  translate}}" state="collection" >
+        <div fxLayout="column" fxLayout.gt-xs="row" fxLayoutGap="8px" fxLayoutGap.gt-xs="24px" fxLayoutAlign="end" [formGroup]="editForm">
+                <mat-form-field fxFlex="40%" appearance="outline">
+                    <mat-label >RFC operador</mat-label>
+                    <input style="color: black;" autocomplete="off" matInput formControlName="RFCFigura"  />
+                </mat-form-field>
+                <mat-form-field fxFlex="40%" appearance="outline">
+                    <mat-label >Número de licencia</mat-label>
+                    <input style="color: black;" autocomplete="off" matInput formControlName="NumLicencia"  />
+                </mat-form-field>
+                <mat-form-field fxFlex="40%" appearance="outline">
+                    <mat-label >Nombre de operador / Chofer </mat-label>
+                    <input style="color: black;" autocomplete="off" matInput formControlName="NombreFigura"  />
+                </mat-form-field>
+
+                <mat-form-field fxFlex="33%" appearance="outline">
+                    <mat-label>Tipo de Figura</mat-label>
+                    <mat-select name="TipoFigura" formControlName="TipoFigura" >
+                        <mat-option *ngFor="let item of catTipoFiguraTransporte" [value]="item.ClaveTransporte">
+                            {{item.Descripcion}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+               
+            </div>
+
+    </mat-step>
+
+    <mat-step label="{{'TRIPS.STEPS.PAYMENTS' | translate}}" state="payments">
+            <div fxLayout="column" fxLayout.gt-xs="row" fxLayoutGap="8px" fxLayoutGap.gt-xs="24px" fxLayoutAlign="end" *ngIf="statusFlota">
+                <p style="background-color: #efff004d;padding: 5px;">Estatus: EN PISO POR REPARACION</p>
+            </div>
+            <div fxLayout="column" fxLayout.gt-xs="row" fxLayoutGap="8px" fxLayoutGap.gt-xs="24px" fxLayoutAlign="end" [formGroup]="editForm" >
+
+                <mat-form-field fxFlex="35%" appearance="outline">
+                    <mat-label># Eco</mat-label>
+                    <input style="color: black;" autocomplete="off" matInput formControlName="Eco" (change)="onSelectEvent($event.value, 'eamFlota')" />
+                </mat-form-field> 
+
+                <mat-form-field fxFlex="40%" appearance="outline">
+                    <mat-label>Permiso SCT</mat-label>
+                    <mat-select name="catTipoPermiso" formControlName="PermSCT" (selectionChange)="onSelectEvent($event.value, 'numpermisosct')">
+                        <mat-option *ngFor="let item of catTipoPermiso" [value]="item" >
+                          {{item.Clave}} / {{item.Descripcion}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <mat-form-field fxFlex="40%" appearance="outline">
+                    <mat-label>Confuguración Vehicular</mat-label>
+                    <mat-select name="catTipoRemolque" formControlName="ConfigVehicular">
+                        <mat-option *ngFor="let item of catTipoRemolque" [value]="item">
+                            {{item.ClaveTipoRemolque}} / {{item.Remolque}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <mat-form-field fxFlex="40%" appearance="outline">
+                    <mat-label >Número Permiso SCT</mat-label>
+                    <input style="color: black;" autocomplete="off" matInput formControlName="NumPermisoSCT"  />
+                </mat-form-field>
+               
+            </div>
+
+           
+
+            <div fxLayout="column" fxLayout.gt-xs="row" fxLayoutGap="8px" fxLayoutGap.gt-xs="24px" fxLayoutAlign="end" [formGroup]="editForm">
+                <mat-form-field fxFlex="40%" appearance="outline">
+                    <mat-label >Año Camión</mat-label>
+                    <input style="color: black;" autocomplete="off" matInput formControlName="AnioModeloVM"  />
+                </mat-form-field>
+                <mat-form-field fxFlex="40%" appearance="outline">
+                    <mat-label >Número de Placa</mat-label>
+                    <input style="color: black;" autocomplete="off" matInput formControlName="PlacaVM"  />
+                </mat-form-field>
+                <mat-form-field fxFlex="40%" appearance="outline">
+                    <mat-label >Poliza Responsabilidad Civil</mat-label>
+                    <input style="color: black;" autocomplete="off" matInput formControlName="PolizaRespCivil"  />
+                </mat-form-field>
+                <mat-form-field fxFlex="40%" appearance="outline">
+                    <mat-label >Aseguradora</mat-label>
+                    <input style="color: black;" autocomplete="off" matInput formControlName="AseguraRespCivil"  />
+                </mat-form-field>
+               
+            </div>
+
+    </mat-step>
+
+    <mat-step label="{{'TRIPS.STEPS.COMMISSIONS' | translate}}" state="commissions">
+        <div class="mt-4" fxLayout="column" fxLayoutGap="8px" [formGroup]="editForm" >
+           
+            <div fxLayout="column" fxLayout.gt-xs="row" fxLayoutGap="8px" fxLayoutGap.gt-xs="24px" fxLayoutAlign="end">
+                <mat-form-field fxFlex="20%" appearance="outline">
+                    <mat-label>Tipo de Producto</mat-label>
+                    <mat-select name="catTipoProducto" formControlName="BienesTransp"  (selectionChange)="onSelectEvent($event.value, 'catTipoProducto')">
+                        <mat-option *ngFor="let item of catTipoProducto" [value]="item">
+                            {{item.Descripcion}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <mat-form-field fxFlex="20%" appearance="outline">
+                    <mat-label>Descripción</mat-label>
+                    <mat-select name="tipoProducto" formControlName="Descripcion" (selectionChange)="onSelectEvent($event.value, 'descripcion')">
+                        <mat-option *ngFor="let item of tipoProducto" [value]="item">
+                            {{item.Descripcion}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <mat-form-field fxFlex="20%" appearance="outline">
+                    <mat-label >Cantidad</mat-label>
+                    <input style="color: black;" autocomplete="off" matInput formControlName="Cantidad"  />
+                </mat-form-field>
+
+                <mat-form-field fxFlex="20%" appearance="outline">
+                    <mat-label>Tipo Unidad</mat-label>
+                    <mat-select name="catTipoUnidad" formControlName="Unidad" (selectionChange)="onSelectEvent($event.value, 'unidad')">
+                        <mat-option *ngFor="let item of catTipoUnidad" [value]="item" >
+                            {{item.ClaveUnidad}} / {{item.Nombre}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <mat-form-field fxFlex="20%" appearance="outline">
+                    <mat-label>Peso (KGM)</mat-label>
+                    <input style="color: black;" autocomplete="off" matInput formControlName="PesoEnKg"  />
+                </mat-form-field>
+
+                <button mat-mini-fab color="primary"  mat-raised-button (click)="addData()">
+                    <mat-icon >add</mat-icon>
+                </button>
+
+                <button mat-mini-fab color="primary"  mat-raised-button  [disabled]="!dataSource.length" (click)="removeData()">
+                    <mat-icon >delete</mat-icon>
+                </button>
+                
+          
+            </div>
+            
+        </div>
+        <div class="mt-4" fxLayout="column" fxLayoutGap="8px">
+            
+            <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 demo-table">
+                <!-- Position Column -->
+
+                <ng-container matColumnDef="ClaveProdServ">
+                  <th mat-header-cell *matHeaderCellDef>Clave</th>
+                  <td mat-cell *matCellDef="let element">{{element.ClaveProdServ}}</td>
+                </ng-container>
+              
+                <!-- Name Column -->
+                <ng-container matColumnDef="ClaveUnidad">
+                  <th mat-header-cell *matHeaderCellDef>Clave Unidad</th>
+                  <td mat-cell *matCellDef="let element">{{element.ClaveUnidad}}</td>
+                </ng-container>
+              
+                <!-- Weight Column -->
+                <ng-container matColumnDef="Cantidad">
+                  <th mat-header-cell *matHeaderCellDef>Cantidad</th>
+                  <td mat-cell *matCellDef="let element">{{element.Cantidad}}</td>
+                </ng-container>
+                
+              
+                <!-- Symbol Column -->
+                <ng-container matColumnDef="Unidad">
+                  <th mat-header-cell *matHeaderCellDef>Unidad</th>
+                  <td mat-cell *matCellDef="let element">{{element.Unidad}}</td>
+                </ng-container>
+
+                 <!-- Symbol Column -->
+                 <ng-container matColumnDef="Descripcion">
+                    <th mat-header-cell *matHeaderCellDef>Descripcion</th>
+                    <td mat-cell *matCellDef="let element">{{element.Descripcion}}</td>
+                  </ng-container>
+              
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+
+
+
+                    
+        </div>
+
+        
+    </mat-step>
+
+    <mat-step label="{{'TRIPS.STEPS.UBICACION_ORIGEN' | translate}}" state="ubicacion_origen">
+            <h1>Origen</h1>
+        <div class="mt-4" fxLayout="column" fxLayoutGap="8px" [formGroup]="editForm" >
+            <div fxLayout="column" fxLayout.gt-xs="row" fxLayoutGap="8px" fxLayoutGap.gt-xs="24px" fxLayoutAlign="end">
+                <mat-form-field fxFlex="50%" appearance="outline">
+                    <mat-label >Fecha Salida</mat-label>
+                    <input matInput [matDatepicker]="FechaSalida" formControlName="FechaSalida" >
+                    <mat-datepicker-toggle matSuffix [for]="FechaSalida"></mat-datepicker-toggle>
+                    <mat-datepicker touchUi #FechaSalida></mat-datepicker>
+                </mat-form-field>
+
+                <mat-form-field fxFlex="50%" appearance="outline">
+                    <mat-label >Hora Salida</mat-label>
+                    <input [ngxTimepicker]="HoraSalida" matInput formControlName="HoraSalida">
+                     <ngx-material-timepicker #HoraSalida></ngx-material-timepicker>
+                </mat-form-field>
+            </div>
+            
+            <div fxLayout="column" fxLayout.gt-xs="row" fxLayoutGap="8px" fxLayoutGap.gt-xs="24px" fxLayoutAlign="end">
+                <mat-form-field fxFlex="50%" appearance="outline">
+                    <mat-label >Clave Bodega</mat-label>
+                    <input style="color: black;" autocomplete="off" matInput formControlName="ClaveBodega"  />
+                </mat-form-field>
+
+                <mat-form-field fxFlex="50%" appearance="outline" (change)="onSelectEvent($event.value, 'clavecliente')">
+                    <mat-label >Clave Cliente</mat-label>
+                    <input style="color: black;" autocomplete="off" matInput formControlName="ClaveCliente" />
+                </mat-form-field>
+
+                <mat-form-field fxFlex="40%" appearance="outline">
+                    <mat-label >ID Ubicación</mat-label>
+                    <input style="color: black;" autocomplete="off" matInput formControlName="IDUbicacion"  />
+                </mat-form-field>
+                <mat-form-field fxFlex="40%" appearance="outline">
+                    <mat-label >RFC Remitente Destinatario</mat-label>
+                    <input style="color: black;" autocomplete="off" matInput formControlName="RFCRemitenteDestinatario"  />
+                </mat-form-field>
+                <mat-form-field fxFlex="35%" appearance="outline">
+                    <mat-label>Tipo de horario</mat-label>
+                    <mat-select name="tipoHorario" formControlName="TipoHorario">
+                        <mat-option *ngFor="let item of tipoHorario" [value]="item">
+                            {{item.Descripcion}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+
+           
+            
+           
+        </div>
+            <h1>Destino</h1>
+        <div fxLayout="column" fxLayout.gt-xs="row" fxLayoutGap="8px" fxLayoutGap.gt-xs="24px" fxLayoutAlign="end" [formGroup]="editForm" >
+            <mat-form-field fxFlex="40%" appearance="outline">
+                
+                <mat-label >RFC</mat-label>
+                <input style="color: black;" autocomplete="off" matInput formControlName="RFCDestino"  />
+            </mat-form-field>
+
+            <mat-form-field  fxFlex="40%" appearance="outline">
+                <mat-label>Fecha Llegada</mat-label>
+                <input matInput [matDatepicker]="picker" formControlName="FechaSalidaLlegada" >
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker touchUi #picker></mat-datepicker>
+            </mat-form-field>
+
+            <mat-form-field fxFlex="40%" appearance="outline">
+                <mat-label >Hora Llegada</mat-label>
+                <input [ngxTimepicker]="HoraLlegada" matInput formControlName="HoraLlegada" placeholder="24hr format" aria-label="24hr format" [format]="24">
+                <ngx-material-timepicker #HoraLlegada></ngx-material-timepicker>
+            </mat-form-field>
+
+
+            <mat-form-field fxFlex="40%" appearance="outline">
+                <mat-label >Distancia (Km)</mat-label>
+                <input style="color: black;" autocomplete="off" matInput formControlName="DistanciaRecorrida"  />
+            </mat-form-field>
+
+            
+ 
+        </div>
+        <div fxLayout="column" fxLayout.gt-xs="row" fxLayoutGap="8px" fxLayoutGap.gt-xs="24px" fxLayoutAlign="end" [formGroup]="editForm" >
+            <mat-form-field fxFlex="35%" appearance="outline">
+                <mat-label>País</mat-label>
+                <mat-select name="catPaises" formControlName="PaisUbicacion" (selectionChange)="onSelectEvent($event.value, 'paisUbicación')">
+                    <mat-option *ngFor="let item of catPaises" [value]="item">
+                        {{item.Nombre}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            
+            <mat-form-field fxFlex="35%" appearance="outline">
+                <mat-label>Estado</mat-label>
+                <mat-select name="catEstados" formControlName="EstadoUbicacion" (selectionChange)="onSelectEvent($event.value, 'estadoUbicacion')">
+                    <mat-option *ngFor="let item of catEstados" [value]="item">
+                        {{item.Nombre}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+
+            <mat-form-field fxFlex="35%" appearance="outline">
+                <mat-label>Municipio</mat-label>
+                <mat-select name="catMunicipios" formControlName="MunicipioUbicacion" (selectionChange)="onSelectEvent($event.value, 'municipioUbicacion')">
+                    <mat-option *ngFor="let item of catMunicipios" [value]="item">
+                        {{item.Descripcion}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+
+            <mat-form-field fxFlex="35%" appearance="outline">
+                <mat-label>CP</mat-label>
+                <input style="color: black;" autocomplete="off" matInput formControlName="CodigoPostalUbicacion" />
+            </mat-form-field> 
+
+
+            <button mat-mini-fab color="primary"  mat-raised-button (click)="addDataUbicacion()">
+                <mat-icon >add</mat-icon>
+            </button>
+            
+        </div>
+        <div fxLayout="column" fxLayout.gt-xs="row" fxLayoutGap="8px" fxLayoutGap.gt-xs="24px" fxLayoutAlign="end"  >
+            <p><b>Total Distancia:</b>{{totalDistancia}}</p>
+        </div>
+
+        <div class="mt-4" fxLayout="column" fxLayoutGap="8px">
+            <table mat-table [dataSource]="dataSource1" matSort (matSortChange)="announceSortChange($event)" class="mat-elevation-z8">
+                <!-- Position Column -->
+                <ng-container matColumnDef="rfc">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="RFC">
+                        RFC
+                    </th>
+                    <td mat-cell *matCellDef="let element"> {{element.rfc}} </td>
+                </ng-container>
+
+                <!-- Name Column -->
+                <ng-container matColumnDef="fecha">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Fecha">
+                        Fecha
+                    </th>
+                    <td mat-cell *matCellDef="let element"> {{element.fecha}} </td>
+                </ng-container>
+
+                <!-- Weight Column -->
+                <ng-container matColumnDef="hora">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Hora">
+                        Hora
+                    </th>
+                    <td mat-cell *matCellDef="let element"> {{element.hora}} </td>
+                </ng-container>
+
+                <!-- Symbol Column -->
+                <ng-container matColumnDef="direccion">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Direccion">
+                        Direccion
+                    </th>
+                    <td mat-cell *matCellDef="let element"> {{element.direccion}} </td>
+                </ng-container>
+
+
+                <ng-container matColumnDef="cp">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="CP">
+                        CP
+                    </th>
+                    <td mat-cell *matCellDef="let element"> {{element.cp}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="distancia">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Distancia">
+                        Distancia
+                    </th>
+                    <td mat-cell *matCellDef="let element"> {{element.distancia}} </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns1"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns1;"></tr>
+            </table>
+        </div>
+
+        <div class="mt-4" fxLayout="column" fxLayoutGap="8px">
+            
+        </div>
+
+        
+    </mat-step>
+
+    <mat-step label="{{'TRIPS.STEPS.GENERACION_CARTA' | translate}}" state="generacion_carta">
+        <div class="mt-4" fxLayout="column" fxLayoutGap="8px" [formGroup]="editForm" >
+           
+            <div fxLayout="column" fxLayout.gt-xs="row" fxLayoutGap="8px" fxLayoutGap.gt-xs="24px" fxLayoutAlign="end">
+                <mat-form-field fxFlex="100%" appearance="outline">
+                    <mat-label >Correo</mat-label>
+                    <input style="color: black;" autocomplete="off" matInput formControlName="Correo"  />
+                </mat-form-field>    
+            </div>
+            <button mat-flat-button color="primary" (click)="saveData(false)">
+                <mat-icon>save</mat-icon> Guardar
+              </button>
+              &nbsp;&nbsp;
+              <button mat-flat-button color="primary" (click)="saveData(true)">
+                <mat-icon>settings</mat-icon>Guardar y Timbrar
+              </button>
+            <div fxLayout="column" >
+                      <p>*Escribe cada direeción de correo separados por coma</p>
+                 </div>
+        </div>
+    </mat-step> 
+    
+</mat-vertical-stepper>
+

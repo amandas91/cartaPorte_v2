@@ -1,0 +1,10 @@
+<div fxLayout="column" fxLayout.gt-xs="row" fxLayoutGap="8px"
+    fxLayoutGap.gt-xs="24px" *ngIf="(catAdventures && catAdventuresTrip) || trip_id === undefined">
+
+    <mat-selection-list #adventuresList fxFlex="100%" [(ngModel)]="selectedOptions" (ngModelChange)="onNgModelChange($event)">
+        <mat-list-option *ngFor="let item of catAdventures" [value]="item.id" [selected]="getSelect(item)" >
+            {{item.name}}
+        </mat-list-option>
+    </mat-selection-list>
+
+</div>

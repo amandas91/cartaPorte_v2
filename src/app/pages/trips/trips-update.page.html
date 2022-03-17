@@ -1,0 +1,77 @@
+<!-- FIXME EN IF CAMBIAR POR EL OBJETO QUE CORRESPONDA CAANDO SE TENGA. -->
+<div *ngIf="true" [formGroup]="editForm">
+    <div fxLayout="column" fxLayoutGap="8px">
+        <div fxLayout="column" fxLayout.gt-xs="row" fxLayoutGap="8px" fxLayoutGap.gt-xs="24px">
+
+            <mat-form-field fxFlex="50%" appearance="outline">
+                <mat-label> {{ 'TRIPS.FIELDS.TRAVEL_ADVISOR' | translate }}
+                </mat-label>
+                <mat-select name="owner" formControlName="owner_id">
+                    <mat-option *ngFor="let item of catOwners" [value]="item.owner">
+                        {{item.name}} </mat-option>
+                </mat-select>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" fxFlex="50%">
+                <mat-label>Enter a date range</mat-label>
+                <mat-date-range-input [rangePicker]="picker">
+                    <input class="fix-read-only" matStartDate formControlName="starting_date" placeholder="Start date" disabled>
+                    <input class="fix-read-only" matEndDate formControlName="ending_date" placeholder="End date" disabled>
+                </mat-date-range-input>
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-date-range-picker #picker disabled="false"></mat-date-range-picker>
+                <mat-error *ngIf="editForm.controls.starting_date.hasError('matStartDateInvalid')">Invalid start date</mat-error>
+                <mat-error *ngIf="editForm.controls.ending_date.hasError('matEndDateInvalid')">Invalid end date</mat-error>
+            </mat-form-field>
+
+        </div>
+
+        <div fxLayout="column" fxLayout.gt-xs="row" fxLayoutGap="8px" fxLayoutGap.gt-xs="24px">
+
+            <mat-form-field fxFlex="100%" appearance="outline">
+                <mat-label> {{ 'TRIPS.FIELDS.NAME' | translate }} </mat-label>
+                <input autocomplete="off" matInput formControlName="name" [validation]="false"  [dropSpecialCharacters]="false" [patterns]="LATIN_PATTERNS" />
+            </mat-form-field>
+
+        </div>
+
+        <div fxLayout="column" fxLayout.gt-xs="row" fxLayoutGap="8px" fxLayoutGap.gt-xs="24px">
+
+            <mat-form-field fxFlex="50%" appearance="outline">
+                <!-- FIXME TEMPORAL CORRECCIÓN DE ETIQUEDAS  -->
+                <!-- <mat-label> {{ 'TRIPS.FIELDS.TRAVEL_ADVISOR' | translate }} -->
+                <mat-label>Type</mat-label>
+                <mat-select name="catInteroperabilitys" formControlName="cat_interoperabilities_id" (selectionChange)="selection($event.value)" >
+                    <mat-option *ngFor="let item of catInteroperabilitys" [value]="item.id">
+                        {{item.name}} </mat-option>
+                </mat-select>
+            </mat-form-field>
+
+
+            <mat-form-field fxFlex="50%" appearance="outline" *ngIf="onShow">
+                <mat-label> Booking/PNR </mat-label>
+                <input autocomplete="off" matInput formControlName="reference" [dropSpecialCharacters]="false" />
+            </mat-form-field>
+
+
+
+        </div>
+
+
+        <div fxLayout="column" fxLayout.gt-xs="row" fxLayoutGap="8px" fxLayoutGap.gt-xs="24px">
+            <!-- <mat-form-field fxFlex="50%" appearance="outline">
+                <mat-label> {{ 'TRIPS.FIELDS.TRIP_NAME' | translate }} </mat-label>
+                <input autocomplete="off" matInput formControlName="name"
+                    [validation]="false" mask="N{45}"
+                    [dropSpecialCharacters]="false" [patterns]="LATIN_PATTERNS"
+                    />
+            </mat-form-field> -->
+            <!-- <div fxFlex="100%">
+                <app-trips-type-adventure (adventures)="adventures($event)"></app-trips-type-adventure>
+            </div> -->
+
+        </div>
+
+
+    </div>
+</div>

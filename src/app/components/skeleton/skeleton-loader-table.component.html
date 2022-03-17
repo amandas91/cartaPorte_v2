@@ -1,0 +1,37 @@
+<!-- <vex-page-layout-content [class.container]="layoutCtrl.value === 'boxed'" [class.px-gutter]="layoutCtrl.value === 'fullwidth'" class="mt-2"> -->
+  <div class="table-fix">
+    <!-- <div class="bg-app-bar px-6 h-16 border-b sticky left-0" fxLayout="row" fxLayoutAlign="start center">
+            <div class="bg-card rounded-full border px-4" fxFlex="400px" fxFlex.lt-md="auto" fxHide.xs fxLayout="row" fxLayoutAlign="start center">
+                <ic-icon [icIcon]="icSearch" size="20px"></ic-icon>
+                <input class="px-4 py-3 border-0 outline-none w-full bg-transparent" placeholder="Buscar..." type="search">
+            </div>
+
+            <span fxFlex></span>
+
+            <button class="ml-4" fxFlex="none" mat-icon-button matTooltip="Filtrar Columnas" type="button">
+                <mat-icon [icIcon]="icFilterList"></mat-icon>
+            </button>
+        </div> -->
+    <div class="bg-app-bar px-2 h-12 border-b sticky left-0 table-header-fix" fxLayout="row" fxLayoutAlign="start center"></div>
+
+    <div class="tableWrapper">
+      <table [dataSource]="dataSource" class="w-full table" mat-table>
+        <ng-container *ngFor="let column of columns">
+          <ng-container *ngIf="column.type === 'text'" [matColumnDef]="column.property">
+            <th *matHeaderCellDef class="uppercase loading" mat-header-cell>
+              <div class="bar-header"></div>
+            </th>
+            <td *matCellDef="let row" class="loading" mat-cell>
+              <div class="bar"></div>
+            </td>
+          </ng-container>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="visibleColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: visibleColumns" [@fadeInOut]="{value:'*',params:{delay:'300ms',scale:'100', opacity:'0.5'}}"></tr>
+      </table>
+    </div>
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+    <mat-paginator [length]="5" [pageSizeOptions]="[5]" [pageSize]="5" class="sticky left-0"></mat-paginator>
+  </div>
+<!-- </vex-page-layout-content> -->

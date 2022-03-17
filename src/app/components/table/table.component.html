@@ -1,0 +1,137 @@
+<!-- <vex-page-layout-content [class.container]="layoutCtrl.value === 'boxed'"
+  [class.px-gutter]="layoutCtrl.value === 'fullwidth'" class="my-2"> -->
+<div class="table-fix mat-elevation-z8 table-responsive">
+
+    <div *ngIf="headerProperties?.header" class="table-bg-bar px-2 border-b sticky left-0 table-header-fix" style="background-color: white;" fxLayout="row" fxLayoutAlign="start center">
+        <button *ngIf="headerProperties?.refreshButton" (click)="refreshAdd()" class="ml-1" color="primary" fxFlex="none" mat-mini-fab matTooltip="{{headerProperties.refreshTitle || 'Recargar la p�gina' }}" type="button" style="opacity: 0.3;">
+        <mat-icon style="text-shadow: 2px 2px 2px #000;">refresh</mat-icon>
+      </button>
+
+        <h2 class="title my-0 ltr:pr-4 rtl:pl-4 ltr:mr-4 rtl:ml-4 ltr:border-r rtl:border-l" fxFlex="none" fxHide.xs>
+            <span *ngIf="headerTitle?.length">{{ headerTitle }}</span>
+            <span *ngIf="headerTitleNotData?.length && !data?.length">{{ headerTitleNotData }}</span>
+        </h2>
+
+        <!-- SEARCH -->
+        <div *ngIf="headerProperties?.search && data.length > 0" class="search-wrapper ml-sm-32 bg-card rounded-full border px-3" fxFlex="400px" fxFlex.lt-md="auto" fxHide.xs fxLayout="row" fxLayoutAlign="start center">
+            <ic-icon [icIcon]="icSearch" size="20px"></ic-icon>
+            <input autocomplete="off" [formControl]="searchCtrl" class="border-0 outline-none w-full search" placeholder="Search..." type="search" />
+        </div>
+        <!-- / SEARCH -->
+
+        <span fxFlex></span>
+
+        <button *ngIf="headerProperties?.filterColumns" [matMenuTriggerFor]="columnFilterMenu" class="ml-4" fxFlex="none" mat-icon-button matTooltip="Filtrar Columnas" type="button">
+        <!-- <mat-icon [icIcon]="icFilterList" class="table-filter-icon"></mat-icon> -->
+        <mat-icon class="table-filter-icon">filter_list</mat-icon>
+      </button>
+
+        <!-- <button *ngIf="headerProperties?.addButton" (click)="eventAdd()" class="ml-4" color="primary" fxFlex="none" mat-mini-fab matTooltip="{{headerProperties.addTitle || 'Agregar' }}" type="button">
+            <mat-icon [icIcon]="icAdd"></mat-icon>
+        </button> -->
+
+        <button *ngIf="headerProperties?.updateButton" (click)="eventUpdate()" class="ml-4" color="primary" fxFlex="none" mat-mini-fab matTooltip="{{headerProperties.addTitle || 'Update' }}" type="button">
+            <!-- <mat-icon [icIcon]="icCached"></mat-icon> -->
+            <span class="material-icons"> cached</span>
+        </button>
+
+    </div>
+
+
+    <div class="table-container-height-{{tableHeight}}">
+        <div class="table-loading-shade" *ngIf="isLoading">
+            <mat-spinner *ngIf="isLoading" color="primary"></mat-spinner>
+        </div>
+        <table [dataSource]="dataSource" class="w-full" mat-table matSort>
+            <!-- Text Columns -->
+            <ng-container *ngFor="let column of columns; trackBy: trackByProperty">
+                <ng-container *ngIf="column.type === 'text' || column.type === 'pipe'" [matColumnDef]="column.property">
+                    <th *matHeaderCellDef class="uppercase" mat-header-cell mat-sort-header>{{ column.label }}</th>
+                    <td *matCellDef="let row" [ngClass]= " {
+                    'DRAFT' : row.status === 'DRAFT' && column.cssClasses, 
+                    'AWAITINGPAYMENT' : row.status === 'AWAITING PAYMENT' && column.cssClasses,
+                    'PAID' : row.status === 'PAID' && column.cssClasses,
+                    'REPEATING' : row.status === 'REPEATING' && column.cssClasses,
+                    'AUTHORISED' : row.status === 'AUTHORISED' && column.cssClasses, 
+                    'PENDDING' : row.status === 'PENDDING' && column.cssClasses,
+                    'EXPIRING' : row.expiring === true && column.cssClasses
+                }" mat-cell>
+                        <span *ngIf="column.type === 'text'">{{ getValue(row,column.property) }}</span>
+                        <ng-container *ngIf="column.type === 'pipe'">
+                            <span *ngIf="column.valueAsTooltip" #colTooltip="matTooltip" [matTooltip]="getValue(row,column.property)">
+                  {{ getValue(row,column.property) | dynamicPipe: column.pipe:column.pipeArgs }}</span>
+                            <span *ngIf="!column.valueAsTooltip">
+                  {{ getValue(row,column.property) | dynamicPipe: column.pipe:column.pipeArgs }}</span>
+                        </ng-container>
+                    </td>
+                </ng-container>
+            </ng-container>
+
+            <!-- Action Column -->
+            <ng-container matColumnDef="buttonsActions" [stickyEnd]="stickyActionButtons">
+                <th *matHeaderCellDef mat-header-cell>{{headerProperties.actionButtonTitle || 'Edit'}}</th>
+                <td *matCellDef="let row;let idx = index;" mat-cell>
+                    <div class="flex">
+                        <ng-container *ngFor="let button of buttons">
+
+                <button *ngIf="validateField(button.canDisplay, row) && button.actionType !== 'upload'" (click)="handleActions(row, button.actionType, idx)" color="primary" class="w-8 h-8 leading-none flex items-center justify-center fixbuttons hover:bg-hover" #tooltip="matTooltip" [matTooltip]="button.title"
+                                mat-icon-button>
+                  <mat-icon *ngIf="!button.iconType" style="color: var(--primary);transform: scale(0.8);" aria-hidden="false">{{button.icon}}</mat-icon>
+                  <mat-icon *ngIf="button.iconType" style="color: var(--primary);transform: scale(0.8);" fontSet="{{button.iconType}}" aria-hidden="false">{{button.icon}}</mat-icon>
+                </button>
+                <button *ngIf="validateField(button.canDisplay, row) && button.actionType === 'upload'" (click)="fileInput.click()" color="primary" class="w-8 h-8 leading-none flex items-center justify-center fixbuttons hover:bg-hover" #tooltip="matTooltip" [matTooltip]="button.title"
+                                mat-icon-button>
+                  <mat-icon *ngIf="!button.iconType" style="color: var(--primary);transform: scale(0.8);" aria-hidden="false">{{button.icon}}</mat-icon>
+                  <mat-icon *ngIf="button.iconType" style="color: var(--primary);transform: scale(0.8);" fontSet="{{button.iconType}}" aria-hidden="false">{{button.icon}}</mat-icon>
+                  <input #fileInput type="file" (change)="onFileInput(row, button.actionType, idx, $event.target.files)" 
+                  style="display:none;" accept="application/pdf"  />
+                </button>
+                        </ng-container>
+                    </div>
+                </td>
+            </ng-container>
+
+            <!-- Action Extras Column -->
+            <ng-container matColumnDef="buttonsActionsExt">
+                <th *matHeaderCellDef mat-header-cell>{{headerProperties.actionExtButtonTitle || 'ACCIONES EXTRA'}}</th>
+                <td *matCellDef="let row;let idx = index;" mat-cell>
+                    <div class="flex">
+                        <ng-container *ngFor="let button of buttonsExt">
+                            <button *ngIf="validateField(button.canDisplay, row)" (click)="handleExtActions(row, button.actionType, idx)" color="primary" class="w-8 h-8 leading-none flex items-center justify-center hover:bg-hover" #tooltip="matTooltip" [matTooltip]="button.title"
+                                mat-icon-button>
+                  <mat-icon *ngIf="!button.iconType" style="color: var(--primary);transform: scale(0.8);" aria-hidden="false">{{button.icon}}</mat-icon>
+                  <mat-icon *ngIf="button.iconType" style="color: var(--primary);transform: scale(0.8);" fontSet="{{button.iconType}}" aria-hidden="false">{{button.icon}}</mat-icon>
+                </button>
+                        </ng-container>
+                    </div>
+                </td>
+            </ng-container>
+
+            <tr *matHeaderRowDef="visibleColumns; sticky: true" mat-header-row></tr>
+            <tr *matRowDef="let row; columns: visibleColumns" [ngClass]="{ textBold: row[cssRow?.property] === cssRow?.coincidenceProperty }" class="hover:bg-hover trans-ease-out cursor-pointer" mat-row
+            [@fadeInOut]="{value:'*',params:{delay:'300ms',scale:'100', opacity:'0.5'}}"></tr>
+        </table>
+    </div>
+
+    <!-- SIN RESULTADOS -->
+    <div *ngIf="dataSource.filteredData.length === 0 || data.length === 0" fxLayout="column" fxLayoutAlign="center center" style="background-color: white !important;">
+        <img class="m-6 h-40" src="assets/svgs/list.svg" />
+        <h2 class="headline m-0 text-center">No se encontraron resultados</h2>
+    </div>
+
+    <mat-progress-bar mode="indeterminate" *ngIf="isLoading"></mat-progress-bar>
+    <ng-container *ngIf="!autoHidePageButtons">
+        <mat-paginator [length]="totalItems" [pageSizeOptions]="pageSizeOptions" [pageSize]="pageSize" (page)="handlePage($event)" class="sticky left-0 table-footer-fix" [showFirstLastButtons]="showFirstLastButtons"></mat-paginator>
+    </ng-container>
+</div>
+
+<!-- </vex-page-layout-content> -->
+
+<mat-menu #columnFilterMenu="matMenu" xPosition="before" yPosition="below">
+    <button (click)="toggleColumnVisibility(column, $event)" *ngFor="let column of columns" class="checkbox-item mat-menu-item">
+      <mat-checkbox (click)="$event.stopPropagation()" [(ngModel)]="column.visible" color="primary">
+        {{ column.label }}
+      </mat-checkbox>
+    </button>
+</mat-menu>
+<!-- </vex-page-layout-content> -->

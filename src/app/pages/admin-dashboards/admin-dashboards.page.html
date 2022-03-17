@@ -1,0 +1,74 @@
+<div id="orders" class="page-layout carded fullwidth inner-scroll">
+    <!-- TOP BACKGROUND -->
+    <div class="top-bg accent"></div>
+    <!-- / TOP BACKGROUND -->
+
+    <!-- CENTER -->
+    <div class="center">
+        <!-- HEADER -->
+        <div class="header accent" fxLayout="column" fxLayoutAlign="center center" fxLayout.gt-xs="row" fxLayoutAlign.gt-xs="space-between center">
+            <!-- APP TITLE -->
+            <div class="logo mb-24 mb-sm-0" fxLayout="row" fxLayoutAlign="start center">
+                <mat-icon class="logo-icon s-32 mr-16" [@animate]="{value:'*',params:{delay:'50ms',scale:'0.2'}}">dvr
+                </mat-icon>
+                <span class="logo-text h1" [@animate]="{value:'*',params:{delay:'100ms',x:'-25px'}}">
+                    {{'TRAVEL_DASHBOARD.TITLE' | translate}}
+                </span>
+            </div>
+            <!-- / APP TITLE -->
+
+            <!-- SEARCH -->
+            <div class="search-wrapper ml-sm-32">
+                <div class="search" fxFlex fxLayout="row" fxLayoutAlign="start center">
+                    <mat-icon>search</mat-icon>
+                    <input #filter placeholder="Search for an order" />
+                </div>
+            </div>
+            <!-- / SEARCH -->
+        </div>
+        <!-- / HEADER -->
+
+        <!-- CONTENT CARD -->
+        <div class="content-card">
+            <div class="content">
+                <!-- [formGroup]="updateForm" -->
+                <form name="updateForm" class="product w-100-p" fxLayout="column" fxFlex>
+                    <mat-tab-group>
+                        <mat-tab label="{{'TRAVEL_DASHBOARD.TABS.TITLE1' | translate}}">
+                            <div class="tab-content p-24" fusePerfectScrollbar>
+                            </div>
+                        </mat-tab>
+
+                        <mat-tab label="{{'TRAVEL_DASHBOARD.TABS.TITLE2' | translate}}">
+                            <div class="tab-content p-24" fusePerfectScrollbar>
+                                
+                            </div>
+                        </mat-tab>
+
+                        <mat-tab label="{{'TRAVEL_DASHBOARD.TABS.TITLE3' | translate}}">
+                            <div class="tab-content p-24" fusePerfectScrollbar>
+                            </div>
+                        </mat-tab>
+
+                        <mat-tab label="{{'TRAVEL_DASHBOARD.TABS.TITLE4' | translate}}">
+                            <div class="tab-content p-24" fusePerfectScrollbar>
+                            </div>
+                        </mat-tab>
+
+                        <!-- <mat-tab label="Shipping">
+                            <div
+                                class="tab-content p-24"
+                                fusePerfectScrollbar
+                                fxLayout="column"
+                            >
+                                contenido 5...
+                            </div>
+                        </mat-tab> -->
+                    </mat-tab-group>
+                </form>
+            </div>
+        </div>
+        <!-- / CONTENT CARD -->
+    </div>
+    <!-- / CENTER -->
+</div>

@@ -1,0 +1,47 @@
+<div id="orders" class="page-layout carded fullwidth overflow-y:scroll">
+    <!-- TOP BACKGROUND -->
+    <div class="top-bg primary"></div>
+    <!-- / TOP BACKGROUND -->
+
+    <!-- CENTER -->
+    <div class="center">
+
+        <!-- HEADER -->
+        <div class="header primary" fxLayout="column" fxLayoutAlign="center center" fxLayout.gt-xs="row" fxLayoutAlign.gt-xs="space-between center">
+
+            <app-header-page [title]="'HOME.TITLE' | translate" [icon]="'home'"></app-header-page>
+        </div>
+        <!-- / HEADER -->
+
+        <!-- CONTENT CARD -->
+        <div class="content-card">
+            <div fxLayout="column" fxLayout.gt-xs="row" fxLayoutGap="8px" fxLayoutGap.gt-xs="24px">
+
+                <div fxFlex="33.3%">
+                </div>
+
+                <div fxFlex="33.3%">
+                </div>
+
+                <div fxFlex="33.3%">
+                </div>
+
+            </div>
+        </div>
+
+
+        <div class="fuse-card auto-width p-16">
+
+            <div class="pb-16" fxLayout="row" fxLayoutAlign="start center">
+                <mat-icon class="m-0 mr-16 secondary-text">tv</mat-icon>
+                <div class="h2 secondary-text">Summary</div>
+            </div>
+            <!-- <div class="pb-24 font-size-18 font-weight-300">
+                Resumen de los ultimos registros.
+            </div> -->
+            <app-trips-list></app-trips-list>
+        </div>
+        <!-- / CONTENT CARD -->
+    </div>
+    <!-- / CENTER -->
+</div>

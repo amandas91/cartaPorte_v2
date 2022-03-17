@@ -1,0 +1,99 @@
+// Import Fuse core library
+@import "@fuse/scss/core";
+// Import app.theme.scss
+@import "app/app.theme";
+mat-chip {
+    max-width: 100%;
+}
+
+.mat-radio-button~.mat-radio-button {
+    margin-left: 16px;
+}
+
+.fix-read-only{
+    color: black !important;
+}
+
+.detail{
+    font-weight: bold; 
+    text-decoration-line: underline;
+}
+
+tbody tr:nth-child(odd) {
+    background-color: #ccc !important;
+ }
+
+ tr:nth-child(even) {
+  background-color: #f2f2f2 !important;
+}
+
+.DRAFT{
+    background-color: #ADCAE4;
+    margin: 1em auto;
+    border-radius: 25px;
+    padding: 0 25px !important;
+    display: inline-flex;
+    font-weight: bold;
+    color: #0077E2 !important;
+}
+
+.AWAITING_PAYMENT{
+    background-color: #F29D5E;
+    margin: 1em auto;
+    border-radius: 25px;
+    padding: 0 25px !important;
+    display: inline-flex;
+    font-weight: bold;
+    color: #F46A04 !important;
+}
+
+.PAID{
+    background-color: #A4EE83;
+    margin: 1em auto;
+    border-radius: 25px;
+    padding: 0 25px !important;
+    display: inline-flex;
+    font-weight: bold;
+    color: #2F9800 !important;
+}
+
+.REPEATING{
+    background-color: #F2735E;
+    margin: 1em auto;
+    border-radius: 25px;
+    padding: 0 25px !important;
+    display: inline-flex;
+    font-weight: bold;
+    color: #F32403 !important;
+}
+
+.AUTHORISED{
+    background-color: #2F4B1C;
+    margin: 1em auto;
+    border-radius: 25px;
+    padding: 0 5px !important;
+    display: inline-flex;
+    font-weight: bold;
+    color: #49B000 !important;
+    font-size: 80%
+}
+
+.PENDDING{
+    background-color: #FFC372;
+    margin: 1em auto;
+    border-radius: 25px;
+    padding: 0 25px !important;
+    display: inline-flex;
+    font-weight: bold;
+    color: #FF9200 !important;
+}
+
+.EXPIRING{
+    background-color: #ff7272;
+    margin: 1em auto;
+    border-radius: 25px;
+    padding: 0 25px !important;
+    display: inline-flex;
+    font-weight: bold;
+    color: #ff0000 !important;
+}

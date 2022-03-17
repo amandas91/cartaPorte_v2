@@ -1,0 +1,22 @@
+<div class="mat-elevation-z8"
+style="margin-top: 25px">
+
+    <div *ngIf="listPage">
+      
+      <fuse-table
+        [columns]="columns"
+        [data]="listPage"
+        [totalItems]="totalItems"
+        [pageSize]="itemsPerPage"
+        [pageSizeOptions]="pageSizeOptions"
+        [headerProperties]="headerProperties"
+        [buttons]="buttons"
+        (paginatorEvents)="loadPage($event)"
+        (addEvent)="newItem()"
+        (buttonsEvents)="buttonsEvents($event)">
+      </fuse-table>
+    </div>
+  <div *ngIf="listPage === undefined">
+    <skeleton-loader-table></skeleton-loader-table>
+  </div>
+</div>

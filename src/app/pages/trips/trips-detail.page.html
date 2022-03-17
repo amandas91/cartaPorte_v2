@@ -1,0 +1,82 @@
+<div id="orders" class="page-layout carded fullwidth inner-scroll" [@fadeInOut]="{value:'*',params:{delay:'300ms',scale:'100', opacity:'0.5'}}">
+    <!-- TOP BACKGROUND -->
+    <div class="top-bg primary"></div>
+    <!-- / TOP BACKGROUND -->
+
+    <!-- CENTER -->
+    <div class="center">
+
+        <!-- HEADER -->
+
+        <app-header-page [title]="nameTrip" [icon]="'card_travel'" [subTitle]="'EXPEDIENT: '+ record"></app-header-page>
+
+        <!-- / HEADER -->
+        <div class="sidenav-content" style="overflow: auto">
+            <mat-vertical-stepper [linear]="isLinear" #stepper [selectedIndex]="index">
+                <!-- change default 'edit' icon -->
+                <ng-template matStepperIcon="budget">
+                    <mat-icon>business_center</mat-icon>
+                </ng-template>
+
+                <ng-template matStepperIcon="collection">
+                    <mat-icon>attach_money</mat-icon>
+                </ng-template>
+
+                <ng-template matStepperIcon="payments">
+                    <mat-icon>payment</mat-icon>
+                </ng-template>
+
+                <ng-template matStepperIcon="commissions">
+                    <mat-icon>trending_up</mat-icon>
+                </ng-template>
+                <!-- --------------------------------- -->
+
+                <!-- [stepControl]="firstFormGroup" -->
+                <mat-step label="{{'TRIPS.STEPS.BUDGET' | translate}}" state="budget">
+                    <!-- <form [formGroup]="firstFormGroup"> -->
+                    <ng-container *ngIf="stepper.selectedIndex === 0 ">
+                    </ng-container>
+                    <!-- <div>
+                        <button mat-button matStepperNext>Next</button>
+                    </div> -->
+                    <!-- </form> -->
+                </mat-step>
+
+                <!-- [stepControl]="secondFormGroup" -->
+                <mat-step label="{{'TRIPS.STEPS.COLLECTIONS_INVOICING' |
+                    translate}}" state="collection">
+
+                    <ng-container *ngIf="stepper.selectedIndex === 1 ">
+                        <!-- <form [formGroup]="secondFormGroup"> -->
+                    </ng-container>
+                    <!-- <div>
+                        <button mat-button matStepperPrevious>Back</button>
+                        <button mat-button matStepperNext>Next</button>
+                    </div> -->
+                    <!-- </form> -->
+                </mat-step>
+
+                <mat-step label="{{'TRIPS.STEPS.PAYMENTS' | translate}}" state="payments">
+                    <ng-container *ngIf="stepper.selectedIndex === 2 ">
+                        
+                    </ng-container>
+                </mat-step>
+
+                <mat-step label="{{'TRIPS.STEPS.COMMISSIONS' | translate}}" state="commissions">
+
+                    <ng-container *ngIf="stepper.selectedIndex === 3 ">
+                    </ng-container>
+
+                    <!-- <div>
+                        <button mat-button matStepperPrevious>Back</button>
+                        <button mat-button (click)="stepper.reset()">
+                            Reset
+                        </button>
+                    </div> -->
+                </mat-step>
+            </mat-vertical-stepper>
+        </div>
+        <!-- / CONTENT CARD -->
+    </div>
+    <!-- / CENTER -->
+</div>

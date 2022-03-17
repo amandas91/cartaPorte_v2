@@ -1,0 +1,22 @@
+<!-- FIXME EN IF CAMBIAR POR EL OBJETO QUE CORRESPONDA CAANDO SE TENGA. -->
+<div *ngIf="true" [formGroup]="editForm">
+    <div fxLayout="column" fxLayoutGap="8px">
+        <div fxLayout="column" fxLayout.gt-xs="row" fxLayoutGap="8px" fxLayoutGap.gt-xs="30px">
+            <!-- CAMPO ID-->
+            <mat-form-field fxFlex="20%" appearance="outline">
+                <mat-label>ID</mat-label>
+                <input autocomplete="off" matInput formControlName="id" />
+            </mat-form-field>
+            <!-- CAMPO Description-->
+            <mat-form-field fxFlex="80%" appearance="outline">
+                <mat-label>{{'CATALOGS.DIALOG.DESCRIPTION' | translate}}</mat-label>
+                <!-- <textarea matInput></textarea> -->
+                <input autocomplete="off" matInput formControlName="name" [validation]="false" mask="N{45}" [dropSpecialCharacters]="false" [patterns]="LATIN_PATTERNS" />
+            </mat-form-field>
+
+        </div>
+        <!-- <div fxLayout="column" fxLayoutGap="50px" fxLayoutGap.gt-xs="100px">
+
+        </div> -->
+    </div>
+</div>
