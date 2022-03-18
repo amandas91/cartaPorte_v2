@@ -1,5 +1,5 @@
 import { Component, Inject, Input, OnInit, ViewChild, EventEmitter, Output } from '@angular/core';
-import { FormGroup, FormBuilder } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
 import { locale as english } from "app/i18n/en/clients";
@@ -46,9 +46,10 @@ export class MonitorDialogPages implements OnInit {
   monitoreo:any;
   cancelacion: Cancelacion;
   getPac:any;
+  showFolioSustitucion:boolean=false;
 
   editForm = this.fb.group({
-    motivo: [null, []],
+    motivo: [null, [Validators.required]],
     FolioSustitucion:[null, []],
     });
 
@@ -86,8 +87,8 @@ export class MonitorDialogPages implements OnInit {
     }
   }
   ngOnInit(): void {
-    
-    this.editForm.controls['FolioSustitucion'].setValue(this.monitoreo.Referencia);
+    this.editForm.controls['FolioSustitucion'].disable();
+    //this.editForm.controls['FolioSustitucion'].setValue(this.monitoreo.Referencia);
     this.catTipoListaService.query({ size: MaxItems },  "MOTIVO_CANCELACION")
     .pipe(
         map((res: HttpResponse<ICatLista[]>) => {
@@ -159,24 +160,43 @@ export class MonitorDialogPages implements OnInit {
   onSelectEvent(value: any){
     console.log(value);
     this.monitoreo.Motivo = value.Valor;
+    if(value == 1){
+      this.editForm.controls['FolioSustitucion'].enable();
+    }else{
+      this.editForm.controls['FolioSustitucion'].disable();
+    }
   }
 
   protected subscribeToSaveResponse(result: Observable<HttpResponse<any>>): void {
     result.subscribe(
-      () => this.onSaveSuccess(),
+      (res) => this.onSaveSuccess(res),
       () => this.onSaveError()
     );
   }
 
 
-  protected onSaveSuccess(): void {
+  protected onSaveSuccess(res): void {
     this.isSaving = true;
+    
     if (this.auxSaves) {
       Swal.close();
-      Swal.fire({
-        icon: 'success',
-        timer: 1500,
-      });
+      let message:string;
+      message=res.body.Error;
+      if(res.body.Estatus != null){
+        Swal.fire({
+          icon: 'success',
+          html: '<p> <b>' + message + '</b> </p>',
+          showCloseButton: true,
+        });
+      }else{
+        Swal.fire({
+          icon: 'warning',
+          html: '<p> <b>' + message + '</b> </p>',
+          showCloseButton: true,
+        });
+      }
+     
+     
       this.auxSaves.emit(true);
     }
   }
@@ -193,7 +213,7 @@ export class MonitorDialogPages implements OnInit {
       title: 'Conflicto',
       text: 'No fue Posible Realizar la Acción',
       icon: 'warning',
-      showCloseButton: true,
+      
       });
   }
 

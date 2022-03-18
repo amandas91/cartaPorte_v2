@@ -169,21 +169,9 @@ editForm = this.fb.group({
   // FIXME AJUSTAR CON BASE AL MODELO QUE LE CORRESPONDA TableColumn<?>
   getColumns(origen: number): TableColumn<any>[] {
       const columns: TableColumn<any>[] = [];
-      //columns.push({ label: 'Núm. Folio', property: 'IdComprobante', type: 'text', visible: true });
+      //columns.push({ XML: 'Núm. PDF', property: 'IdComprobante', type: 'text', visible: true });
       
-        columns.push({
-            label: "XML",
-            property: "XML",
-            type: "text",
-            visible: true,
-        });
-
-        columns.push({
-            label: "PDF",
-            property: "PDF",
-            type: "text",
-            visible: true,
-        });
+       
 
         columns.push({
             label: "Folio Temporal",
@@ -236,7 +224,7 @@ editForm = this.fb.group({
 
       
       columns.push({
-          label: this.translate.instant('CLIENTS.COLUMNS.ACTIONS'),
+          label: 'action',
           property: "buttonsActions",
           type: "button",
           visible: true,
@@ -247,17 +235,28 @@ editForm = this.fb.group({
 
   getButtons(): ButtonProperties[] {
       const buttons: ButtonProperties[] = [];
-          buttons.push({
-              title: "Ver Detalle",
-              actionType: "view",
-              icon: "edit",
-              canDisplay: "!Referencia"
-          });
+        buttons.push({
+            title: "XML",
+            actionType: "view",
+            icon: "file_copy"
+        });
 
-          buttons.push({
-            title: "Eliminar",
+        buttons.push({
+            title: "PDF",
+            actionType: "view",
+            icon: "picture_as_pdf"
+        });
+        buttons.push({
+            title: "Ver Detalle",
+            actionType: "view",
+            icon: "edit",
+            canDisplay: "!Referencia"
+        });
+
+        buttons.push({
+            title: "Cancelar",
             actionType: "delete",
-            icon: "delete",
+            icon: "cancel",
             canDisplay: "Referencia"
         });
 
