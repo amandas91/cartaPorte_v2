@@ -1326,12 +1326,18 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
       Swal.fire({
         icon: 'success',
         text: 'Guardado',
+        showCancelButton: false,
+        confirmButtonColor: '#3085d6',
+        confirmButtonText: 'Ok',
         html: '<p>Folio <b>' + res.body.Folio + '</b> </p>' +
           '<p>Fecha <b>' + res.body.RespuestaTimbrado.fechaTimbre + '</b></p> ' +
           '<p>uuid <b>' + res.body.RespuestaTimbrado.uuid + '</b></p>' +
           '<p>Mensage' + res.body.RespuestaTimbrado.error + '</p>',
-        showCloseButton: true,
-      });
+        }).then((result) => {
+        if (result.isConfirmed) {
+          window.location.reload();
+        }
+      })
       //window.location.reload();
     }
 
