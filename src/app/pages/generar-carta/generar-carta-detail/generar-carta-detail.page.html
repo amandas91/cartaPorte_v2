@@ -49,12 +49,12 @@
 
                 <mat-form-field fxFlex="33%" appearance="outline">
                     <mat-label >Nombre</mat-label>
-                    <input style="color: black;" autocomplete="off" matInput formControlName="Nombre" />
+                    <input style="color: black;" autocomplete="off" matInput formControlName="Nombre" readonly  />
                 </mat-form-field>
                 
                 <mat-form-field fxFlex="33%" appearance="outline">
                     <mat-label >Regimen Fiscal</mat-label>
-                    <input style="color: black;" autocomplete="off" matInput formControlName="RegimenFiscal"  />
+                    <input style="color: black;" autocomplete="off" matInput formControlName="RegimenFiscal" readonly />
                 </mat-form-field>
                 
             </div>
@@ -91,7 +91,7 @@
 
                 <mat-form-field fxFlex="35%" appearance="outline">
                     <mat-label>CP</mat-label>
-                    <input type="number" style="color: black;" autocomplete="off" matInput formControlName="CodigoPostal" (change)="onSelectEvent($event.value, 'expedicion')" />
+                    <input type="text" style="color: black;" autocomplete="off" matInput formControlName="CodigoPostal" (change)="onSelectEvent($event.value, 'expedicion')" min="0" maxlength="5" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"  />
                 </mat-form-field> 
                 
             </div>
@@ -116,11 +116,11 @@
 
                 <mat-form-field fxFlex="40%" appearance="outline">
                     <mat-label >Nombre</mat-label>
-                    <input style="color: black;" autocomplete="off" matInput formControlName="NombreReceptor"  />
+                    <input style="color: black;" autocomplete="off" matInput formControlName="NombreReceptor" readonly />
                 </mat-form-field>
                 <mat-form-field fxFlex="40%" appearance="outline">
                     <mat-label >Uso CFDI</mat-label>
-                    <input style="color: black;" autocomplete="off" matInput formControlName="UsoCFDI"  />
+                    <input style="color: black;" autocomplete="off" matInput formControlName="UsoCFDI" readonly   />
                 </mat-form-field>
             </div>
         </div>
@@ -131,7 +131,7 @@
         <div fxLayout="column" fxLayout.gt-xs="row" fxLayoutGap="8px" fxLayoutGap.gt-xs="24px" fxLayoutAlign="end" [formGroup]="editForm">
                 <mat-form-field fxFlex="40%" appearance="outline">
                     <mat-label >RFC operador</mat-label>
-                    <input style="color: black;" autocomplete="off" matInput formControlName="RFCFigura" (change)="onSelectEvent($event.value, 'UpperCase')" />
+                    <input style="color: black;" autocomplete="off" matInput formControlName="RFCFigura" (change)="onSelectEvent($event.value, 'UpperCase')" onkeyup="this.value = this.value.toUpperCase();" />
                 </mat-form-field>
                 
                 <mat-form-field fxFlex="40%" appearance="outline">
@@ -186,7 +186,7 @@
 
                 <mat-form-field fxFlex="40%" appearance="outline">
                     <mat-label >Número Permiso SCT</mat-label>
-                    <input  style="color: black;" autocomplete="off" matInput formControlName="NumPermisoSCT"  />
+                    <input  style="color: black;" autocomplete="off" matInput formControlName="NumPermisoSCT" readonly />
                 </mat-form-field>
                
             </div>
@@ -196,19 +196,19 @@
             <div fxLayout="column" fxLayout.gt-xs="row" fxLayoutGap="8px" fxLayoutGap.gt-xs="24px" fxLayoutAlign="end" [formGroup]="editForm">
                 <mat-form-field fxFlex="40%" appearance="outline">
                     <mat-label >Año Camión</mat-label>
-                    <input style="color: black;" autocomplete="off" matInput formControlName="AnioModeloVM"  />
+                    <input style="color: black;" autocomplete="off" matInput formControlName="AnioModeloVM" readonly />
                 </mat-form-field>
                 <mat-form-field fxFlex="40%" appearance="outline">
                     <mat-label >Número de Placa</mat-label>
-                    <input style="color: black;" autocomplete="off" matInput formControlName="PlacaVM"  />
+                    <input style="color: black;" autocomplete="off" matInput formControlName="PlacaVM" readonly />
                 </mat-form-field>
                 <mat-form-field fxFlex="40%" appearance="outline">
                     <mat-label >Poliza Responsabilidad Civil</mat-label>
-                    <input style="color: black;" autocomplete="off" matInput formControlName="PolizaRespCivil"  />
+                    <input style="color: black;" autocomplete="off" matInput formControlName="PolizaRespCivil" readonly />
                 </mat-form-field>
                 <mat-form-field fxFlex="40%" appearance="outline">
                     <mat-label >Aseguradora</mat-label>
-                    <input style="color: black;" autocomplete="off" matInput formControlName="AseguraRespCivil"  />
+                    <input style="color: black;" autocomplete="off" matInput formControlName="AseguraRespCivil" readonly />
                 </mat-form-field>
                
             </div>
@@ -385,7 +385,7 @@
             <mat-form-field fxFlex="40%" appearance="outline">
                 
                 <mat-label >RFC</mat-label>
-                <input style="color: black;" autocomplete="off" matInput formControlName="RFCDestino"  />
+                <input style="color: black;" autocomplete="off" matInput formControlName="RFCDestino" onkeyup="this.value = this.value.toUpperCase();"  />
             </mat-form-field>
 
             <mat-form-field  fxFlex="40%" appearance="outline">
@@ -440,7 +440,7 @@
 
             <mat-form-field fxFlex="35%" appearance="outline">
                 <mat-label>CP</mat-label>
-                <input type="number" style="color: black;" autocomplete="off" matInput formControlName="CodigoPostalUbicacion" />
+                <input type="text" style="color: black;" autocomplete="off" matInput formControlName="CodigoPostalUbicacion" matInput min="0" maxlength="5" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" />
             </mat-form-field> 
 
 
