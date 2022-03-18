@@ -40,7 +40,7 @@
             <div fxLayout="column" fxLayout.gt-xs="row" fxLayoutGap="8px" fxLayoutGap.gt-xs="24px" fxLayoutAlign="end">
                 <mat-form-field fxFlex="33%" appearance="outline">
                     <mat-label>RFC</mat-label>
-                    <mat-select name="Rfc" formControlName="Rfc" (selectionChange)="onSelectEvent($event.value, 'rfcemisor')"  >
+                    <mat-select name="Rfc" formControlName="Rfc" (selectionChange)="onSelectEvent($event.value, 'rfcemisor')" >
                         <mat-option *ngFor="let item of emisor" [value]="item">
                             {{item.Rfc}}
                         </mat-option>
@@ -57,7 +57,6 @@
                     <input style="color: black;" autocomplete="off" matInput formControlName="RegimenFiscal"  />
                 </mat-form-field>
                 
-               
             </div>
 
             <h1>Expedido</h1>
@@ -92,7 +91,7 @@
 
                 <mat-form-field fxFlex="35%" appearance="outline">
                     <mat-label>CP</mat-label>
-                    <input style="color: black;" autocomplete="off" matInput formControlName="CodigoPostal"  />
+                    <input type="number" style="color: black;" autocomplete="off" matInput formControlName="CodigoPostal" (change)="onSelectEvent($event.value, 'expedicion')" />
                 </mat-form-field> 
                 
             </div>
@@ -132,11 +131,12 @@
         <div fxLayout="column" fxLayout.gt-xs="row" fxLayoutGap="8px" fxLayoutGap.gt-xs="24px" fxLayoutAlign="end" [formGroup]="editForm">
                 <mat-form-field fxFlex="40%" appearance="outline">
                     <mat-label >RFC operador</mat-label>
-                    <input style="color: black;" autocomplete="off" matInput formControlName="RFCFigura"  />
+                    <input style="color: black;" autocomplete="off" matInput formControlName="RFCFigura" (change)="onSelectEvent($event.value, 'UpperCase')" />
                 </mat-form-field>
+                
                 <mat-form-field fxFlex="40%" appearance="outline">
                     <mat-label >Número de licencia</mat-label>
-                    <input style="color: black;" autocomplete="off" matInput formControlName="NumLicencia"  />
+                    <input  type="number" style="color: black;" autocomplete="off" matInput formControlName="NumLicencia"  />
                 </mat-form-field>
                 <mat-form-field fxFlex="40%" appearance="outline">
                     <mat-label >Nombre de operador / Chofer </mat-label>
@@ -164,7 +164,7 @@
 
                 <mat-form-field fxFlex="35%" appearance="outline">
                     <mat-label># Eco</mat-label>
-                    <input style="color: black;" autocomplete="off" matInput formControlName="Eco" (change)="onSelectEvent($event.value, 'eamFlota')" />
+                    <input  type="number" style="color: black;" autocomplete="off" matInput formControlName="Eco" (change)="onSelectEvent($event.value, 'eamFlota')" />
                 </mat-form-field> 
 
                 <mat-form-field fxFlex="40%" appearance="outline">
@@ -183,9 +183,10 @@
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
+
                 <mat-form-field fxFlex="40%" appearance="outline">
                     <mat-label >Número Permiso SCT</mat-label>
-                    <input style="color: black;" autocomplete="off" matInput formControlName="NumPermisoSCT"  />
+                    <input  style="color: black;" autocomplete="off" matInput formControlName="NumPermisoSCT"  />
                 </mat-form-field>
                
             </div>
@@ -235,8 +236,8 @@
                     </mat-select>
                 </mat-form-field>
                 <mat-form-field fxFlex="20%" appearance="outline">
-                    <mat-label >Cantidad</mat-label>
-                    <input style="color: black;" autocomplete="off" matInput formControlName="Cantidad"  />
+                    <mat-label  type="number">Cantidad</mat-label>
+                    <input  type="number" style="color: black;" autocomplete="off" matInput formControlName="Cantidad"  />
                 </mat-form-field>
 
                 <mat-form-field fxFlex="20%" appearance="outline">
@@ -249,16 +250,13 @@
                 </mat-form-field>
                 <mat-form-field fxFlex="20%" appearance="outline">
                     <mat-label>Peso (KGM)</mat-label>
-                    <input style="color: black;" autocomplete="off" matInput formControlName="PesoEnKg"  />
+                    <input  type="number" style="color: black;" autocomplete="off" matInput formControlName="PesoEnKg"  />
                 </mat-form-field>
 
                 <button mat-mini-fab color="primary"  mat-raised-button (click)="addData()">
                     <mat-icon >add</mat-icon>
                 </button>
 
-                <button mat-mini-fab color="primary"  mat-raised-button  [disabled]="!dataSource.length" (click)="removeData()">
-                    <mat-icon >delete</mat-icon>
-                </button>
                 
           
             </div>
@@ -267,30 +265,16 @@
         <div class="mt-4" fxLayout="column" fxLayoutGap="8px">
             
             <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 demo-table">
+                <ng-container matColumnDef="Linea">
+                    <th mat-header-cell *matHeaderCellDef># Linea </th>
+                    <td mat-cell *matCellDef="let element; let i = index;">{{i}}</td>
+                </ng-container>
+
                 <!-- Position Column -->
 
                 <ng-container matColumnDef="ClaveProdServ">
-                  <th mat-header-cell *matHeaderCellDef>Clave</th>
-                  <td mat-cell *matCellDef="let element">{{element.ClaveProdServ}}</td>
-                </ng-container>
-              
-                <!-- Name Column -->
-                <ng-container matColumnDef="ClaveUnidad">
-                  <th mat-header-cell *matHeaderCellDef>Clave Unidad</th>
-                  <td mat-cell *matCellDef="let element">{{element.ClaveUnidad}}</td>
-                </ng-container>
-              
-                <!-- Weight Column -->
-                <ng-container matColumnDef="Cantidad">
-                  <th mat-header-cell *matHeaderCellDef>Cantidad</th>
-                  <td mat-cell *matCellDef="let element">{{element.Cantidad}}</td>
-                </ng-container>
-                
-              
-                <!-- Symbol Column -->
-                <ng-container matColumnDef="Unidad">
-                  <th mat-header-cell *matHeaderCellDef>Unidad</th>
-                  <td mat-cell *matCellDef="let element">{{element.Unidad}}</td>
+                  <th mat-header-cell *matHeaderCellDef>Tipo de Producto</th>
+                  <td mat-cell *matCellDef="let element">{{element.TipoProducto}}</td>
                 </ng-container>
 
                  <!-- Symbol Column -->
@@ -298,13 +282,47 @@
                     <th mat-header-cell *matHeaderCellDef>Descripcion</th>
                     <td mat-cell *matCellDef="let element">{{element.Descripcion}}</td>
                   </ng-container>
+
+                  <!-- Weight Column -->
+                <ng-container matColumnDef="Cantidad">
+                    <th mat-header-cell *matHeaderCellDef>Cantidad</th>
+                    <td mat-cell *matCellDef="let element">{{element.Cantidad}}</td>
+                  </ng-container>
+                  
+
+                 <!-- Symbol Column -->
+                 <ng-container matColumnDef="Unidad">
+                    <th mat-header-cell *matHeaderCellDef>Tipo Unidad</th>
+                    <td mat-cell *matCellDef="let element">{{element.Unidad}}</td>
+                  </ng-container>
+              
+                 <!-- Name Column -->
+                 <ng-container matColumnDef="PesoUnidad">
+                    <th mat-header-cell *matHeaderCellDef>Peso por Unidad</th>
+                    <td mat-cell *matCellDef="let element">{{element.ClaveUnidad}}</td>
+                  </ng-container>
+
+
+                   <!-- Name Column -->
+                <ng-container matColumnDef="PesoBruto">
+                    <th mat-header-cell *matHeaderCellDef>Peso Bruto</th>
+                    <td mat-cell *matCellDef="let element">{{element.ClaveUnidad}}</td>
+                  </ng-container>
+              
+                
+
+                  <ng-container matColumnDef="action">
+                    <th mat-header-cell *matHeaderCellDef> Action </th>
+                    <td mat-cell *matCellDef="let element" class="action-link"> 
+                      <a (click)="deleteRowData(element, index)"> <mat-icon >delete</mat-icon></a>  
+                    </td>
+                  </ng-container>
               
                 <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
                 <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
             </table>
 
-
-
+            
                     
         </div>
 
@@ -324,7 +342,7 @@
 
                 <mat-form-field fxFlex="50%" appearance="outline">
                     <mat-label >Hora Salida</mat-label>
-                    <input [ngxTimepicker]="HoraSalida" matInput formControlName="HoraSalida">
+                    <input [ngxTimepicker]="HoraSalida" matInput formControlName="HoraSalida" placeholder="24hr format" aria-label="24hr format" [format]="24">
                      <ngx-material-timepicker #HoraSalida></ngx-material-timepicker>
                 </mat-form-field>
             </div>
@@ -332,21 +350,21 @@
             <div fxLayout="column" fxLayout.gt-xs="row" fxLayoutGap="8px" fxLayoutGap.gt-xs="24px" fxLayoutAlign="end">
                 <mat-form-field fxFlex="50%" appearance="outline">
                     <mat-label >Clave Bodega</mat-label>
-                    <input style="color: black;" autocomplete="off" matInput formControlName="ClaveBodega"  />
+                    <input  type="number" style="color: black;" autocomplete="off" matInput formControlName="ClaveBodega"  />
                 </mat-form-field>
 
                 <mat-form-field fxFlex="50%" appearance="outline" (change)="onSelectEvent($event.value, 'clavecliente')">
                     <mat-label >Clave Cliente</mat-label>
-                    <input style="color: black;" autocomplete="off" matInput formControlName="ClaveCliente" />
+                    <input  type="number" style="color: black;" autocomplete="off" matInput formControlName="ClaveCliente" />
                 </mat-form-field>
 
-                <mat-form-field fxFlex="40%" appearance="outline">
+                <!-- <mat-form-field fxFlex="40%" appearance="outline">
                     <mat-label >ID Ubicación</mat-label>
                     <input style="color: black;" autocomplete="off" matInput formControlName="IDUbicacion"  />
-                </mat-form-field>
+                </mat-form-field> -->
                 <mat-form-field fxFlex="40%" appearance="outline">
                     <mat-label >RFC Remitente Destinatario</mat-label>
-                    <input style="color: black;" autocomplete="off" matInput formControlName="RFCRemitenteDestinatario"  />
+                    <input style="color: black;" autocomplete="off" matInput formControlName="RFCRemitenteDestinatario" (selectionChange)="onSelectEvent($event.value, 'rfcremitente')" />
                 </mat-form-field>
                 <mat-form-field fxFlex="35%" appearance="outline">
                     <mat-label>Tipo de horario</mat-label>
@@ -386,7 +404,7 @@
 
             <mat-form-field fxFlex="40%" appearance="outline">
                 <mat-label >Distancia (Km)</mat-label>
-                <input style="color: black;" autocomplete="off" matInput formControlName="DistanciaRecorrida"  />
+                <input  type="number" style="color: black;" autocomplete="off" matInput formControlName="DistanciaRecorrida"  />
             </mat-form-field>
 
             
@@ -422,7 +440,7 @@
 
             <mat-form-field fxFlex="35%" appearance="outline">
                 <mat-label>CP</mat-label>
-                <input style="color: black;" autocomplete="off" matInput formControlName="CodigoPostalUbicacion" />
+                <input type="number" style="color: black;" autocomplete="off" matInput formControlName="CodigoPostalUbicacion" />
             </mat-form-field> 
 
 
@@ -436,7 +454,12 @@
         </div>
 
         <div class="mt-4" fxLayout="column" fxLayoutGap="8px">
-            <table mat-table [dataSource]="dataSource1" matSort (matSortChange)="announceSortChange($event)" class="mat-elevation-z8">
+            <table mat-table [dataSource]="dataSource1" matSort (matSortChange)="announceSortChange($event)" class="mat-elevation-z8" >
+                <ng-container matColumnDef="index">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="index"> Index </th>
+                    <td mat-cell *matCellDef="let element; let i = index;">{{i}}</td>
+                </ng-container>
+
                 <!-- Position Column -->
                 <ng-container matColumnDef="rfc">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="RFC">
@@ -484,9 +507,18 @@
                     <td mat-cell *matCellDef="let element"> {{element.distancia}} </td>
                 </ng-container>
 
+                <ng-container matColumnDef="action">
+                    <th mat-header-cell *matHeaderCellDef> Action </th>
+                    <td mat-cell *matCellDef="let element" class="action-link"> 
+                      <a (click)="removeDataUbicacion(element,index)"> <mat-icon >delete</mat-icon></a>  
+                    </td>
+                  </ng-container>
+
                 <tr mat-header-row *matHeaderRowDef="displayedColumns1"></tr>
                 <tr mat-row *matRowDef="let row; columns: displayedColumns1;"></tr>
             </table>
+
+            
         </div>
 
         <div class="mt-4" fxLayout="column" fxLayoutGap="8px">

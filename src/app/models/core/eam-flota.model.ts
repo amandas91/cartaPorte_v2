@@ -13,6 +13,8 @@ export interface IEamFlota {
     EstatusEco?: string ;
     FechaCarga?: string ;
     _links?: any ;
+    status?: number ,
+    message?: string,
 
 }
 
@@ -30,6 +32,8 @@ export class EamFlota implements IEamFlota {
     public EstatusEco?: string,
     public FechaCarga?: string,
     public _links?: any,
+    public status?: number ,
+    public message?: string,
 
   ) {
   }
