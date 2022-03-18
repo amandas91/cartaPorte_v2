@@ -232,7 +232,8 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
   conceptos: Array<IConcepto> = [];
 
   Ubicaciones: [];
-  ubicacion: Array<any> = [];
+  ubicacionOrigen: Array<any> = [];
+  ubicacionDestino: Array<any> = [];
   mercancia: Array<any> = [];
   ubicaciontest: any;
 
@@ -733,20 +734,18 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
       let formattedDate = this.datepipe.transform(tmpDate, 'YYYY-MM-dd') + 'T' + tmpTime + ':00';
       let aux = {
         TipoUbicacion: "Origen",
-        RFCRemitenteDestinatario: this.editForm.controls['RFCRemitenteDestinatario'].value,
+        RFCRemitenteDestinatario: this.editForm.controls['RFCRemitenteDestinatario'].value.toUpperCase() ,
         IDUbicacion: 0,
         FechaHoraSalidaLlegada: formattedDate,
         DistanciaRecorrida: null,
         Domicilio: this.domicilio
       };
 
-      this.ubicacion.push(aux);
+      this.ubicacionOrigen.push(aux);
       this.origen = true;
       console.log("AGREGAR ORIGEN");
-      console.log(this.ubicacion);
+      console.log(this.ubicacionOrigen);
     }
-
-
 
     let tmpDate = this.editForm.controls['FechaSalidaLlegada'].value;
     let tmpTime = this.editForm.controls['HoraLlegada'].value;
@@ -754,7 +753,7 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
 
     let aux = {
       TipoUbicacion: "Destino",
-      RFCRemitenteDestinatario: this.editForm.controls['RFCDestino'].value,
+      RFCRemitenteDestinatario: this.editForm.controls['RFCDestino'].value.toUpperCase(),
       IDUbicacion: 0,
       FechaHoraSalidaLlegada: formattedDate,
       DistanciaRecorrida: Number(this.editForm.controls['DistanciaRecorrida'].value),
@@ -772,11 +771,11 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
 
     this.totalDistancia += Number(this.editForm.controls['DistanciaRecorrida'].value);
 
-    //this.ubicacion.push(aux);
+    this.ubicacionDestino.push(aux);
     this.dataSource1.data.push(this.ubicacionElementList);
     this.dataSource1.sort = this.sort;
-    console.log("UBICACION");
-    console.log(this.dataSource1.data);
+    console.log("AGREGAR Destino");
+    console.log(this.ubicacionDestino);
 
 
     this.editForm.controls['DistanciaRecorrida'].setValue('');
@@ -794,6 +793,11 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
     data.splice(index, 1);
 
     this.dataSource1.data = data;
+
+    this.ubicacionDestino.splice(index, 1);
+
+    console.log("eliminar Destino");
+    console.log(this.ubicacionDestino);
 
     this.table.renderRows();
   }
@@ -1169,11 +1173,13 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
      * ubicaciones 
      */
     let ubicacionesTemp: Array<any> = [];
-    this.dataSource1.data.forEach(function (value) {
+    /*this.dataSource1.data.forEach(function (value) {
       ubicacionesTemp.push(value.ubicacion);
-    });
+    });*/
 
-    ubicacionesTemp.push(this.ubicacion[0]);
+    const ubicacionesTotal =  this.ubicacionDestino.concat(this.ubicacionOrigen[0]);
+
+    ubicacionesTemp.push(ubicacionesTotal);
 
     //this.CartaPorte.Ubicaciones.push(ubicacionesTemp);
 
@@ -1235,7 +1241,7 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
     });
 
 
-    let aux = { Ubicacion: ubicacionesTemp };
+    let aux = { Ubicacion: ubicacionesTemp[0] };
     let auxFigura = { TiposFigura: [this.TiposFigura] };
     let auxMerc = {
       PesoBrutoTotal: pesoBrutoTemp,
@@ -1253,6 +1259,8 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
       Mercancias: auxMerc,
       FiguraTransporte: auxFigura
     };
+
+    console.log("this.CartaPorte: ", this.CartaPorte)
 
     this.generarCarta.CartaPorte = this.CartaPorte;
     let tmpDateFechaSalida = this.editForm.controls['FechaSalida'].value;
