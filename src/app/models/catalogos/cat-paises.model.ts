@@ -1,12 +1,12 @@
 export interface ICatPaises {
-    IdPais?: number;
+    IdPais?: string;
     Nombre?: string;
   
   }
   
   export class CatPaises implements ICatPaises {
     constructor(
-        public IdPais?: number,
+        public IdPais?: string,
         public Nombre?: string,
     ) { }
   }

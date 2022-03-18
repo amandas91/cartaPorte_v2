@@ -255,6 +255,7 @@
 
                 <button mat-mini-fab color="primary"  mat-raised-button (click)="addData()">
                     <mat-icon >add</mat-icon>
+
                 </button>
 
                 
@@ -445,8 +446,10 @@
 
 
             <button mat-mini-fab color="primary"  mat-raised-button (click)="addDataUbicacion()">
+                
                 <mat-icon >add</mat-icon>
             </button>
+            <mat-hint><p style="color: red;">{{validacionUbicacion}}</p></mat-hint>
             
         </div>
         <div fxLayout="column" fxLayout.gt-xs="row" fxLayoutGap="8px" fxLayoutGap.gt-xs="24px" fxLayoutAlign="end"  >

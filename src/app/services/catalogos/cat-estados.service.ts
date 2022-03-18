@@ -19,7 +19,7 @@ public resourceUrl = environment.apiUrlCartaPorte + '/estado';
   constructor(protected http: HttpClient) {}
 
 
-  find(id: number): Observable<EntityArrayResponseType> {
+  find(id: any): Observable<EntityArrayResponseType> {
     return this.http.get<ICatEstados[]>(`${this.resourceUrl}?idPais=${id}`, { observe: 'response' });
   }
 
