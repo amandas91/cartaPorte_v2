@@ -690,14 +690,23 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit{
     
   }
 
-  deleteRowData(element,index){
-    this.dataSource.pop();
-    this.table.renderRows();
+  deleteRowData(index, element){
+    //this.dataSource.pop();
+    //rthis.table.renderRows();
     // //console.log(element);
     // this.dataSource = this.dataSource.splice(index, 1);
     // // this.dataSource1.data= this.dataSource1.data.filter((value,key)=>{
     // //   return value.fecha != element.fecha;
     // // });
+
+    const data = this.dataSource;
+    
+    data.splice(index, 1);
+
+    this.dataSource = data;
+
+    this.table.renderRows();
+
   }
 
 
@@ -771,8 +780,13 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit{
   }
 
 
-  removeDataUbicacion(element, index) {
-    this.dataSource1.data.pop();
+  removeDataUbicacion(index, element) {
+    const data = this.dataSource1.data;
+    
+    data.splice(index, 1);
+
+    this.dataSource1.data = data;
+
     this.table.renderRows();
   }
 
