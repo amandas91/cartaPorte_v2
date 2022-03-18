@@ -91,8 +91,10 @@
 
                 <mat-form-field fxFlex="35%" appearance="outline">
                     <mat-label>CP</mat-label>
-                    <input type="text" style="color: black;" autocomplete="off" matInput formControlName="CodigoPostal" (change)="onSelectEvent($event.value, 'expedicion')" min="0" maxlength="5" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"  />
-                </mat-form-field> 
+                    <input type="text" style="color: black;" autocomplete="off" matInput formControlName="CodigoPostal" placeholder="xxxxx" 
+                        (change)="onSelectEvent($event.value, 'expedicion')" min="1" maxlength="5" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"  />
+                        <mat-hint><p style="color: red;">{{cpEmisorValidate}}</mat-hint>
+                </mat-form-field>
                 
             </div>
         </div>
@@ -257,6 +259,7 @@
                     <mat-icon >add</mat-icon>
 
                 </button>
+                <mat-hint><p style="color: red;">{{validacionCarga}}</p></mat-hint>
 
                 
           
@@ -540,11 +543,11 @@
                     <input style="color: black;" autocomplete="off" matInput formControlName="Correo"  />
                 </mat-form-field>    
             </div>
-            <button mat-flat-button color="primary" (click)="saveData(false)">
+            <button mat-flat-button color="primary" (click)="save(false)">
                 <mat-icon>save</mat-icon> Guardar
               </button>
               &nbsp;&nbsp;
-              <button mat-flat-button color="primary" (click)="saveData(true)">
+              <button mat-flat-button color="primary" (click)="save(true)">
                 <mat-icon>settings</mat-icon>Guardar y Timbrar
               </button>
             <div fxLayout="column" >
