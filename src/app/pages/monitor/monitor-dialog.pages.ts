@@ -195,8 +195,6 @@ export class MonitorDialogPages implements OnInit {
           showCloseButton: true,
         });
       }
-     
-     
       this.auxSaves.emit(true);
     }
   }

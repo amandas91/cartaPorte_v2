@@ -40,8 +40,8 @@
             <div fxLayout="column" fxLayout.gt-xs="row" fxLayoutGap="8px" fxLayoutGap.gt-xs="24px" fxLayoutAlign="end">
                 <mat-form-field fxFlex="33%" appearance="outline">
                     <mat-label>RFC</mat-label>
-                    <mat-select name="Rfc" formControlName="Rfc" (selectionChange)="onSelectEvent($event.value, 'rfcemisor')" >
-                        <mat-option *ngFor="let item of emisor" [value]="item">
+                    <mat-select  name="Rfc" formControlName="Rfc" (selectionChange)="onSelectEvent($event.value, 'rfcemisor')" >
+                        <mat-option *ngFor="let item of emisor" [value]="item" >
                             {{item.Rfc}}
                         </mat-option>
                     </mat-select>
@@ -413,7 +413,7 @@
         <div fxLayout="column" fxLayout.gt-xs="row" fxLayoutGap="8px" fxLayoutGap.gt-xs="24px" fxLayoutAlign="end" [formGroup]="editForm" >
             <mat-form-field fxFlex="35%" appearance="outline">
                 <mat-label>País</mat-label>
-                <mat-select name="catPaises" formControlName="PaisUbicacion" (selectionChange)="onSelectEvent($event.value, 'paisUbicación')">
+                <mat-select name="catPaises" formControlName="PaisUbicacion" (selectionChange)="onSelectEvent($event.value, 'paisUbicacion')">
                     <mat-option *ngFor="let item of catPaises" [value]="item">
                         {{item.Nombre}}
                     </mat-option>

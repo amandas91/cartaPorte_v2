@@ -280,12 +280,15 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
 
   calleTest: any[];
 
-  folio: string;
-  serie: string;
+  folio: string="";
+  serie: string="";
 
   origen: boolean = false;
 
   tipoProductoTable: string;
+
+  searchArray:any;
+  searchRfc:any;
 
   @Output()
   auxSave: EventEmitter<boolean> = new EventEmitter();
@@ -427,6 +430,18 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
         )
         .subscribe((resBody: IEmisor[]) => (this.emisor = resBody));
 
+
+        this.receptorService
+        .query({ size: MaxItems }, (this.hasRol([Authority.DMC]) === true ? 2 : 1))
+        .pipe(
+          map((res: HttpResponse<IReceptor[]>) => {
+            return res.body ? res.body : [];
+          })
+        )
+        .subscribe((resBody: IReceptor[]) => (this.receptor = resBody));
+
+
+
       this.catPaisesService
         .query({ size: MaxItems }, (this.hasRol([Authority.DMC]) === true ? 2 : 1))
         .pipe(
@@ -527,42 +542,12 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
     /**
      * Llenando Tabla de Carga
      */
-    let auxcargaElementList: any;
     let auxubicacionElementList: any;
     console.log("TODO CARTA"),
       console.log(resBody),
-      resBody.Conceptos.forEach(
-        function obj(value) {
-          let auxcargaMercancia = {
-            BienesTransp: value.ClaveProdServ,
-            Cantidad: value.Cantidad,
-            Unidad: value.ClaveUnidad,
-            Descripcion: value.descripcion,
-            ClaveUnidad: value.ClaveUnidad,
-            PesoEnKg: 0,
-            MaterialPeligroso: null,
-            CveMaterialPeligroso: null,
-            Embalaje: null,
-          }
-
-          auxcargaElementList = {
-            ClaveProdServ: value.ClaveProdServ,
-            Cantidad: value.Cantidad,
-            ClaveUnidad: value.ClaveUnidad,
-            Unidad: value.Unidad,
-            Descripcion: value.descripcion,
-            ValorUnitario: 0,
-            Importe: 0,
-            carga: auxcargaMercancia
-
-          }
-          return auxcargaElementList
-
-        }
-
-      ),
-      this.dataSource.push(auxcargaElementList);
-    this.table.renderRows()
+      this.dataSource = resBody.Conceptos;
+     
+      this.table.renderRows()
     /**
      * Llenando Tabla de Carga
      */
@@ -597,27 +582,45 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
       }
 
     ),
-
-      this.dataSource1.data.push(auxubicacionElementList);
+    this.dataSource1.data.push(auxubicacionElementList);
+    //this.dataSource1.data = resBody.CartaPorte.Ubicaciones.Ubicacion;
     this.dataSource1.sort = this.sort;
 
-    this.emisorTemp = {
-      CreateDate: "2022-01-04T19:21:43",
-      IdEmisor: 3,
-      Nombre: "PAC QA",
-      RegimenFiscal: "601",
-      Rfc: "URE180429TM6",
-    },
-      this.generarCarta = resBody,
+    this.generarCarta = resBody,
+
+     
+
       console.log("Consulta de Carta"),
       console.log(this.generarCarta),
 
       //Emisor
-      this.editForm.controls['Rfc'].setValue(this.emisorTemp),
+      console.log("Busqueda de Array"),
+      this.searchRfc = this.generarCarta.Emisor.Rfc;
+      this.searchArray = this.emisor.findIndex(x => x.Rfc ===  this.searchRfc),
+      this.editForm.controls['Rfc'].setValue(this.emisor[this.searchArray]),
       this.editForm.controls['Nombre'].setValue(this.generarCarta.Emisor.Nombre),
       this.editForm.controls['RegimenFiscal'].setValue(this.generarCarta.Emisor.RegimenFiscal),
       this.editForm.controls['CodigoPostal'].setValue(this.generarCarta.Emisor.DomicilioFiscal.CodigoPostal),
+      //EXPEDIDO
+      this.catPaisesService
+      .query({ size: MaxItems }, (this.hasRol([Authority.DMC]) === true ? 2 : 1))
+      .pipe(
+        map((res: HttpResponse<ICatPaises[]>) => {
+          return res.body ? res.body : [];
+        })
+      )
+      .subscribe((resBody: ICatPaises[]) => (
+        this.catPaises = resBody
+      ));
+
+      this.searchRfc = this.generarCarta.Emisor.DomicilioFiscal.Pais,
+      console.log(this.catPaises);
+      // this.searchArray = this.catPaises.findIndex(x => x.IdPais ===  this.searchRfc),
+      this.editForm.controls['Pais'].setValue(this.catPaises[0]),
       //Receptor
+      this.searchRfc = this.generarCarta.Receptor.Rfc;
+      this.searchArray = this.receptor.findIndex(x => x.Rfc ===  this.searchRfc),
+      this.editForm.controls['RfcReceptor'].setValue(this.receptor[this.searchArray]),
       this.editForm.controls['NombreReceptor'].setValue(this.generarCarta.Receptor.Nombre),
       this.editForm.controls['UsoCFDI'].setValue(this.generarCarta.Receptor.UsoCFDI),
       //Operador
@@ -700,14 +703,6 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
   }
 
   deleteRowData(index, element) {
-    //this.dataSource.pop();
-    //rthis.table.renderRows();
-    // //console.log(element);
-    // this.dataSource = this.dataSource.splice(index, 1);
-    // // this.dataSource1.data= this.dataSource1.data.filter((value,key)=>{
-    // //   return value.fecha != element.fecha;
-    // // });
-
     const data = this.dataSource;
 
     data.splice(index, 1);
@@ -885,7 +880,7 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
       case "municipio":
         this.municipioExpedido = value.Municipio;
         break;
-      case "paisUbicación":
+      case "paisUbicacion":
         Swal.fire({
           allowOutsideClick: false,
           text: 'Cargando...',
@@ -1093,8 +1088,8 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
     const value = this.createFromForm();
     this.generarCarta.VersionGepp = "2.2";
     this.generarCarta.Version = "3.3";
-    this.generarCarta.Serie = "";
-    this.generarCarta.Folio = "";
+    this.generarCarta.Serie = this.serie;
+    this.generarCarta.Folio = this.folio;
     this.generarCarta.Fecha = this.FechaActual;
     this.generarCarta.FormaPago = null;
     this.generarCarta.SubTotal = 0;
@@ -1335,10 +1330,11 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
           '<p>Mensage' + res.body.RespuestaTimbrado.error + '</p>',
         }).then((result) => {
         if (result.isConfirmed) {
-          window.location.reload();
+          //window.location.reload();
+          this.folio =  res.body.Folio;
+          this.serie = res.body.Serie;
         }
       })
-      //window.location.reload();
     }
 
   }
