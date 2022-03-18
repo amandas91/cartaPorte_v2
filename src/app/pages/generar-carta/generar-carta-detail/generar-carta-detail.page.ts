@@ -53,6 +53,7 @@ import { ActivatedRoute } from "@angular/router";
 import { MonitoreoService } from "app/services/core/monitoreo.servce";
 import { threadId } from "worker_threads";
 import { THIS_EXPR } from "@angular/compiler/src/output/output_ast";
+import { Console } from "console";
 
 
 const MaxItems = 2000;
@@ -592,16 +593,22 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
           direccion: value.Domicilio.Estado,
           cp: value.Domicilio.CodMunicipioigoPostal,
           distancia: value.DistanciaRecorrida,
-          ubicacion: ""
+          ubicacion: auxdomicilio
         }
 
+       
 
         return auxubicacionElementList
 
       }
+      
 
     ),
+    console.log("UBICACION ELEMENT LIST ");
+    console.log(auxubicacionElementList);
     this.dataSource1.data.push(auxubicacionElementList);
+    console.log("PUSH DE UBICACIONES");
+    console.log(this.dataSource1.data);
     //this.dataSource1.data = resBody.CartaPorte.Ubicaciones.Ubicacion;
     this.dataSource1.sort = this.sort;
       
@@ -863,8 +870,6 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
 
     this.ubicacionDestino.splice(index, 1);
 
-    console.log("eliminar Destino");
-    console.log(this.ubicacionDestino);
 
     this.table.renderRows();
   }
@@ -1370,7 +1375,7 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
     this.generarCartaUpdate.TipoDeComprobante = "T";
     this.generarCartaUpdate.LugarExpedicion = this.LugarExpedicion;
 
-    console.log(this.generarCartaUpdate);
+    
      /**
      * expedido
      */
@@ -1403,9 +1408,23 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
      * CONCEPTOS
      */
 
-     this.generarCartaUpdate.Conceptos = this.generarCarta.Conceptos;
+    let conceptosTemp: Array<any> = [];
+    this.dataSource.forEach(function (value) {
+      let auxConcepto = {
+        ClaveProdServ: value.ClaveProdServ,
+        Cantidad: value.Cantidad,
+        ClaveUnidad: value.ClaveUnidad,
+        Unidad: value.Unidad,
+        Descripcion: value.Descripcion,
+        ValorUnitario: 0,
+        Importe: 0
+      };
 
+    conceptosTemp.push(auxConcepto);
+    });
 
+    this.generarCartaUpdate.Conceptos = conceptosTemp;
+    //this.generarCartaUpdate.Conceptos = this.generarCarta.Conceptos;
     //this.generarCarta.Conceptos = this.conceptos;
 
     // /**
@@ -1448,13 +1467,48 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
       Seguros: this.Seguros
     };
 
+     /**
+     * ubicaciones 
+     */
+    // let ubicacionesTemp: Array<any> = [];
+    // /*this.dataSource1.data.forEach(function (value) {
+    //   ubicacionesTemp.push(value.ubicacion);
+    // });*/
+  
+    // const ubicacionesTotal =  this.ubicacionDestino.concat(this.ubicacionOrigen[0]);
+
+    // ubicacionesTemp.push(ubicacionesTotal);
+  
+    let mercanciaTemp: Array<any> = [];
+    let pesoBrutoTemp = 0;
+    this.dataSource.forEach(function (value) {
+    console.log("DATA SOURCE CARGA MERCANCIA");
+    console.log(value);
+    let cargaMercanciaTemp = {
+        // BienesTransp: value.carga.BienesTransp,
+        // Cantidad: value.carga.Cantidad,
+        // Unidad: value.carga.Unidad,
+        // Descripcion: value.carga.Descripcion,
+        // ClaveUnidad: value.carga.ClaveUnidad,
+        // PesoEnKg: value.carga.PesoEnKg,
+        // MaterialPeligroso: value.carga.MaterialPeligroso,
+        // CveMaterialPeligroso: value.carga.CveMaterialPeligroso,
+        // Embalaje: value.carga.Embalaje,
+      };
+      console.log("Carga de mercancias");
+      console.log(value);
+      pesoBrutoTemp += Number(value.carga.PesoEnKg);
+      mercanciaTemp.push(cargaMercanciaTemp);
+    });
+
+
     let aux = { Ubicacion: [] };
     let auxFigura = { TiposFigura: [this.TiposFigura] };
     let auxMerc = {
       PesoBrutoTotal: 0,
       UnidadPeso: "KGM",
       NumTotalMercancias: this.NumTotalMercancias,
-      Mercancia:  [],
+      Mercancia:  mercanciaTemp,
       Autotransporte: this.Autotransporte
     };
 
@@ -1491,14 +1545,12 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
     console.log(this.generarCartaUpdate);
 
     this.subscribeToSaveResponse(
-      this.generarCartaService.create(generarCataAux, timbrado)
+
+      this.generarCartaService.create(generarCataAux, timbrado),
+      
     );
 
-    Swal.close();
-
-    
-
-    
+   
     
   }
 
