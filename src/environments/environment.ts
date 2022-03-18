@@ -6,12 +6,11 @@ export const environment = {
     appName: 'GEPP',
     // apiUrl:  `${window.location.protocol}//nvoyage.nubamexico.com/public`,
     apiUrl:  `https://api.nubamexico.mx/public`,
-    //apiUrlCartaPorte:  `urlproxy`,
-    apiUrlCartaPorte: `/carta-porte-oracle-api`,
+    apiUrlCartaPorte:  `urlproxy`,
+    //apiUrlCartaPorte: `/carta-porte-oracle-api`,
     production: false,
     hmr       : false
 };
-
 /*
  * For easier debugging in development mode, you can import the following file
  * to ignore zone related error stack frames such as `zone.run`, `zoneDelegate.invokeTask`.

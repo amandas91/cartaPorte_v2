@@ -33,7 +33,7 @@ import { Authority } from "app/shared/constant/authority.constants";
 import { map } from "rxjs/operators";
 import { MatTable, MatTableDataSource } from "@angular/material/table";
 import { MatSort, Sort } from '@angular/material/sort';
-import {LiveAnnouncer} from '@angular/cdk/a11y';
+import { LiveAnnouncer } from '@angular/cdk/a11y';
 import Swal from "sweetalert2";
 import { GenerarCata, IGenerarCata } from "app/models/core/generar-carta.model";
 import { GenerarCartaService } from "app/services/core/generar-carta.service";
@@ -43,7 +43,7 @@ import { ListaService } from "app/services/catalogos/cat-listas.service";
 import { Operador } from "app/models/core/operador.model";
 import { ICliente } from "app/models/core/cliente.model";
 import { ClienteService } from "app/services/core/cliente.service";
-import { Domicilio} from "app/models/core/domicilio.model";
+import { Domicilio } from "app/models/core/domicilio.model";
 import { IMaterialPeligroso } from "app/models/core/material-peligroso.model";
 import { MaterialPeligrosoService } from "app/services/core/material-peligroso.service";
 import { DatePipe } from '@angular/common';
@@ -66,8 +66,10 @@ export interface CargaElementTable {
   Descripcion: string;
   ValorUnitario: number;
   Importe: number;
-  carga:any;
-  
+  carga: any;
+  PesoEnKg: number;
+  PesoBruto: number;
+
 }
 
 export interface UbicacionElementTable {
@@ -76,7 +78,7 @@ export interface UbicacionElementTable {
   direccion: string;
   cp: number;
   distancia: number;
-  ubicacion:any;
+  ubicacion: any;
 }
 
 export interface DomicilioFiscal {
@@ -92,79 +94,79 @@ export interface DomicilioFiscal {
 }
 
 
-export interface Observaciones{
+export interface Observaciones {
   Numero: number;
   Tema: string;
   Texto: string;
 }
 
 
-export interface ExpedidoEn{
+export interface ExpedidoEn {
   Municipio: string;
   Estado: string;
   Pais: string;
   CodigoPostal: string;
 }
 
-export interface CataPorte{
-  Version?:string;
-  TranspInternac?:string;
-  TotalDistRec?:number;
-  Ubicaciones?:any;
+export interface CataPorte {
+  Version?: string;
+  TranspInternac?: string;
+  TotalDistRec?: number;
+  Ubicaciones?: any;
   Mercancias?: any;
   FiguraTransporte?: any;
   Autotransporte?: any;
 }
 
-export interface TiposFigura{
-  TipoFigura?:string;
-  RFCFigura?:string;
-  NumLicencia?:string;
-  NombreFigura?:string;
+export interface TiposFigura {
+  TipoFigura?: string;
+  RFCFigura?: string;
+  NumLicencia?: string;
+  NombreFigura?: string;
 }
 
 export interface CfdiRelacionados {
-  TipoRelacion?:string;
-  CfdiRelacionado?:any;
+  TipoRelacion?: string;
+  CfdiRelacionado?: any;
 }
 
-export interface Mercancias{
-  PesoBrutoTotal?:number;
-  UnidadPeso?:string;
-  NumTotalMercancias?:number;
-  Mercancia:any;
+export interface Mercancias {
+  PesoBrutoTotal?: number;
+  UnidadPeso?: string;
+  NumTotalMercancias?: number;
+  Mercancia: any;
 }
 
 export interface Mercancia {
-  BienesTransp?:string;
-  Descripcion?:string;
-  Cantidad?:number;
-  ClaveUnidad?:string;
-  Unidad?:string;
-  PesoEnKg?:number;
-  MaterialPeligroso?:string;
-  CveMaterialPeligroso?:string;
-  Embalaje?:string;
+  BienesTransp?: string;
+  Descripcion?: string;
+  Cantidad?: number;
+  ClaveUnidad?: string;
+  Unidad?: string;
+  PesoEnKg?: number;
+  MaterialPeligroso?: string;
+  CveMaterialPeligroso?: string;
+  Embalaje?: string;
 }
 
-export interface IdentificacionVehicular{
-  ConfigVehicular?:string;
-  PlacaVM?:string;
-  AnioModeloVM?:number;
+export interface IdentificacionVehicular {
+  ConfigVehicular?: string;
+  PlacaVM?: string;
+  AnioModeloVM?: number;
 }
 
-export interface Seguros{
-  AseguraRespCivil?:string;
-  PolizaRespCivil?:string;
-  AseguraMedAmbiente?:string;
-  PolizaMedAmbiente?:string
+export interface Seguros {
+  AseguraRespCivil?: string;
+  PolizaRespCivil?: string;
+  AseguraMedAmbiente?: string;
+  PolizaMedAmbiente?: string
 }
 
-export interface Autotransporte{
-  PermSCT?:string;
-  NumPermisoSCT?:string;
-  IdentificacionVehicular?:IdentificacionVehicular;
-  Seguros?:any;
+export interface Autotransporte {
+  PermSCT?: string;
+  NumPermisoSCT?: string;
+  IdentificacionVehicular?: IdentificacionVehicular;
+  Seguros?: any;
 }
 
 
@@ -172,117 +174,117 @@ export interface Autotransporte{
   selector: 'app-generar-carta-detail',
   templateUrl: './generar-carta-detail.page.html',
   animations: fuseAnimations
-  
+
 })
-export class GenerarCartaDetailPage implements OnInit, AfterViewInit{
+export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
   datepipe: DatePipe = new DatePipe('en-US')
   editForm: FormGroup;
   isLinear = false;
   index = 0;
-  LugarExpedicion:string;
-  FechaActual:string;
+  LugarExpedicion: string;
+  FechaActual: string;
   catOwners: ICatOwners[];
   catPaises: ICatPaises[];
   catEstados: ICatEstados[];
-  catMunicipios:ICatMunicipios[];
-  catCP:ICatCP[];
-  catTipoUnidad:ICatTipoUnidad[];
-  catTipoFiguraTransporte:ICatTipoFiguraTransporte[];
-  catTipoPermiso:ICatTipoPermiso[];
-  catTipoRemolque:ICatTipoRemolque[];
-  catTipoProducto:ICatTipoProducto[];
-  tipoProducto:ICatTipoProducto[];
-  tipoHorario:ICatLista[];
-  eamFlota:IEamFlota[];
-  cliente:ICliente[];
-  statusFlota=false;
-  messageFlota:string;
+  catMunicipios: ICatMunicipios[];
+  catCP: ICatCP[];
+  catTipoUnidad: ICatTipoUnidad[];
+  catTipoFiguraTransporte: ICatTipoFiguraTransporte[];
+  catTipoPermiso: ICatTipoPermiso[];
+  catTipoRemolque: ICatTipoRemolque[];
+  catTipoProducto: ICatTipoProducto[];
+  tipoProducto: ICatTipoProducto[];
+  tipoHorario: ICatLista[];
+  eamFlota: IEamFlota[];
+  cliente: ICliente[];
+  statusFlota = false;
+  messageFlota: string;
   cargaElementList: CargaElementTable;
-  
-  cargaMercancias:Mercancias;
+
+  cargaMercancias: Mercancias;
   cargaMercancia: Mercancia;
-  ubicacionElementList:UbicacionElementTable;
+  ubicacionElementList: UbicacionElementTable;
 
   operador = new Operador;
   generarCarta = new GenerarCata;
-  CartaPorte:CataPorte;
-  
-  Mercancias:Mercancias[]  ;
-  materialPeligroso:IMaterialPeligroso[];
-  domicilio  = new Domicilio;
-  emisor_g  = new Emisor;
+  CartaPorte: CataPorte;
+
+  Mercancias: Mercancias[];
+  materialPeligroso: IMaterialPeligroso[];
+  domicilio = new Domicilio;
+  emisor_g = new Emisor;
   receptor_g = new Receptor;
-  DomicilioFiscal:DomicilioFiscal;
-  domFiscal:IDomicilioFiscal[];
-  ExpedidoEn:ExpedidoEn;
-  Observaciones:Observaciones[];
-  TiposFigura:any;
-  CfdiRelacionados:CfdiRelacionados;
-  IdentificacionVehicular:IdentificacionVehicular;
-  Autotransporte:Autotransporte;
-  Seguros:Seguros;
+  DomicilioFiscal: DomicilioFiscal;
+  domFiscal: IDomicilioFiscal[];
+  ExpedidoEn: ExpedidoEn;
+  Observaciones: Observaciones[];
+  TiposFigura: any;
+  CfdiRelacionados: CfdiRelacionados;
+  IdentificacionVehicular: IdentificacionVehicular;
+  Autotransporte: Autotransporte;
+  Seguros: Seguros;
 
-  
-  emisor:IEmisor[];
-  receptor:IReceptor[];
 
-  concepto:IConcepto[];
-  conceptos:  Array<IConcepto> = [];
+  emisor: IEmisor[];
+  receptor: IReceptor[];
 
-  Ubicaciones:[];
+  concepto: IConcepto[];
+  conceptos: Array<IConcepto> = [];
+
+  Ubicaciones: [];
   ubicacion: Array<any> = [];
   mercancia: Array<any> = [];
-  ubicaciontest:any;
- 
-  localidad:string;
-  clave_estado:string;
+  ubicaciontest: any;
 
-  PesoBrutoTotal:number;
+  localidad: string;
+  clave_estado: string;
 
-  ClaveProdServ:string;
-  descripcion:string;
-  ClaveUnidad:string;
-  MaterialPeligroso:string;
-  CveMaterialPeligroso:string;
-  Embalaje:string;
+  PesoBrutoTotal: number;
 
-  displayedColumns: string[] = ['Linea','ClaveProdServ',  'Cantidad', 'Unidad', 'PesoUnidad', 'PesoBruto', 'Descripcion','action'];
-  displayedColumns1: string[] =  ['index', 'rfc', 'fecha', 'direccion',  'cp', 'distancia','action'];
+  ClaveProdServ: string;
+  descripcion: string;
+  ClaveUnidad: string;
+  MaterialPeligroso: string;
+  CveMaterialPeligroso: string;
+  Embalaje: string;
+
+  displayedColumns: string[] = ['Linea', 'ClaveProdServ', 'Descripcion', 'Cantidad', 'Unidad', 'PesoUnidad', 'PesoBruto', 'action'];
+  displayedColumns1: string[] = ['index', 'rfc', 'fecha', 'direccion', 'cp', 'distancia', 'action'];
   //# Linea	Tipo de Producto	Descripción	Cantidad	Tipo unidad	Peso por Unidad (Kg)	Peso Bruto (Kg)	Accion
   dataSource = [];
-  dataSourceUbication  = [];
+  dataSourceUbication = [];
 
   isSaving = false;
 
-  totalDistancia:number=0;
+  totalDistancia: number = 0;
 
-  paisExpedido:string;
-  estadoExpedido:string;
-  municipioExpedido:string;
-  cpExpedido:string;
+  paisExpedido: string;
+  estadoExpedido: string;
+  municipioExpedido: string;
+  cpExpedido: string;
 
-  paisUbicacion:number;
-  estadoUbicacion:string;
-  municipioUbicacion:string;
-  cpUbicacion:string;
+  paisUbicacion: number;
+  estadoUbicacion: string;
+  municipioUbicacion: string;
+  cpUbicacion: string;
 
-  Unidad:string;
+  Unidad: string;
 
-  conceptoUnidad:string;
-  conceptoClaveUnidad:string;
+  conceptoUnidad: string;
+  conceptoClaveUnidad: string;
 
- 	NumTotalMercancias:number=0;
-  PermSCT:string;
+  NumTotalMercancias: number = 0;
+  PermSCT: string;
 
 
-  calleTest:any[];
+  calleTest: any[];
 
   folio: string;
   serie: string;
 
-  origen:boolean=false;
+  origen: boolean = false;
 
-  tipoProductoTable:string;
+  tipoProductoTable: string;
 
   @Output()
   auxSave: EventEmitter<boolean> = new EventEmitter();
@@ -301,7 +303,7 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit{
   @ViewChild(MatTable) tableUbicacion: MatTable<UbicacionElementTable>;
   emisorTemp: { CreateDate: string; IdEmisor: number; Nombre: string; RegimenFiscal: string; Rfc: string; };
 
-  
+
   constructor(
     private fb: FormBuilder,
     private catPaisesService: CatPaisesService,
@@ -310,105 +312,105 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit{
     private catCPsService: CatCPService,
     private catTipoUnidadService: CatTipoUnidadService,
     private emisorService: EmisorService,
-    private receptorService:ReceptorService,
-    private catTipoFiguraTransporteService:CatTipoFiguraTransporteService,
-    private catTipoPermisoService:CatTipoPermisoService,
-    private catTipoRemolqueService:CatTipoRemolqueService,
-    private catTipoProductoService:CatTipoProductoService,
-    private catTipoListaService:ListaService,
-    private eamFlotaService:EamFlotaService,
-    private clienteService:ClienteService, 
+    private receptorService: ReceptorService,
+    private catTipoFiguraTransporteService: CatTipoFiguraTransporteService,
+    private catTipoPermisoService: CatTipoPermisoService,
+    private catTipoRemolqueService: CatTipoRemolqueService,
+    private catTipoProductoService: CatTipoProductoService,
+    private catTipoListaService: ListaService,
+    private eamFlotaService: EamFlotaService,
+    private clienteService: ClienteService,
     protected accountService: AccountService,
     private _liveAnnouncer: LiveAnnouncer,
     private generarCartaService: GenerarCartaService,
     private materialPeligrosoService: MaterialPeligrosoService,
-    private domicilioFiscalService:DomicilioFiscalService,
+    private domicilioFiscalService: DomicilioFiscalService,
     protected activatedRoute: ActivatedRoute,
-    private monitorService:MonitoreoService
+    private monitorService: MonitoreoService
 
-    ) {
-      this.createForm(); 
-      this.dataSource = [];
-     }
+  ) {
+    this.createForm();
+    this.dataSource = [];
+  }
 
-     createForm() {
-      this.editForm = this.fb.group({
-        Nombre: [null, [Validators.required]],
-        Rfc: [null, [Validators.required]],
-        RegimenFiscal: [null, [Validators.required]],
-        Pais: [null, [Validators.required]],
-        Estado:[null, [Validators.required]],
-        Municipio: [null, [Validators.required]],
-        CodigoPostal:[null, [Validators.required]],
-        RfcReceptor: [null, [Validators.required,
-          Validators.maxLength(13),
-          Validators.minLength(13)
-        ]],
-        NombreReceptor: [null, []],
-        UsoCFDI: [null, []],
-        RFCFigura: [null, [Validators.required,
-          Validators.maxLength(13),
-          Validators.minLength(13)
-        ]],
-        NumLicencia: [null, []],
-        NombreFigura: [null, []],
-        TipoFigura:  [null, [Validators.required]],
-        PermSCT:[null, [Validators.required]],
-        ConfigVehicular:[null, [Validators.required]],
-        NumPermisoSCT:[null, [Validators.required]],
-        AnioModeloVM:[null, [Validators.required]],
-        PlacaVM:[null, [Validators.required]],
-        PolizaRespCivil:[null, [Validators.required]],
-        AseguraRespCivil:[null, [Validators.required]],
-        BienesTransp:[null, []],
-        Descripcion:[null, []],
-        Cantidad:[null, []],
-        Unidad:[null, []],
-        PesoEnKg:[null, []],
-        IDUbicacion:[null, []],
-        RFCRemitenteDestinatario:[null, [Validators.required]],
-        RFCDestino:[null, [Validators.required]],
-        TipoHorario:[null, []],
-        PaisUbicacion:[null, []],
-        CodigoPostalUbicacion:[null, []],
-        EstadoUbicacion:[null, []],
-        MunicipioUbicacion:[null, []],
-        Correo:[null, [Validators.required]],
-        DistanciaRecorrida:[null, []],
-        Eco:[null, []],
-        FechaSalidaLlegada:[null, [Validators.required]],
-        FechaSalida:[null, [Validators.required]],
-        HoraSalida:[null, [Validators.required]],
-        HoraSalidaLlegada:[null, [Validators.required]],
-        HoraLlegada:[null, [Validators.required]],
-        ClaveBodega:[null, []],
-        ClaveCliente:[null, []]
-      });
-  
-      this.editForm.controls["RFCFigura"].valueChanges.subscribe(data => {
-        console.log(data);
-      });
+  createForm() {
+    this.editForm = this.fb.group({
+      Nombre: [null, [Validators.required]],
+      Rfc: [null, [Validators.required]],
+      RegimenFiscal: [null, [Validators.required]],
+      Pais: [null, [Validators.required]],
+      Estado: [null, [Validators.required]],
+      Municipio: [null, [Validators.required]],
+      CodigoPostal: [null, [Validators.required]],
+      RfcReceptor: [null, [Validators.required,
+      Validators.maxLength(13),
+      Validators.minLength(13)
+      ]],
+      NombreReceptor: [null, []],
+      UsoCFDI: [null, []],
+      RFCFigura: [null, [Validators.required,
+      Validators.maxLength(13),
+      Validators.minLength(13)
+      ]],
+      NumLicencia: [null, []],
+      NombreFigura: [null, []],
+      TipoFigura: [null, [Validators.required]],
+      PermSCT: [null, [Validators.required]],
+      ConfigVehicular: [null, [Validators.required]],
+      NumPermisoSCT: [null, [Validators.required]],
+      AnioModeloVM: [null, [Validators.required]],
+      PlacaVM: [null, [Validators.required]],
+      PolizaRespCivil: [null, [Validators.required]],
+      AseguraRespCivil: [null, [Validators.required]],
+      BienesTransp: [null, []],
+      Descripcion: [null, []],
+      Cantidad: [null, []],
+      Unidad: [null, []],
+      PesoEnKg: [null, []],
+      IDUbicacion: [null, []],
+      RFCRemitenteDestinatario: [null, [Validators.required]],
+      RFCDestino: [null, [Validators.required]],
+      TipoHorario: [null, []],
+      PaisUbicacion: [null, []],
+      CodigoPostalUbicacion: [null, []],
+      EstadoUbicacion: [null, []],
+      MunicipioUbicacion: [null, []],
+      Correo: [null, [Validators.required]],
+      DistanciaRecorrida: [null, []],
+      Eco: [null, []],
+      FechaSalidaLlegada: [null, [Validators.required]],
+      FechaSalida: [null, [Validators.required]],
+      HoraSalida: [null, [Validators.required]],
+      HoraSalidaLlegada: [null, [Validators.required]],
+      HoraLlegada: [null, [Validators.required]],
+      ClaveBodega: [null, []],
+      ClaveCliente: [null, []]
+    });
+
+    this.editForm.controls["RFCFigura"].valueChanges.subscribe(data => {
+      console.log(data);
+    });
+  }
+
+  @ViewChild(MatSort) sort: MatSort;
+
+  ngAfterViewInit() {
+    this.dataSource1.sort = this.sort;
+  }
+
+  /** Announce the change in sort state for assistive technology. */
+  announceSortChange(sortState: Sort) {
+    if (sortState.direction) {
+      this._liveAnnouncer.announce(`Sorted ${sortState.direction}ending`);
+    } else {
+      this._liveAnnouncer.announce('Sorting cleared');
     }
+  }
 
-    @ViewChild(MatSort) sort: MatSort;
-
-    ngAfterViewInit() {
-      this.dataSource1.sort = this.sort;
-    }
-  
-    /** Announce the change in sort state for assistive technology. */
-    announceSortChange(sortState: Sort) {
-      if (sortState.direction) {
-        this._liveAnnouncer.announce(`Sorted ${sortState.direction}ending`);
-      } else {
-        this._liveAnnouncer.announce('Sorting cleared');
-      }
-    }
-  
 
   ngOnInit(): void {
     this.FechaActual = this.datepipe.transform(Date.now(), 'yyyy-MM-ddTh:mm:ss');
-   
+
     this.activatedRoute.params.subscribe(params => {
       Swal.fire({
         allowOutsideClick: false,
@@ -416,83 +418,83 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit{
       });
       Swal.showLoading();
       this.emisorService
-    .query({ size: MaxItems },  (this.hasRol([Authority.DMC]) === true ? 2 : 1))
-    .pipe(
-        map((res: HttpResponse<IEmisor[]>) => {
+        .query({ size: MaxItems }, (this.hasRol([Authority.DMC]) === true ? 2 : 1))
+        .pipe(
+          map((res: HttpResponse<IEmisor[]>) => {
             return res.body ? res.body : [];
-        })
-    )
-    .subscribe((resBody: IEmisor[]) => (this.emisor = resBody));
+          })
+        )
+        .subscribe((resBody: IEmisor[]) => (this.emisor = resBody));
 
-    this.catPaisesService
-    .query({ size: MaxItems },  (this.hasRol([Authority.DMC]) === true ? 2 : 1))
-    .pipe(
-        map((res: HttpResponse<ICatPaises[]>) => {
+      this.catPaisesService
+        .query({ size: MaxItems }, (this.hasRol([Authority.DMC]) === true ? 2 : 1))
+        .pipe(
+          map((res: HttpResponse<ICatPaises[]>) => {
             return res.body ? res.body : [];
-        })
-    )
-    .subscribe((resBody: ICatPaises[]) => (this.catPaises = resBody));
+          })
+        )
+        .subscribe((resBody: ICatPaises[]) => (this.catPaises = resBody));
 
-    this.catTipoUnidadService
-    .query({ size: MaxItems },  (this.hasRol([Authority.DMC]) === true ? 2 : 1))
-    .pipe(
-        map((res: HttpResponse<ICatTipoUnidad[]>) => {
+      this.catTipoUnidadService
+        .query({ size: MaxItems }, (this.hasRol([Authority.DMC]) === true ? 2 : 1))
+        .pipe(
+          map((res: HttpResponse<ICatTipoUnidad[]>) => {
             return res.body ? res.body : [];
-        })
-    )
-    .subscribe((resBody: ICatTipoUnidad[]) => (this.catTipoUnidad = resBody));
+          })
+        )
+        .subscribe((resBody: ICatTipoUnidad[]) => (this.catTipoUnidad = resBody));
 
 
-    this.catTipoPermisoService
-    .query({ size: MaxItems },  (this.hasRol([Authority.DMC]) === true ? 2 : 1))
-    .pipe(
-        map((res: HttpResponse<ICatTipoPermiso[]>) => {
+      this.catTipoPermisoService
+        .query({ size: MaxItems }, (this.hasRol([Authority.DMC]) === true ? 2 : 1))
+        .pipe(
+          map((res: HttpResponse<ICatTipoPermiso[]>) => {
             return res.body ? res.body : [];
-        })
-    )
-    .subscribe((resBody: ICatTipoPermiso[]) => (this.catTipoPermiso = resBody));
+          })
+        )
+        .subscribe((resBody: ICatTipoPermiso[]) => (this.catTipoPermiso = resBody));
 
-    this.catTipoRemolqueService
-    .query({ size: MaxItems },  (this.hasRol([Authority.DMC]) === true ? 2 : 1))
-    .pipe(
-        map((res: HttpResponse<ICatTipoRemolque[]>) => {
+      this.catTipoRemolqueService
+        .query({ size: MaxItems }, (this.hasRol([Authority.DMC]) === true ? 2 : 1))
+        .pipe(
+          map((res: HttpResponse<ICatTipoRemolque[]>) => {
             return res.body ? res.body : [];
-        })
-    )
-    .subscribe((resBody: ICatTipoRemolque[]) => (this.catTipoRemolque = resBody));
+          })
+        )
+        .subscribe((resBody: ICatTipoRemolque[]) => (this.catTipoRemolque = resBody));
 
-    this.catTipoProductoService
-    .query({ size: MaxItems },  (this.hasRol([Authority.DMC]) === true ? 2 : 1))
-    .pipe(
-        map((res: HttpResponse<ICatTipoProducto[]>) => {
+      this.catTipoProductoService
+        .query({ size: MaxItems }, (this.hasRol([Authority.DMC]) === true ? 2 : 1))
+        .pipe(
+          map((res: HttpResponse<ICatTipoProducto[]>) => {
             return res.body ? res.body : [];
-        })
-    )
-    .subscribe((resBody: ICatTipoProducto[]) => (
+          })
+        )
+        .subscribe((resBody: ICatTipoProducto[]) => (
 
-        this.catTipoProducto = resBody
-        
-    ));
+          this.catTipoProducto = resBody
 
-    this.catTipoListaService.query({ size: MaxItems },  "TIPO_HORARIO")
-    .pipe(
-        map((res: HttpResponse<ICatLista[]>) => {
+        ));
+
+      this.catTipoListaService.query({ size: MaxItems }, "TIPO_HORARIO")
+        .pipe(
+          map((res: HttpResponse<ICatLista[]>) => {
             return res.body ? res.body : [];
-        })
-    )
-    .subscribe((resBody: ICatLista[]) => (
-        this.tipoHorario = resBody
-        
-    ));
+          })
+        )
+        .subscribe((resBody: ICatLista[]) => (
+          this.tipoHorario = resBody
 
-    this.catTipoFiguraTransporteService
-    .query({ size: MaxItems },  (this.hasRol([Authority.DMC]) === true ? 2 : 1))
-    .pipe(
-        map((res: HttpResponse<ICatTipoFiguraTransporte[]>) => {
+        ));
+
+      this.catTipoFiguraTransporteService
+        .query({ size: MaxItems }, (this.hasRol([Authority.DMC]) === true ? 2 : 1))
+        .pipe(
+          map((res: HttpResponse<ICatTipoFiguraTransporte[]>) => {
             return res.body ? res.body : [];
-        })
-    )
-    .subscribe((resBody: ICatTipoFiguraTransporte[]) => (this.catTipoFiguraTransporte = resBody));
+          })
+        )
+        .subscribe((resBody: ICatTipoFiguraTransporte[]) => (this.catTipoFiguraTransporte = resBody));
 
       // console.log('params: ', params);
       this.serie = params.id;
@@ -500,174 +502,180 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit{
 
       // console.log("AQUI");
       // console.log(params.folio);
-      if(params.folio){
+      if (params.folio) {
         this.monitorService.findMotivo('T', params.folio)
-        .pipe(
+          .pipe(
             map((res: HttpResponse<any>) => {
-                return res.body ? res.body : [];
+              return res.body ? res.body : [];
             })
-        )
-        .subscribe((resBody: any) => (
-         this.update(resBody)
-        ))
-         
-      }else{
+          )
+          .subscribe((resBody: any) => (
+            this.update(resBody)
+          ))
+
+      } else {
         Swal.close()
       }
-       
+
     });
 
   }
 
 
-  update(resBody){
+  update(resBody) {
     /**
      * Llenando Tabla de Carga
      */
-    let auxcargaElementList:any;
-    let auxubicacionElementList:any;
+    let auxcargaElementList: any;
+    let auxubicacionElementList: any;
     console.log("TODO CARTA"),
-    console.log(resBody),
-    resBody.Conceptos.forEach(
-      function obj (value) {
-      let auxcargaMercancia = {
-        BienesTransp:value.ClaveProdServ, 
-        Cantidad:value.Cantidad,
-        Unidad:  value.ClaveUnidad,
-        Descripcion:  value.descripcion,
-        ClaveUnidad:value.ClaveUnidad, 
-        PesoEnKg: 0,
-        MaterialPeligroso:null,
-        CveMaterialPeligroso:null,
-        Embalaje:null,
-      }
-      
-      auxcargaElementList = {
-        ClaveProdServ: value.ClaveProdServ, 
-        Cantidad:value.Cantidad,
-        ClaveUnidad: value.ClaveUnidad, 
-        Unidad: value.Unidad,
-        Descripcion: value.descripcion,
-        ValorUnitario: 0,
-        Importe: 0,
-        carga:auxcargaMercancia
+      console.log(resBody),
+      resBody.Conceptos.forEach(
+        function obj(value) {
+          let auxcargaMercancia = {
+            BienesTransp: value.ClaveProdServ,
+            Cantidad: value.Cantidad,
+            Unidad: value.ClaveUnidad,
+            Descripcion: value.descripcion,
+            ClaveUnidad: value.ClaveUnidad,
+            PesoEnKg: 0,
+            MaterialPeligroso: null,
+            CveMaterialPeligroso: null,
+            Embalaje: null,
+          }
 
-      }
-      return auxcargaElementList
-     
-    }
-    
-    ),
-    this.dataSource.push(auxcargaElementList);
+          auxcargaElementList = {
+            ClaveProdServ: value.ClaveProdServ,
+            Cantidad: value.Cantidad,
+            ClaveUnidad: value.ClaveUnidad,
+            Unidad: value.Unidad,
+            Descripcion: value.descripcion,
+            ValorUnitario: 0,
+            Importe: 0,
+            carga: auxcargaMercancia
+
+          }
+          return auxcargaElementList
+
+        }
+
+      ),
+      this.dataSource.push(auxcargaElementList);
     this.table.renderRows()
     /**
      * Llenando Tabla de Carga
      */
 
-     /**
-     * Llenando Tabla de Ubicacion 
-     */
+    /**
+    * Llenando Tabla de Ubicacion 
+    */
 
-      resBody.CartaPorte.Ubicaciones.Ubicacion.forEach(
-        function obj (value) {
+    resBody.CartaPorte.Ubicaciones.Ubicacion.forEach(
+      function obj(value) {
         let auxdomicilio = {
           CodigoPostal: value.Domicilio.CodigoPostal,
-          Colonia:  value.Domicilio.Colonia,
-          Estado:  value.Domicilio.Estado,
-          Localidad:  value.Domicilio.Localidad,
-          Municipio:  value.Domicilio.CodMunicipioigoPostal,
-          Pais:  value.Domicilio.Pais
+          Colonia: value.Domicilio.Colonia,
+          Estado: value.Domicilio.Estado,
+          Localidad: value.Domicilio.Localidad,
+          Municipio: value.Domicilio.CodMunicipioigoPostal,
+          Pais: value.Domicilio.Pais
         }
-        
+
         auxubicacionElementList = {
-          rfc: value.RFCRemitenteDestinatario, 
+          rfc: value.RFCRemitenteDestinatario,
           fecha: value.FechaHoraSalidaLlegada,
           direccion: value.Domicilio.Estado,
-          cp:  value.Domicilio.CodMunicipioigoPostal,
-          distancia:  value.DistanciaRecorrida,
-          ubicacion:""
+          cp: value.Domicilio.CodMunicipioigoPostal,
+          distancia: value.DistanciaRecorrida,
+          ubicacion: ""
         }
 
-        
+
         return auxubicacionElementList
-       
+
       }
-      
-      ),
+
+    ),
 
       this.dataSource1.data.push(auxubicacionElementList);
-      this.dataSource1.sort = this.sort;
+    this.dataSource1.sort = this.sort;
 
-      this.emisorTemp={
-        CreateDate: "2022-01-04T19:21:43",
-        IdEmisor: 3,
-        Nombre: "PAC QA",
-        RegimenFiscal: "601",
-        Rfc: "URE180429TM6",
-      },
+    this.emisorTemp = {
+      CreateDate: "2022-01-04T19:21:43",
+      IdEmisor: 3,
+      Nombre: "PAC QA",
+      RegimenFiscal: "601",
+      Rfc: "URE180429TM6",
+    },
       this.generarCarta = resBody,
       console.log("Consulta de Carta"),
       console.log(this.generarCarta),
-   
-    //Emisor
-    this.editForm.controls['Rfc'].setValue(this.emisorTemp),
-    this.editForm.controls['Nombre'].setValue(this.generarCarta.Emisor.Nombre),
-    this.editForm.controls['RegimenFiscal'].setValue(this.generarCarta.Emisor.RegimenFiscal),
-    this.editForm.controls['CodigoPostal'].setValue(this.generarCarta.Emisor.DomicilioFiscal.CodigoPostal),
-    //Receptor
-    this.editForm.controls['NombreReceptor'].setValue(this.generarCarta.Receptor.Nombre),
-    this.editForm.controls['UsoCFDI'].setValue(this.generarCarta.Receptor.UsoCFDI),
-    //Operador
-    this.editForm.controls['RFCFigura'].setValue(this.generarCarta.CartaPorte.FiguraTransporte.TiposFigura[0].RFCFigura),
-    this.editForm.controls['NumLicencia'].setValue(this.generarCarta.CartaPorte.FiguraTransporte.TiposFigura[0].NumLicencia),
-    this.editForm.controls['TipoFigura'].setValue(this.generarCarta.CartaPorte.FiguraTransporte.TiposFigura[0].TipoFigura),
-    this.editForm.controls['NombreFigura'].setValue(this.generarCarta.CartaPorte.FiguraTransporte.TiposFigura[0].NombreFigura),
-    
-    //Unidad y Transporte
-    // this.editForm.controls['Eco'].setValue(this.generarCarta.CartaPorte.Autotransporte),
-    // this.editForm.controls['NumPermisoSCT'].setValue(this.generarCarta.CartaPorte.Autotransporte.NumPermisoSCT),
-    // this.editForm.controls['AnioModeloVM'].setValue(this.generarCarta.CartaPorte.Autotransporte.IdentificacionVehicular.AnioModeloVM),
-    // this.editForm.controls['PlacaVM'].setValue(this.generarCarta.CartaPorte.Autotransporte.NumPermisoSCT),
-    // this.editForm.controls['PolizaRespCivil'].setValue(this.generarCarta.CartaPorte.Autotransporte.NumPermisoSCT),
-    // this.editForm.controls['AseguraRespCivil'].setValue(this.generarCarta.CartaPorte.Autotransporte.NumPermisoSCT),
-    
-    
-    
 
-    
-    Swal.close()
+      //Emisor
+      this.editForm.controls['Rfc'].setValue(this.emisorTemp),
+      this.editForm.controls['Nombre'].setValue(this.generarCarta.Emisor.Nombre),
+      this.editForm.controls['RegimenFiscal'].setValue(this.generarCarta.Emisor.RegimenFiscal),
+      this.editForm.controls['CodigoPostal'].setValue(this.generarCarta.Emisor.DomicilioFiscal.CodigoPostal),
+      //Receptor
+      this.editForm.controls['NombreReceptor'].setValue(this.generarCarta.Receptor.Nombre),
+      this.editForm.controls['UsoCFDI'].setValue(this.generarCarta.Receptor.UsoCFDI),
+      //Operador
+      this.editForm.controls['RFCFigura'].setValue(this.generarCarta.CartaPorte.FiguraTransporte.TiposFigura[0].RFCFigura),
+      this.editForm.controls['NumLicencia'].setValue(this.generarCarta.CartaPorte.FiguraTransporte.TiposFigura[0].NumLicencia),
+      this.editForm.controls['TipoFigura'].setValue(this.generarCarta.CartaPorte.FiguraTransporte.TiposFigura[0].TipoFigura),
+      this.editForm.controls['NombreFigura'].setValue(this.generarCarta.CartaPorte.FiguraTransporte.TiposFigura[0].NombreFigura),
+
+      //Unidad y Transporte
+      // this.editForm.controls['Eco'].setValue(this.generarCarta.CartaPorte.Autotransporte),
+      // this.editForm.controls['NumPermisoSCT'].setValue(this.generarCarta.CartaPorte.Autotransporte.NumPermisoSCT),
+      // this.editForm.controls['AnioModeloVM'].setValue(this.generarCarta.CartaPorte.Autotransporte.IdentificacionVehicular.AnioModeloVM),
+      // this.editForm.controls['PlacaVM'].setValue(this.generarCarta.CartaPorte.Autotransporte.NumPermisoSCT),
+      // this.editForm.controls['PolizaRespCivil'].setValue(this.generarCarta.CartaPorte.Autotransporte.NumPermisoSCT),
+      // this.editForm.controls['AseguraRespCivil'].setValue(this.generarCarta.CartaPorte.Autotransporte.NumPermisoSCT),
+
+
+
+
+
+      Swal.close()
   }
 
 
   addData() {
 
-    this.PesoBrutoTotal +=Number(this.editForm.controls['PesoEnKg'].value);
-    this.NumTotalMercancias +=Number(this.editForm.controls['Cantidad'].value); 
+    this.PesoBrutoTotal += Number(this.editForm.controls['PesoEnKg'].value);
+
+    this.NumTotalMercancias += Number(this.editForm.controls['Cantidad'].value);
+
+    var pesoBrutoPoducto = 0;
+
+    pesoBrutoPoducto = Number(this.editForm.controls['PesoEnKg'].value) * Number(this.editForm.controls['Cantidad'].value);
 
     this.cargaMercancia = {
-      BienesTransp: ""+this.ClaveProdServ, 
-      Cantidad:parseInt(this.editForm.controls['Cantidad'].value),
+      BienesTransp: "" + this.ClaveProdServ,
+      Cantidad: parseInt(this.editForm.controls['Cantidad'].value),
       Unidad: this.Unidad,
       Descripcion: this.descripcion,
-      ClaveUnidad: this.ClaveUnidad, 
+      ClaveUnidad: this.ClaveUnidad,
       PesoEnKg: parseInt(this.editForm.controls['PesoEnKg'].value),
-      MaterialPeligroso:this.MaterialPeligroso,
-      CveMaterialPeligroso:this.CveMaterialPeligroso,
-      Embalaje:this.Embalaje,
+      MaterialPeligroso: this.MaterialPeligroso,
+      CveMaterialPeligroso: this.CveMaterialPeligroso,
+      Embalaje: this.Embalaje,
     };
 
     this.cargaElementList = {
-        ClaveProdServ: ""+this.ClaveProdServ,
-        TipoProducto: this.tipoProductoTable, 
-        Cantidad:Number(this.editForm.controls['Cantidad'].value),
-        ClaveUnidad: this.ClaveUnidad, 
-        Unidad: this.Unidad,
-        Descripcion: this.descripcion,
-        ValorUnitario: 0,
-        Importe: 0,
-        carga:this.cargaMercancia
-  
-      };
+      ClaveProdServ: "" + this.ClaveProdServ,
+      TipoProducto: this.tipoProductoTable,
+      Cantidad: Number(this.editForm.controls['Cantidad'].value),
+      ClaveUnidad: this.ClaveUnidad,
+      Unidad: this.Unidad,
+      Descripcion: this.descripcion,
+      ValorUnitario: 0,
+      Importe: 0,
+      carga: this.cargaMercancia,
+      PesoEnKg: parseInt(this.editForm.controls['PesoEnKg'].value),
+      PesoBruto: pesoBrutoPoducto
+    };
 
 
     // this.cargaElementList = {
@@ -687,10 +695,10 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit{
     this.table.renderRows();
 
     console.log(this.dataSource);
-    
+
   }
 
-  deleteRowData(index, element){
+  deleteRowData(index, element) {
     //this.dataSource.pop();
     //rthis.table.renderRows();
     // //console.log(element);
@@ -700,7 +708,7 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit{
     // // });
 
     const data = this.dataSource;
-    
+
     data.splice(index, 1);
 
     this.dataSource = data;
@@ -712,58 +720,58 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit{
 
   addDataUbicacion() {
 
-    this.domicilio.Pais  = this.paisUbicacion;
+    this.domicilio.Pais = this.paisUbicacion;
     this.domicilio.Municipio = this.municipioUbicacion;
     this.domicilio.Estado = this.estadoUbicacion;
     this.domicilio.CodigoPostal = this.editForm.controls['CodigoPostalUbicacion'].value;
 
-    if(this.origen == false){
-      
+    if (this.origen == false) {
+
       let tmpDate = this.editForm.controls['FechaSalida'].value;
       let tmpTime = this.editForm.controls['HoraSalida'].value;
-     
-      let formattedDate =  this.datepipe.transform(tmpDate, 'YYYY-MM-dd')+'T'+tmpTime+':00';
+
+      let formattedDate = this.datepipe.transform(tmpDate, 'YYYY-MM-dd') + 'T' + tmpTime + ':00';
       let aux = {
-        TipoUbicacion:"Origen",
-        RFCRemitenteDestinatario:this.editForm.controls['RFCRemitenteDestinatario'].value,
-        IDUbicacion:0,
-        FechaHoraSalidaLlegada: formattedDate, 
-        DistanciaRecorrida:null,
-        Domicilio:this.domicilio
+        TipoUbicacion: "Origen",
+        RFCRemitenteDestinatario: this.editForm.controls['RFCRemitenteDestinatario'].value,
+        IDUbicacion: 0,
+        FechaHoraSalidaLlegada: formattedDate,
+        DistanciaRecorrida: null,
+        Domicilio: this.domicilio
       };
-  
+
       this.ubicacion.push(aux);
-      this.origen= true;
+      this.origen = true;
       console.log("AGREGAR ORIGEN");
       console.log(this.ubicacion);
-    }  
+    }
 
-   
+
 
     let tmpDate = this.editForm.controls['FechaSalidaLlegada'].value;
     let tmpTime = this.editForm.controls['HoraLlegada'].value;
-    let formattedDate =  this.datepipe.transform(tmpDate, 'YYYY-MM-dd')+'T'+tmpTime+':00';
+    let formattedDate = this.datepipe.transform(tmpDate, 'YYYY-MM-dd') + 'T' + tmpTime + ':00';
 
     let aux = {
-      TipoUbicacion:"Destino",
-      RFCRemitenteDestinatario:this.editForm.controls['RFCDestino'].value,
-      IDUbicacion:0,
-      FechaHoraSalidaLlegada: formattedDate, 
+      TipoUbicacion: "Destino",
+      RFCRemitenteDestinatario: this.editForm.controls['RFCDestino'].value,
+      IDUbicacion: 0,
+      FechaHoraSalidaLlegada: formattedDate,
       DistanciaRecorrida: Number(this.editForm.controls['DistanciaRecorrida'].value),
-      Domicilio:this.domicilio
-    };
-   
-    this.ubicacionElementList = {
-      rfc: this.editForm.controls['RFCDestino'].value, 
-      fecha: formattedDate,
-      direccion:  this.domicilio.Estado,
-      cp:  this.editForm.controls['CodigoPostalUbicacion'].value,
-      distancia:  this.editForm.controls['DistanciaRecorrida'].value,
-      ubicacion:aux
+      Domicilio: this.domicilio
     };
 
-    this.totalDistancia += Number(this.editForm.controls['DistanciaRecorrida'].value); 
-    
+    this.ubicacionElementList = {
+      rfc: this.editForm.controls['RFCDestino'].value,
+      fecha: formattedDate,
+      direccion: this.domicilio.Estado,
+      cp: this.editForm.controls['CodigoPostalUbicacion'].value,
+      distancia: this.editForm.controls['DistanciaRecorrida'].value,
+      ubicacion: aux
+    };
+
+    this.totalDistancia += Number(this.editForm.controls['DistanciaRecorrida'].value);
+
     //this.ubicacion.push(aux);
     this.dataSource1.data.push(this.ubicacionElementList);
     this.dataSource1.sort = this.sort;
@@ -776,13 +784,13 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit{
     this.editForm.controls['EstadoUbicacion'].setValue('');
     this.editForm.controls['MunicipioUbicacion'].setValue('');
     this.editForm.controls['CodigoPostalUbicacion'].setValue('');
-   
+
   }
 
 
   removeDataUbicacion(index, element) {
     const data = this.dataSource1.data;
-    
+
     data.splice(index, 1);
 
     this.dataSource1.data = data;
@@ -791,274 +799,274 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit{
   }
 
 
-  onSelectEvent(value: any, type:string){
+  onSelectEvent(value: any, type: string) {
     switch (type) {
-        case "expedicion":
-          this.datepipe.transform(Date.now(), 'yyyy-MM-ddThh:mm:ss');
-          this.LugarExpedicion = this.editForm.controls['CodigoPostal'].value;
+      case "expedicion":
+        this.datepipe.transform(Date.now(), 'yyyy-MM-ddThh:mm:ss');
+        this.LugarExpedicion = this.editForm.controls['CodigoPostal'].value;
         break;
-        case "eamFlota":
-          Swal.fire({
-            allowOutsideClick: false,
-            text: 'Cargando...',
-          });
-          Swal.showLoading();
-          
-          
-            let result = this.eamFlotaService.find(this.editForm.controls['Eco'].value)
-            .pipe(
-                    map((res: HttpResponse<IEamFlota>) => {
-                        return res.body ? res.body : [];
-                    })
-                    )
-                    .subscribe((resBody: IEamFlota) => {
-                        if(resBody.EstatusEco == 'ACTIVO'){
-                            this.editForm.controls['AnioModeloVM'].setValue(resBody.AnioCP);
-                            this.editForm.controls['PlacaVM'].setValue(resBody.PlacaCP);
-                            this.editForm.controls['PolizaRespCivil'].setValue(resBody.PolizaCP);
-                            this.editForm.controls['AseguraRespCivil'].setValue(resBody.AseguradoraCP);
-                            this.editForm.controls['NumPermisoSCT'].setValue(resBody.NoPermisoCP);
-                            this.editForm.controls['PermSCT'].setValue(resBody.TipoPermisoCP);
-                            Swal.close();
-                        }else{
-                          Swal.fire({
-                            title: 'Conflicto',
-                            text:  resBody.message,
-                            icon: 'warning',
-                            showCloseButton: true,
-                            });
-
-                            //this.statusFlota = true;
-                        }
-                       
-                        
-                      });
-
-                      
-            break;
-        case "pais":
-          Swal.fire({
-            allowOutsideClick: false,
-            text: 'Cargando...',
-          });
-          Swal.showLoading();
-          
-            this.catEstadosService.find(value.IdPais)
-            .pipe(
-            map((res: HttpResponse<ICatEstados[]>) => {
-                return res.body ? res.body : [];
-            })
-            )
-            .subscribe((resBody: ICatEstados[]) => (
-              this.paisExpedido = value.IdPais,
-              this.catEstados = resBody,
-              Swal.close()));
-            break;
-        case "estado":
-          Swal.fire({
-            allowOutsideClick: false,
-            text: 'Cargando...',
-          });
-          Swal.showLoading();
-          this.estadoExpedido = value.ClaveEstado;
-            this.catMunicipiosService.find(value.Nombre)
-            .pipe(
-                map((res: HttpResponse<ICatMunicipios[]>) => {
-                    return res.body ? res.body : [];
-                })
-            )
-            .subscribe((resBody: ICatMunicipios[]) => (this.catMunicipios = resBody,
-              Swal.close())); 
-            break;
-        case "municipio":
-            this.municipioExpedido = value.Municipio;
-        break;
-        case "paisUbicación":
+      case "eamFlota":
         Swal.fire({
           allowOutsideClick: false,
           text: 'Cargando...',
         });
         Swal.showLoading();
-          //this.paisUbicacion = value.Nombre;
-          this.paisUbicacion = value.IdPais;
-          this.catEstadosService.find(value.IdPais)
+
+
+        let result = this.eamFlotaService.find(this.editForm.controls['Eco'].value)
           .pipe(
-          map((res: HttpResponse<ICatEstados[]>) => {
+            map((res: HttpResponse<IEamFlota>) => {
               return res.body ? res.body : [];
-          })
+            })
+          )
+          .subscribe((resBody: IEamFlota) => {
+            if (resBody.EstatusEco == 'ACTIVO') {
+              this.editForm.controls['AnioModeloVM'].setValue(resBody.AnioCP);
+              this.editForm.controls['PlacaVM'].setValue(resBody.PlacaCP);
+              this.editForm.controls['PolizaRespCivil'].setValue(resBody.PolizaCP);
+              this.editForm.controls['AseguraRespCivil'].setValue(resBody.AseguradoraCP);
+              this.editForm.controls['NumPermisoSCT'].setValue(resBody.NoPermisoCP);
+              this.editForm.controls['PermSCT'].setValue(resBody.TipoPermisoCP);
+              Swal.close();
+            } else {
+              Swal.fire({
+                title: 'Conflicto',
+                text: resBody.message,
+                icon: 'warning',
+                showCloseButton: true,
+              });
+
+              //this.statusFlota = true;
+            }
+
+
+          });
+
+
+        break;
+      case "pais":
+        Swal.fire({
+          allowOutsideClick: false,
+          text: 'Cargando...',
+        });
+        Swal.showLoading();
+
+        this.catEstadosService.find(value.IdPais)
+          .pipe(
+            map((res: HttpResponse<ICatEstados[]>) => {
+              return res.body ? res.body : [];
+            })
+          )
+          .subscribe((resBody: ICatEstados[]) => (
+            this.paisExpedido = value.IdPais,
+            this.catEstados = resBody,
+            Swal.close()));
+        break;
+      case "estado":
+        Swal.fire({
+          allowOutsideClick: false,
+          text: 'Cargando...',
+        });
+        Swal.showLoading();
+        this.estadoExpedido = value.ClaveEstado;
+        this.catMunicipiosService.find(value.Nombre)
+          .pipe(
+            map((res: HttpResponse<ICatMunicipios[]>) => {
+              return res.body ? res.body : [];
+            })
+          )
+          .subscribe((resBody: ICatMunicipios[]) => (this.catMunicipios = resBody,
+            Swal.close()));
+        break;
+      case "municipio":
+        this.municipioExpedido = value.Municipio;
+        break;
+      case "paisUbicación":
+        Swal.fire({
+          allowOutsideClick: false,
+          text: 'Cargando...',
+        });
+        Swal.showLoading();
+        //this.paisUbicacion = value.Nombre;
+        this.paisUbicacion = value.IdPais;
+        this.catEstadosService.find(value.IdPais)
+          .pipe(
+            map((res: HttpResponse<ICatEstados[]>) => {
+              return res.body ? res.body : [];
+            })
           )
           .subscribe((resBody: ICatEstados[]) => (this.catEstados = resBody,
             Swal.close()));
-          break;
-        case "estadoUbicacion":
-          Swal.fire({
-            allowOutsideClick: false,
-            text: 'Cargando...',
-          });
-          Swal.showLoading();
-          this.estadoUbicacion = value.ClaveEstado;
-            this.catMunicipiosService.find(value.Nombre)
-            .pipe(
-                map((res: HttpResponse<ICatMunicipios[]>) => {
-                    return res.body ? res.body : [];
-                })
-            )
-            .subscribe((resBody: ICatMunicipios[]) => (this.catMunicipios = resBody,
-              Swal.close())); 
-            break;
-        case "municipioUbicacion":
-          this.municipioUbicacion = value.Municipio;
         break;
-        case "rfcemisor":
-          console.log("EMISOR");
-          console.log(value);
-          Swal.fire({
-            allowOutsideClick: false,
-            text: 'Cargando...',
-          });
-          Swal.showLoading();
-          this.editForm.controls['Nombre'].setValue(value.Nombre);
-          this.editForm.controls['RegimenFiscal'].setValue(value.RegimenFiscal); 
-          this.emisor_g = this.editForm.controls['Rfc'].value;
-
-          console.log("VALOR QUEVA A CONSULTAR");
-          console.log(value.Rfc);
-            this.domicilioFiscalService.findDomicilioFiscal(value.Rfc)
-            .pipe(
-              map((res: HttpResponse<IDomicilioFiscal[]>) => {
-                  return res.body ? res.body : [];
-              })
-              )
-              .subscribe((resBody: IDomicilioFiscal[]) => (
-                this.domFiscal = resBody
-                
-                
-              ));
-
-          
-          this.receptorService
-          .query({ size: MaxItems },  (this.hasRol([Authority.DMC]) === true ? 2 : 1))
+      case "estadoUbicacion":
+        Swal.fire({
+          allowOutsideClick: false,
+          text: 'Cargando...',
+        });
+        Swal.showLoading();
+        this.estadoUbicacion = value.ClaveEstado;
+        this.catMunicipiosService.find(value.Nombre)
           .pipe(
-              map((res: HttpResponse<IReceptor[]>) => {
-                  return res.body ? res.body : [];
-              })
+            map((res: HttpResponse<ICatMunicipios[]>) => {
+              return res.body ? res.body : [];
+            })
+          )
+          .subscribe((resBody: ICatMunicipios[]) => (this.catMunicipios = resBody,
+            Swal.close()));
+        break;
+      case "municipioUbicacion":
+        this.municipioUbicacion = value.Municipio;
+        break;
+      case "rfcemisor":
+        console.log("EMISOR");
+        console.log(value);
+        Swal.fire({
+          allowOutsideClick: false,
+          text: 'Cargando...',
+        });
+        Swal.showLoading();
+        this.editForm.controls['Nombre'].setValue(value.Nombre);
+        this.editForm.controls['RegimenFiscal'].setValue(value.RegimenFiscal);
+        this.emisor_g = this.editForm.controls['Rfc'].value;
+
+        console.log("VALOR QUEVA A CONSULTAR");
+        console.log(value.Rfc);
+        this.domicilioFiscalService.findDomicilioFiscal(value.Rfc)
+          .pipe(
+            map((res: HttpResponse<IDomicilioFiscal[]>) => {
+              return res.body ? res.body : [];
+            })
+          )
+          .subscribe((resBody: IDomicilioFiscal[]) => (
+            this.domFiscal = resBody
+
+
+          ));
+
+
+        this.receptorService
+          .query({ size: MaxItems }, (this.hasRol([Authority.DMC]) === true ? 2 : 1))
+          .pipe(
+            map((res: HttpResponse<IReceptor[]>) => {
+              return res.body ? res.body : [];
+            })
           )
           .subscribe((resBody: IReceptor[]) => (this.receptor = resBody));
-             
-                
-          
-          Swal.close()
-          break;
-        case "rfcreceptor": 
-            
-            //this.editForm.controls['RfcReceptor'].setValue(value.Rfc);
-            this.editForm.controls['NombreReceptor'].setValue(value.Nombre);
-            this.editForm.controls['UsoCFDI'].setValue(value.UsoCFDI);
 
-            this.receptor_g.Rfc = value.Rfc;
-            this.receptor_g.Nombre = value.Nombre;
-            this.receptor_g.UsoCFDI = value.UsoCFDI;
-            this.generarCarta.Receptor = this.receptor_g;
 
-              this.DomicilioFiscal = {
-                  Calle: '',
-                  NoExterior: this.domFiscal[0].NoExterior,
-                  NoInterior: this.domFiscal[0].NoInterior,
-                  Colonia: this.domFiscal[0].Colonia,
-                  Localidad: this.domFiscal[0].Localidad,
-                  Municipio: this.domFiscal[0].Municipio,
-                  Estado: this.domFiscal[0].Estado,
-                  Pais:  this.domFiscal[0].Pais,
-                  CodigoPostal: this.domFiscal[0].CodigoPostal,
-            
-                };
-         
-        break; 
-        case "clavecliente":
-          Swal.fire({ 
-            allowOutsideClick: false,
-            text: 'Cargando...',
-          });
-          Swal.showLoading();
-          this.editForm.controls['RFCDestino'].setValue(this.emisor_g.Rfc);
-          this.editForm.controls['RFCRemitenteDestinatario'].setValue("XAXX010101000");
-         
-          Swal.close();
-                      
-          break  
-        case "catTipoProducto":
-          console.log(value);
-          Swal.fire({ 
-            allowOutsideClick: false,
-            text: 'Cargando...',
-          });
-          Swal.showLoading();
-          this.tipoProductoTable =value.Descripcion;
-          this.conceptoClaveUnidad = value.TipoProducto;
-          this.catTipoProductoService.find(value.TipoProducto)
+
+        Swal.close()
+        break;
+      case "rfcreceptor":
+
+        //this.editForm.controls['RfcReceptor'].setValue(value.Rfc);
+        this.editForm.controls['NombreReceptor'].setValue(value.Nombre);
+        this.editForm.controls['UsoCFDI'].setValue(value.UsoCFDI);
+
+        this.receptor_g.Rfc = value.Rfc;
+        this.receptor_g.Nombre = value.Nombre;
+        this.receptor_g.UsoCFDI = value.UsoCFDI;
+        this.generarCarta.Receptor = this.receptor_g;
+
+        this.DomicilioFiscal = {
+          Calle: '',
+          NoExterior: this.domFiscal[0].NoExterior,
+          NoInterior: this.domFiscal[0].NoInterior,
+          Colonia: this.domFiscal[0].Colonia,
+          Localidad: this.domFiscal[0].Localidad,
+          Municipio: this.domFiscal[0].Municipio,
+          Estado: this.domFiscal[0].Estado,
+          Pais: this.domFiscal[0].Pais,
+          CodigoPostal: this.domFiscal[0].CodigoPostal,
+
+        };
+
+        break;
+      case "clavecliente":
+        Swal.fire({
+          allowOutsideClick: false,
+          text: 'Cargando...',
+        });
+        Swal.showLoading();
+        this.editForm.controls['RFCDestino'].setValue(this.emisor_g.Rfc);
+        this.editForm.controls['RFCRemitenteDestinatario'].setValue("XAXX010101000");
+
+        Swal.close();
+
+        break
+      case "catTipoProducto":
+        console.log(value);
+        Swal.fire({
+          allowOutsideClick: false,
+          text: 'Cargando...',
+        });
+        Swal.showLoading();
+        this.tipoProductoTable = value.Descripcion;
+        this.conceptoClaveUnidad = value.TipoProducto;
+        this.catTipoProductoService.find(value.TipoProducto)
           .pipe(
-                  map((res: HttpResponse<ICatTipoProducto[]>) => {
-                      return res.body ? res.body : [];
-                      
-                  })
-                  )
+            map((res: HttpResponse<ICatTipoProducto[]>) => {
+              return res.body ? res.body : [];
+
+            })
+          )
           .subscribe((resBody: ICatTipoProducto[]) => (
             this.tipoProducto = resBody,
             //this.editForm.controls['BienesTransp'].setValue(value.Descripcion),
             Swal.close()
-            ));
-          break;
-        case "descripcion":
-          console.log("DESCRIPCION");
-          console.log(value);
-          this.ClaveProdServ = value.ClaveProducto;
-          this.descripcion = value.Descripcion;
-          //this.ClaveUnidad = value.ClaveProducto;
-         
-          if(value.MaterialPeligroso == "Sí"){
-            console.log("Material Peligroso");
-            console.log(value.MaterialPeligroso);
-            this.materialPeligrosoService
-            .query({ size: MaxItems },  (this.hasRol([Authority.DMC]) === true ? 2 : 1))
+          ));
+        break;
+      case "descripcion":
+        console.log("DESCRIPCION");
+        console.log(value);
+        this.ClaveProdServ = value.ClaveProducto;
+        this.descripcion = value.Descripcion;
+        //this.ClaveUnidad = value.ClaveProducto;
+
+        if (value.MaterialPeligroso == "Sí") {
+          console.log("Material Peligroso");
+          console.log(value.MaterialPeligroso);
+          this.materialPeligrosoService
+            .query({ size: MaxItems }, (this.hasRol([Authority.DMC]) === true ? 2 : 1))
             .pipe(
-                map((res: HttpResponse<IMaterialPeligroso[]>) => {
-                    return res.body ? res.body : [];
-                })
+              map((res: HttpResponse<IMaterialPeligroso[]>) => {
+                return res.body ? res.body : [];
+              })
             )
             .subscribe((resBody: IMaterialPeligroso[]) => (
               console.log("Datos de Material Peligroso"),
               console.log(resBody),
               this.materialPeligroso = resBody,
               this.MaterialPeligroso = "Sí",
-              this.CveMaterialPeligroso=this.materialPeligroso[0].CveMaterialPeligroso,
-              this.Embalaje=this.materialPeligroso[0].Embalaje
-              ));
-          }else{
-            this.MaterialPeligroso =null;
-            this.CveMaterialPeligroso=null;
-            this.Embalaje=null;
-          }
-          break;
-        case "unidad":
-          console.log("UNIDAD");
-          this.ClaveUnidad = value.ClaveUnidad;
-          this.Unidad = value.Nombre;
-          break;
-        case "numpermisosct":
-          console.log("PERMISO SCT");
-
-          this.PermSCT = value.Clave;//this.editForm.controls['PermSCT'].value;
+              this.CveMaterialPeligroso = this.materialPeligroso[0].CveMaterialPeligroso,
+              this.Embalaje = this.materialPeligroso[0].Embalaje
+            ));
+        } else {
+          this.MaterialPeligroso = null;
+          this.CveMaterialPeligroso = null;
+          this.Embalaje = null;
+        }
         break;
-        case "UpperCase":
-          let fec = this.editForm.controls['RFCFigura'].value;
-          this.editForm.controls['RFCFigura'].setValue(fec.toUpperCase());
-          break;
-        case "rfcremitente":
-          let frev = this.editForm.controls['RFCRemitenteDestinatario'].value;
-          this.editForm.controls['RFCRemitenteDestinatario'].setValue(frev.toUpperCase());
-          break;
-        default:
-          console.log("No such day exists!");
+      case "unidad":
+        console.log("UNIDAD");
+        this.ClaveUnidad = value.ClaveUnidad;
+        this.Unidad = value.Nombre;
+        break;
+      case "numpermisosct":
+        console.log("PERMISO SCT");
+
+        this.PermSCT = value.Clave;//this.editForm.controls['PermSCT'].value;
+        break;
+      case "UpperCase":
+        let fec = this.editForm.controls['RFCFigura'].value;
+        this.editForm.controls['RFCFigura'].setValue(fec.toUpperCase());
+        break;
+      case "rfcremitente":
+        let frev = this.editForm.controls['RFCRemitenteDestinatario'].value;
+        this.editForm.controls['RFCRemitenteDestinatario'].setValue(frev.toUpperCase());
+        break;
+      default:
+        console.log("No such day exists!");
         break;
     }
   }
@@ -1069,9 +1077,9 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit{
   }
 
 
-  saveData(timbrado:boolean){
-    
-    
+  saveData(timbrado: boolean) {
+
+
     Swal.fire({
       allowOutsideClick: false,
       text: 'Cargando...',
@@ -1084,7 +1092,7 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit{
     this.generarCarta.Serie = "";
     this.generarCarta.Folio = "";
     this.generarCarta.Fecha = this.FechaActual;
-    this.generarCarta.FormaPago =null;
+    this.generarCarta.FormaPago = null;
     this.generarCarta.SubTotal = 0;
     this.generarCarta.Moneda = "XXX";
     this.generarCarta.Total = 0;
@@ -1094,7 +1102,7 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit{
      * expedido
      */
 
-     this.ExpedidoEn = {
+    this.ExpedidoEn = {
       Municipio: this.municipioExpedido,
       Estado: this.estadoExpedido,
       Pais: this.paisExpedido,
@@ -1109,46 +1117,46 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit{
     /**
      * CFDI RELACIONADOS
      */
-     this.CfdiRelacionados = {
-       
-        TipoRelacion: "",
-        CfdiRelacionado: []
-  
-      };
+    this.CfdiRelacionados = {
 
-     this.generarCarta.CfdiRelacionados = this.CfdiRelacionados;
+      TipoRelacion: "",
+      CfdiRelacionado: []
+
+    };
+
+    this.generarCarta.CfdiRelacionados = this.CfdiRelacionados;
 
     this.generarCarta.Receptor = this.receptor_g;
-   
+
 
     // /**
     //  * CONCEPTOS
     // */
-    
+
     let conceptosTemp: Array<any> = [];
     this.dataSource.forEach(function (value) {
-    let auxConcepto = {
-        ClaveProdServ: value.ClaveProdServ, 
-        Cantidad:value.Cantidad,
-        ClaveUnidad:value.ClaveUnidad, 
-        Unidad:value.Unidad,
+      let auxConcepto = {
+        ClaveProdServ: value.ClaveProdServ,
+        Cantidad: value.Cantidad,
+        ClaveUnidad: value.ClaveUnidad,
+        Unidad: value.Unidad,
         Descripcion: value.Descripcion,
         ValorUnitario: 0,
         Importe: 0
       };
       conceptosTemp.push(auxConcepto);
-    
-    }); 
+
+    });
 
     this.generarCarta.Conceptos = conceptosTemp;
 
-    
+
     //this.generarCarta.Conceptos = this.conceptos;
 
     // /**
     //  * OBSERVACIONES
     // */
-     this.Observaciones = [{
+    this.Observaciones = [{
       Numero: 1,
       Tema: 'PAG',
       Texto: '',
@@ -1161,14 +1169,14 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit{
      * ubicaciones 
      */
     let ubicacionesTemp: Array<any> = [];
-     this.dataSource1.data.forEach(function (value) {
+    this.dataSource1.data.forEach(function (value) {
       ubicacionesTemp.push(value.ubicacion);
-    }); 
+    });
 
     ubicacionesTemp.push(this.ubicacion[0]);
-    
+
     //this.CartaPorte.Ubicaciones.push(ubicacionesTemp);
-  
+
 
     /**
      * OPERADOR
@@ -1179,97 +1187,97 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit{
     this.operador.NumLicencia = this.editForm.controls['NumLicencia'].value;
     this.TiposFigura = this.operador;
 
-     /**
-     * AUTOTRANSPORTE
-     */
-      this.Seguros = {
-        AseguraRespCivil:this.editForm.controls['AseguraRespCivil'].value,
-        PolizaRespCivil:  this.editForm.controls['PolizaRespCivil'].value,
-  
-      };
-  
-      this.IdentificacionVehicular = {
-        AnioModeloVM:this.editForm.controls['AnioModeloVM'].value,
-        PlacaVM: this.editForm.controls['PlacaVM'].value,
-        ConfigVehicular: "C2",
-      };
-  
-      this.Autotransporte = {
-        NumPermisoSCT:this.editForm.controls['NumPermisoSCT'].value,
-        PermSCT:this.PermSCT,//this.editForm.controls['PermSCT'].value,
-        IdentificacionVehicular: this.IdentificacionVehicular,
-        Seguros: this.Seguros
-      };
-      
-  
+    /**
+    * AUTOTRANSPORTE
+    */
+    this.Seguros = {
+      AseguraRespCivil: this.editForm.controls['AseguraRespCivil'].value,
+      PolizaRespCivil: this.editForm.controls['PolizaRespCivil'].value,
+
+    };
+
+    this.IdentificacionVehicular = {
+      AnioModeloVM: this.editForm.controls['AnioModeloVM'].value,
+      PlacaVM: this.editForm.controls['PlacaVM'].value,
+      ConfigVehicular: "C2",
+    };
+
+    this.Autotransporte = {
+      NumPermisoSCT: this.editForm.controls['NumPermisoSCT'].value,
+      PermSCT: this.PermSCT,//this.editForm.controls['PermSCT'].value,
+      IdentificacionVehicular: this.IdentificacionVehicular,
+      Seguros: this.Seguros
+    };
+
+
     //this.CartaPorte.Autotransporte = this.Autotransporte;
     /**
      * Mercancias
      */
-     let mercanciaTemp: Array<any> = [];
-     let pesoBrutoTemp=0;
-     this.dataSource.forEach(function (value) {
-      
+    let mercanciaTemp: Array<any> = [];
+    let pesoBrutoTemp = 0;
+    this.dataSource.forEach(function (value) {
+
       let cargaMercanciaTemp = {
-        BienesTransp: value.carga.BienesTransp, 
-        Cantidad:value.carga.Cantidad,
+        BienesTransp: value.carga.BienesTransp,
+        Cantidad: value.carga.Cantidad,
         Unidad: value.carga.Unidad,
         Descripcion: value.carga.Descripcion,
-        ClaveUnidad: value.carga.ClaveUnidad, 
+        ClaveUnidad: value.carga.ClaveUnidad,
         PesoEnKg: value.carga.PesoEnKg,
-        MaterialPeligroso:value.carga.MaterialPeligroso,
-        CveMaterialPeligroso:value.carga.CveMaterialPeligroso,
-        Embalaje:value.carga.Embalaje,
+        MaterialPeligroso: value.carga.MaterialPeligroso,
+        CveMaterialPeligroso: value.carga.CveMaterialPeligroso,
+        Embalaje: value.carga.Embalaje,
       };
 
       pesoBrutoTemp += Number(value.carga.PesoEnKg);
       mercanciaTemp.push(cargaMercanciaTemp);
-    }); 
+    });
 
-     
-    let aux = {Ubicacion: ubicacionesTemp};
-    let auxFigura = {TiposFigura: [this.TiposFigura]};
+
+    let aux = { Ubicacion: ubicacionesTemp };
+    let auxFigura = { TiposFigura: [this.TiposFigura] };
     let auxMerc = {
-      PesoBrutoTotal:pesoBrutoTemp,
-      UnidadPeso:"KGM",
-      NumTotalMercancias:this.NumTotalMercancias,
+      PesoBrutoTotal: pesoBrutoTemp,
+      UnidadPeso: "KGM",
+      NumTotalMercancias: this.NumTotalMercancias,
       Mercancia: mercanciaTemp,
-      Autotransporte:this.Autotransporte
+      Autotransporte: this.Autotransporte
     };
-    
-    this.CartaPorte  = {
-      Version:"2.0",
-      TranspInternac:"No",
-      TotalDistRec:this.totalDistancia,
+
+    this.CartaPorte = {
+      Version: "2.0",
+      TranspInternac: "No",
+      TotalDistRec: this.totalDistancia,
       Ubicaciones: aux,
       Mercancias: auxMerc,
-      FiguraTransporte:auxFigura
+      FiguraTransporte: auxFigura
     };
 
-    this.generarCarta.CartaPorte = this.CartaPorte ;
+    this.generarCarta.CartaPorte = this.CartaPorte;
     let tmpDateFechaSalida = this.editForm.controls['FechaSalida'].value;
     let tmpTimeSalida = this.editForm.controls['HoraSalida'].value;
     let tmpDateFechaLlegada = this.editForm.controls['FechaSalidaLlegada'].value;
     let tmpTime = this.editForm.controls['HoraLlegada'].value;
-    
-    
-    let formattedDateFechaSalida = this.datepipe.transform(tmpDateFechaSalida, 'YYYY-MM-dd')+'T'+tmpTimeSalida+':00';
-    let formattedDateFechaLlegada = this.datepipe.transform(tmpDateFechaLlegada, 'YYYY-MM-dd')+'T'+tmpTime+':00';
+
+
+    let formattedDateFechaSalida = this.datepipe.transform(tmpDateFechaSalida, 'YYYY-MM-dd') + 'T' + tmpTimeSalida + ':00';
+    let formattedDateFechaLlegada = this.datepipe.transform(tmpDateFechaLlegada, 'YYYY-MM-dd') + 'T' + tmpTime + ':00';
     //console.log(this.editForm.controls['HoraLlegada'].value);
     let generarCataAux = {
       UsuarioCreador: "4",
       DestinatariosCorreo: this.editForm.controls['Correo'].value,
       FechaSalidaOrigen: formattedDateFechaSalida,
       FechaLlegadaDestino: formattedDateFechaLlegada,
-      CartaPorte:this.generarCarta
+      CartaPorte: this.generarCarta
     };
-     
-     this.subscribeToSaveResponse(
-       this.generarCartaService.create(generarCataAux, timbrado)
+
+    this.subscribeToSaveResponse(
+      this.generarCartaService.create(generarCataAux, timbrado)
     );
-   
-    
-    
+
+
+
   }
 
   private createFromForm(): IGenerarCata {
@@ -1286,13 +1294,13 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit{
     );
   }
 
- 
+
 
   protected onSaveSuccess(res): void {
     console.log("Respuesta");
     console.log(res);
 
-    if(res.body.Serie == "" && res.body.Serie == ""){
+    if (res.body.Serie == "" && res.body.Serie == "") {
       this.isSaving = false;
       if (this.auxSave) {
         this.auxSave.emit(false);
@@ -1303,22 +1311,22 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit{
         text: 'No fue Posible Realizar la Acción',
         icon: 'warning',
         showCloseButton: true,
-        });
-    }else{
+      });
+    } else {
       this.isSaving = true;
       Swal.close();
       Swal.fire({
         icon: 'success',
-        text:'Guardado',
-        html:'<p>Folio <b>'+res.body.Folio+'</b> </p>' +
-        '<p>Fecha <b>'+res.body.RespuestaTimbrado.fechaTimbre+'</b></p> '  +
-        '<p>uuid <b>'+res.body.RespuestaTimbrado.uuid+'</b></p>' +
-        '<p>Mensage'+res.body.RespuestaTimbrado.error+'</p>',
+        text: 'Guardado',
+        html: '<p>Folio <b>' + res.body.Folio + '</b> </p>' +
+          '<p>Fecha <b>' + res.body.RespuestaTimbrado.fechaTimbre + '</b></p> ' +
+          '<p>uuid <b>' + res.body.RespuestaTimbrado.uuid + '</b></p>' +
+          '<p>Mensage' + res.body.RespuestaTimbrado.error + '</p>',
         showCloseButton: true,
       });
       //window.location.reload();
     }
-    
+
   }
 
   protected onSaveError(): void {
@@ -1332,11 +1340,11 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit{
       text: 'No fue Posible Realizar la Acción',
       icon: 'warning',
       showCloseButton: true,
-      });
+    });
   }
 
 
- 
+
 
 
 }
