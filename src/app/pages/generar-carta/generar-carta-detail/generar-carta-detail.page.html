@@ -264,6 +264,10 @@
                 
           
             </div>
+            <div fxLayout="column" fxLayout.gt-xs="row" fxLayoutGap="8px" fxLayoutGap.gt-xs="24px" fxLayoutAlign="end">
+                <p>Total Cantidad:{{NumTotalMercancias}}</p>
+               	<p>Bruto Peso Total (Kg): {{PesoBrutoTotal}}</p>		
+            </div>
             
         </div>
         <div class="mt-4" fxLayout="column" fxLayoutGap="8px">
@@ -301,7 +305,7 @@
                   </ng-container>
               
                  <!-- Name Column -->
-                 <ng-container matColumnDef="PesoUnidad">
+                 <ng-container matColumnDef="PesoEnKg">
                     <th mat-header-cell *matHeaderCellDef>Peso por Unidad</th>
                     <td mat-cell *matCellDef="let element">{{element.PesoEnKg}}</td>
                   </ng-container>

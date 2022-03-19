@@ -249,8 +249,7 @@ editForm = this.fb.group({
         buttons.push({
             title: "Ver Detalle",
             actionType: "view",
-            icon: "edit",
-            canDisplay: "!Referencia"
+            icon: "edit"
         });
 
         buttons.push({

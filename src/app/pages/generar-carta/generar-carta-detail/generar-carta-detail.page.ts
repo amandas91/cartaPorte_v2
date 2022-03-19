@@ -117,6 +117,8 @@ export interface CataPorte {
   Mercancias?: any;
   FiguraTransporte?: any;
   Autotransporte?: any;
+  ClaveBodega?: any;
+  ClaveCliente?: any;
 }
 
 export interface TiposFigura {
@@ -166,6 +168,7 @@ export interface Seguros {
 export interface Autotransporte {
   PermSCT?: string;
   NumPermisoSCT?: string;
+  eco?: string;
   IdentificacionVehicular?: IdentificacionVehicular;
   Seguros?: any;
 }
@@ -242,7 +245,7 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
   localidad: string;
   clave_estado: string;
 
-  PesoBrutoTotal: number;
+  PesoBrutoTotal=0;
 
   ClaveProdServ: string;
   descripcion: string;
@@ -251,7 +254,7 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
   CveMaterialPeligroso: string;
   Embalaje: string;
 
-  displayedColumns: string[] = ['Linea', 'ClaveProdServ', 'Descripcion', 'Cantidad', 'Unidad', 'PesoUnidad', 'PesoBruto', 'action'];
+  displayedColumns: string[] = ['Linea', 'ClaveProdServ', 'Descripcion', 'Cantidad', 'Unidad', 'PesoEnKg', 'PesoBruto', 'action'];
   displayedColumns1: string[] = ['index', 'rfc', 'fecha', 'direccion', 'cp', 'distancia', 'action'];
   //# Linea	Tipo de Producto	Descripción	Cantidad	Tipo unidad	Peso por Unidad (Kg)	Peso Bruto (Kg)	Accion
   dataSource = [];
@@ -296,6 +299,8 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
   isEdit:boolean;
   generarCartaPorteUpdate:any;
 
+  Eco:any;
+
   @Output()
   auxSave: EventEmitter<boolean> = new EventEmitter();
 
@@ -314,7 +319,7 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
   emisorTemp: { CreateDate: string; IdEmisor: number; Nombre: string; RegimenFiscal: string; Rfc: string; };
   validacionCarga: string;
   cpEmisorValidate: string;
-
+  pesoBruto=0;
 
   constructor(
     private fb: FormBuilder,
@@ -542,8 +547,8 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
             })
           )
           .subscribe((resBody: any) => (
-            this.update(resBody),
-            this.generarCartaPorteUpdate = resBody
+            this.update(resBody)
+            //this.generarCartaPorteUpdate = resBody
             
           ))
 
@@ -558,16 +563,56 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
 
 
   update(resBody) {
-    
+    this.generarCarta = resBody,
+    console.log("Consulta de Carta"),
+    console.log(this.generarCarta),
+    this.totalDistancia = 0;
+
     /**
      * Llenando Tabla de Carga
      */
-    let auxubicacionElementList: any;
-      console.log("TODO CARTA UPDATE"),
-      console.log(resBody),
-      this.dataSource = resBody.Conceptos;
      
-      this.table.renderRows()
+     resBody.CartaPorte.Mercancias.Mercancia.forEach(value => {
+      console.log("MERCANCIAS A LA TABLA CONCEPTOR")
+      console.log(value)
+
+      this.cargaMercancia = {
+        BienesTransp: value.BienesTransp,
+        Cantidad:  value.Cantidad,
+        Unidad: value.Unidad,
+        Descripcion: value.Descripcion,
+        ClaveUnidad: value.ClaveUnidad,
+        PesoEnKg:  Number(value.PesoEnKg),
+        MaterialPeligroso: this.MaterialPeligroso,
+        CveMaterialPeligroso: this.CveMaterialPeligroso,
+        Embalaje: this.Embalaje,
+      };
+  
+  
+  
+      this.cargaElementList = {
+        ClaveProdServ:value.BienesTransp,
+        TipoProducto: this.tipoProductoTable,
+        Cantidad:value.Cantidad,
+        ClaveUnidad:  value.ClaveUnidad,
+        Unidad: value.Unidad,
+        Descripcion: value.Descripcion,
+        ValorUnitario: 0,
+        Importe: 0,
+        carga: this.cargaMercancia,
+        PesoEnKg: Number(value.PesoEnKg),
+        PesoBruto:Number(value.PesoEnKg) * Number(value.Cantidad)
+      };
+  
+     
+      this.PesoBrutoTotal += Number(value.PesoEnKg) * Number(value.Cantidad) 
+      this.NumTotalMercancias += Number(value.Cantidad);
+       //this.dataSource = resBody.Conceptos;
+       //this.dataSource = resBody.CartaPorte.Mercancias
+       this.dataSource.push(this.cargaElementList)
+       this.table.renderRows()
+
+    })
     /**
      * Llenando Tabla de Carga
      */
@@ -576,46 +621,54 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
     * Llenando Tabla de Ubicacion 
     */
 
-    resBody.CartaPorte.Ubicaciones.Ubicacion.forEach(
-      function obj(value) {
-        let auxdomicilio = {
-          CodigoPostal: value.Domicilio.CodigoPostal,
-          Colonia: value.Domicilio.Colonia,
-          Estado: value.Domicilio.Estado,
-          Localidad: value.Domicilio.Localidad,
-          Municipio: value.Domicilio.CodMunicipioigoPostal,
-          Pais: value.Domicilio.Pais
-        }
+     resBody.CartaPorte.Ubicaciones.Ubicacion.forEach(element => {
+      let auxubicacionElementList: any;
 
-        auxubicacionElementList = {
-          rfc: value.RFCRemitenteDestinatario,
-          fecha: value.FechaHoraSalidaLlegada,
-          direccion: value.Domicilio.Estado,
-          cp: value.Domicilio.CodMunicipioigoPostal,
-          distancia: value.DistanciaRecorrida,
-          ubicacion: auxdomicilio
-        }
-
-       
-
-        return auxubicacionElementList
-
+      let auxdomicilio = {
+        CodigoPostal: element.Domicilio.CodigoPostal,
+        Colonia: element.Domicilio.Colonia,
+        Estado: element.Domicilio.Estado,
+        Localidad: element.Domicilio.Localidad,
+        Municipio: element.Domicilio.CodMunicipioigoPostal,
+        Pais: element.Domicilio.Pais
       }
-      
 
-    ),
-    console.log("UBICACION ELEMENT LIST ");
-    console.log(auxubicacionElementList);
-    this.dataSource1.data.push(auxubicacionElementList);
-    console.log("PUSH DE UBICACIONES");
-    console.log(this.dataSource1.data);
+      let aux = {
+        TipoUbicacion: element.TipoUbicacion,
+        RFCRemitenteDestinatario: element.RFCRemitenteDestinatario,
+        IDUbicacion: element.IDUbicacion,
+        FechaHoraSalidaLlegada: element.FechaHoraSalidaLlegada,
+        DistanciaRecorrida: element.DistanciaRecorrida,
+        Domicilio: auxdomicilio
+      };
+  
+      auxubicacionElementList = {
+        rfc: element.RFCRemitenteDestinatario,
+        fecha: element.FechaHoraSalidaLlegada,
+        direccion: element.Domicilio.Estado,
+        cp: element.Domicilio.CodigoPostal,
+        distancia: element.DistanciaRecorrida
+      }
+  
+      this.totalDistancia +=Number(element.DistanciaRecorrida) 
+  
+      this.ubicacionDestino.push(aux);
+      
+      if(element.TipoUbicacion == "Destino")
+        this.dataSource1.data.push(auxubicacionElementList);
+
+        
+      console.log("DESTINOS GUARDADOS EN OBJETO");
+      console.log(this.ubicacionDestino);
+
+    })
+
+    
     //this.dataSource1.data = resBody.CartaPorte.Ubicaciones.Ubicacion;
     this.dataSource1.sort = this.sort;
       
-    this.generarCarta = resBody,
-      console.log("Consulta de Carta"),
-      console.log(this.generarCarta),
-
+     
+      
       //Emisor
       this.searchRfc = this.generarCarta.Emisor.Rfc;
       this.searchArray = this.emisor.findIndex(x => x.Rfc ===  this.searchRfc),
@@ -623,6 +676,9 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
       this.editForm.controls['Nombre'].setValue(this.generarCarta.Emisor.Nombre),
       this.editForm.controls['RegimenFiscal'].setValue(this.generarCarta.Emisor.RegimenFiscal),
       this.editForm.controls['CodigoPostal'].setValue(this.generarCarta.Emisor.DomicilioFiscal.CodigoPostal),
+      this.emisor_g.Rfc = this.generarCarta.Emisor.Rfc,
+      this.emisor_g.Nombre = this.generarCarta.Emisor.Nombre
+      this.emisor_g.RegimenFiscal = this.generarCarta.Emisor.RegimenFiscal
 
       this.DomicilioFiscal =  this.generarCarta.Emisor.DomicilioFiscal;
       
@@ -635,6 +691,7 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
       this.editForm.controls['Pais'].setValue(this.catPaises[0]),
       this.paisExpedido =this.catPaises[0].IdPais,
       this.LugarExpedicion = this.editForm.controls['CodigoPostal'].value,
+      
       //estado
       this.catEstadosService.find(this.searchRfc)
           .pipe(
@@ -685,7 +742,10 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
       this.editForm.controls['NombreFigura'].setValue(this.generarCarta.CartaPorte.FiguraTransporte.TiposFigura[0].NombreFigura),
 
       //Unidad y Transporte
-      // this.editForm.controls['Eco'].setValue(this.generarCarta.CartaPorte.Autotransporte.),
+      this.editForm.controls['ClaveBodega'].setValue(this.generarCarta.CartaPorte.ClaveBodega),
+      this.editForm.controls['ClaveCliente'].setValue(this.generarCarta.CartaPorte.ClaveCliente),
+      this.editForm.controls['Eco'].setValue(this.generarCarta.CartaPorte.Mercancias.Autotransporte.eco),
+      this.Eco = this.generarCarta.CartaPorte.Mercancias.Autotransporte.eco,
       this.editForm.controls['PermSCT'].setValue(this.generarCarta.CartaPorte.Mercancias.Autotransporte.PermSCT),
       this.editForm.controls['AnioModeloVM'].setValue(this.generarCarta.CartaPorte.Mercancias.Autotransporte.IdentificacionVehicular.AnioModeloVM),
       this.editForm.controls['PlacaVM'].setValue(this.generarCarta.CartaPorte.Mercancias.Autotransporte.IdentificacionVehicular.PlacaVM),
@@ -693,6 +753,7 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
       this.editForm.controls['NumPermisoSCT'].setValue(this.generarCarta.CartaPorte.Mercancias.Autotransporte.NumPermisoSCT),
       this.editForm.controls['PolizaRespCivil'].setValue(this.generarCarta.CartaPorte.Mercancias.Autotransporte.Seguros.PolizaRespCivil),
       this.editForm.controls['AseguraRespCivil'].setValue(this.generarCarta.CartaPorte.Mercancias.Autotransporte.Seguros.AseguraRespCivil),
+
       this.searchRfc = this.generarCarta.CartaPorte.Mercancias.Autotransporte.PermSCT;
       this.searchArray = this.catTipoPermiso.findIndex(x => x.Clave ===  this.searchRfc),
       this.editForm.controls['PermSCT'].setValue(this.catTipoPermiso[this.searchArray]),
@@ -701,7 +762,6 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
       // this.searchArray = this.catTipoRemolque.findIndex(x => x.ClaveNomenclatura ===  this.searchRfc),
       this.editForm.controls['ConfigVehicular'].setValue(this.catTipoRemolque[1]),
      
-
 
       Swal.close()
   }
@@ -716,14 +776,14 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
 
     } else {
 
-    this.PesoBrutoTotal += Number(this.editForm.controls['PesoEnKg'].value);
+   
 
     this.NumTotalMercancias += Number(this.editForm.controls['Cantidad'].value);
 
     var pesoBrutoPoducto = 0;
 
-    pesoBrutoPoducto = Number(this.editForm.controls['PesoEnKg'].value) * Number(this.editForm.controls['Cantidad'].value);
-
+    pesoBrutoPoducto += Number(this.editForm.controls['PesoEnKg'].value) * Number(this.editForm.controls['Cantidad'].value);
+    this.PesoBrutoTotal += Number(pesoBrutoPoducto);
     this.cargaMercancia = {
       BienesTransp: "" + this.ClaveProdServ,
       Cantidad: parseInt(this.editForm.controls['Cantidad'].value),
@@ -735,6 +795,8 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
       CveMaterialPeligroso: this.CveMaterialPeligroso,
       Embalaje: this.Embalaje,
     };
+
+
 
     this.cargaElementList = {
       ClaveProdServ: "" + this.ClaveProdServ,
@@ -751,19 +813,6 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
     };
 
 
-    // this.cargaElementList = {
-    //   ClaveProdServ: ""+this.ClaveProdServ, 
-    //   Cantidad:Number(this.editForm.controls['Cantidad'].value),
-    //   ClaveUnidad: this.ClaveUnidad, 
-    //   Unidad: this.Unidad,
-    //   Descripcion: this.descripcion,
-    //   ValorUnitario: 0,
-    //   Importe: 0,
-    //   carga:this.cargaMercancia
-
-    // };
-
-    //this.conceptos.push(this.cargaElementList);
     this.dataSource.push(this.cargaElementList);
     this.table.renderRows();
 
@@ -903,6 +952,7 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
               this.editForm.controls['AseguraRespCivil'].setValue(resBody.AseguradoraCP);
               this.editForm.controls['NumPermisoSCT'].setValue(resBody.NoPermisoCP);
               this.editForm.controls['PermSCT'].setValue(resBody.TipoPermisoCP);
+              this.Eco = this.editForm.controls['Eco'].value;
               Swal.close();
             } else {
               Swal.fire({
@@ -1168,8 +1218,7 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
     this.generarCarta.TipoDeComprobante = "T";
     this.generarCarta.LugarExpedicion = this.LugarExpedicion;
 
-    this.generarCarta.CartaPorte.ClaveBodega = this.editForm.controls['ClaveBodega'].value;
-    this.generarCarta.CartaPorte.ClaveCliente = this.editForm.controls['ClaveCliente'].value;
+    
     /**
      * expedido
      */
@@ -1216,7 +1265,12 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
         Unidad: value.Unidad,
         Descripcion: value.Descripcion,
         ValorUnitario: 0,
-        Importe: 0
+        Importe: 0,
+        TipoProducto: "text",
+        PesoBrut: 0,
+        PesoUnidad: 0,
+        PesoBrutoTotal: 0,
+        NumTotalMercancias: 0
       };
       conceptosTemp.push(auxConcepto);
 
@@ -1239,19 +1293,8 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
     this.generarCarta.Observaciones = this.Observaciones;
     /**
     //  ****************** CARTA PORTE *********************
-    /**
-     * ubicaciones 
-     */
-    let ubicacionesTemp: Array<any> = [];
-    /*this.dataSource1.data.forEach(function (value) {
-      ubicacionesTemp.push(value.ubicacion);
-    });*/
-
-    const ubicacionesTotal =  this.ubicacionDestino.concat(this.ubicacionOrigen[0]);
-
-    ubicacionesTemp.push(ubicacionesTotal);
-
-    //this.CartaPorte.Ubicaciones.push(ubicacionesTemp);
+    
+   
 
 
     /**
@@ -1264,7 +1307,7 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
     this.TiposFigura = this.operador;
 
     /**
-    * AUTOTRANSPORTE
+    * ClaveBodega
     */
     this.Seguros = {
       AseguraRespCivil: this.editForm.controls['AseguraRespCivil'].value,
@@ -1280,6 +1323,7 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
 
     this.Autotransporte = {
       NumPermisoSCT: this.editForm.controls['NumPermisoSCT'].value,
+      eco: this.Eco,
       PermSCT: this.PermSCT,//this.editForm.controls['PermSCT'].value,
       IdentificacionVehicular: this.IdentificacionVehicular,
       Seguros: this.Seguros
@@ -1310,6 +1354,15 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
       mercanciaTemp.push(cargaMercanciaTemp);
     });
 
+    /**
+     * ubicaciones 
+     */
+     let ubicacionesTemp: Array<any> = [];
+ 
+     const ubicacionesTotal =  this.ubicacionDestino.concat(this.ubicacionOrigen[0]);
+ 
+     ubicacionesTemp.push(ubicacionesTotal);
+ 
 
     let aux = { Ubicacion: ubicacionesTemp[0] };
     let auxFigura = { TiposFigura: [this.TiposFigura] };
@@ -1327,7 +1380,9 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
       TotalDistRec: this.totalDistancia,
       Ubicaciones: aux,
       Mercancias: auxMerc,
-      FiguraTransporte: auxFigura
+      FiguraTransporte: auxFigura,
+      ClaveBodega: this.editForm.controls['ClaveBodega'].value,
+      ClaveCliente: this.editForm.controls['ClaveCliente'].value,
     };
 
     console.log("this.CartaPorte: ", this.CartaPorte)
@@ -1362,11 +1417,12 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
       text: 'Cargando...',
     });
     Swal.showLoading();
+    
     //this.generarCartaPorteUpdate
-    this.generarCartaUpdate.VersionGepp = this.generarCartaPorteUpdate.VersionGepp;
-    this.generarCartaUpdate.Version = this.generarCartaPorteUpdate.Version;
-    this.generarCartaUpdate.Serie = this.generarCartaPorteUpdate.Serie;
-    this.generarCartaUpdate.Folio = this.generarCartaPorteUpdate.Folio;
+    this.generarCartaUpdate.VersionGepp = this.generarCarta.VersionGepp;
+    this.generarCartaUpdate.Version = this.generarCarta.Version;
+    this.generarCartaUpdate.Serie = this.generarCarta.Serie;
+    this.generarCartaUpdate.Folio = this.generarCarta.Folio;
     this.generarCartaUpdate.Fecha = this.FechaActual;
     this.generarCartaUpdate.FormaPago = null;
     this.generarCartaUpdate.SubTotal = 0;
@@ -1409,23 +1465,27 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
      */
 
     let conceptosTemp: Array<any> = [];
-    this.dataSource.forEach(function (value) {
+    this.dataSource.forEach(element => {
+      console.log("ELEMENT CONCEPTOS"),
+      console.log(element)
       let auxConcepto = {
-        ClaveProdServ: value.ClaveProdServ,
-        Cantidad: value.Cantidad,
-        ClaveUnidad: value.ClaveUnidad,
-        Unidad: value.Unidad,
-        Descripcion: value.Descripcion,
+        ClaveProdServ: element.ClaveProdServ,
+        Cantidad: element.Cantidad,
+        ClaveUnidad: element.ClaveUnidad,
+        Unidad: element.Unidad,
+        Descripcion: element.Descripcion,
         ValorUnitario: 0,
-        Importe: 0
+        Importe: 0,
+        TipoProducto:"dev",
+        pesoCarga:0,
+        PesoBruto:0,
+        PesoUnidad:0
       };
 
-    conceptosTemp.push(auxConcepto);
+      conceptosTemp.push(auxConcepto);
     });
 
     this.generarCartaUpdate.Conceptos = conceptosTemp;
-    //this.generarCartaUpdate.Conceptos = this.generarCarta.Conceptos;
-    //this.generarCarta.Conceptos = this.conceptos;
 
     // /**
     //  * OBSERVACIONES
@@ -1438,7 +1498,7 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
     }];
     this.generarCartaUpdate.Observaciones = this.Observaciones;
 
-    //**UBICACIONES */
+    //**OPERADOR */
     this.operador.TipoFigura = this.editForm.controls['TipoFigura'].value;
     this.operador.RFCFigura = this.editForm.controls['RFCFigura'].value;
     this.operador.NombreFigura = this.editForm.controls['NombreFigura'].value;
@@ -1463,6 +1523,7 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
     this.Autotransporte = {
       NumPermisoSCT: this.editForm.controls['NumPermisoSCT'].value,
       PermSCT: this.PermSCT,//this.editForm.controls['PermSCT'].value,
+      eco: this.Eco,
       IdentificacionVehicular: this.IdentificacionVehicular,
       Seguros: this.Seguros
     };
@@ -1470,44 +1531,41 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
      /**
      * ubicaciones 
      */
-    // let ubicacionesTemp: Array<any> = [];
-    // /*this.dataSource1.data.forEach(function (value) {
-    //   ubicacionesTemp.push(value.ubicacion);
-    // });*/
-  
-    // const ubicacionesTotal =  this.ubicacionDestino.concat(this.ubicacionOrigen[0]);
+      let ubicacionesTemp: Array<any> = [];
+      console.log("UBICACIONES")
+      console.log(this.ubicacionOrigen)
+      const ubicacionesTotal =  this.ubicacionDestino.concat(this.ubicacionOrigen);
+      ubicacionesTemp.push(ubicacionesTotal);
 
-    // ubicacionesTemp.push(ubicacionesTotal);
   
     let mercanciaTemp: Array<any> = [];
     let pesoBrutoTemp = 0;
-    this.dataSource.forEach(function (value) {
-    console.log("DATA SOURCE CARGA MERCANCIA");
-    console.log(value);
-    let cargaMercanciaTemp = {
-        // BienesTransp: value.carga.BienesTransp,
-        // Cantidad: value.carga.Cantidad,
-        // Unidad: value.carga.Unidad,
-        // Descripcion: value.carga.Descripcion,
-        // ClaveUnidad: value.carga.ClaveUnidad,
-        // PesoEnKg: value.carga.PesoEnKg,
-        // MaterialPeligroso: value.carga.MaterialPeligroso,
-        // CveMaterialPeligroso: value.carga.CveMaterialPeligroso,
-        // Embalaje: value.carga.Embalaje,
-      };
-      console.log("Carga de mercancias");
-      console.log(value);
-      pesoBrutoTemp += Number(value.carga.PesoEnKg);
+    
+    this.dataSource.forEach(value => { 
+      let cargaMercanciaTemp = {
+          BienesTransp: value.ClaveProdServ,
+          Cantidad: value.Cantidad,
+          Unidad: value.Unidad,
+          Descripcion: value.Descripcion,
+          ClaveUnidad: value.ClaveUnidad,
+          PesoEnKg: value.PesoEnKg,
+          MaterialPeligroso:this.MaterialPeligroso,
+          CveMaterialPeligroso:this.CveMaterialPeligroso,
+          Embalaje: this.Embalaje,
+
+        };
+      pesoBrutoTemp += Number(value.PesoEnKg);
       mercanciaTemp.push(cargaMercanciaTemp);
     });
 
 
-    let aux = { Ubicacion: [] };
+    let aux = { Ubicacion: ubicacionesTemp[0] };
+    
     let auxFigura = { TiposFigura: [this.TiposFigura] };
     let auxMerc = {
-      PesoBrutoTotal: 0,
+      PesoBrutoTotal: pesoBrutoTemp,
       UnidadPeso: "KGM",
-      NumTotalMercancias: this.NumTotalMercancias,
+      NumTotalMercancias: mercanciaTemp.length,
       Mercancia:  mercanciaTemp,
       Autotransporte: this.Autotransporte
     };
@@ -1518,7 +1576,9 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
       TotalDistRec: this.totalDistancia,
       Ubicaciones: aux,
       Mercancias: auxMerc,
-      FiguraTransporte: auxFigura
+      FiguraTransporte: auxFigura,
+      ClaveBodega: this.editForm.controls['ClaveBodega'].value,
+      ClaveCliente: this.editForm.controls['ClaveCliente'].value,
     };
 
     console.log("this.CartaPorte: ", this.CartaPorte)
