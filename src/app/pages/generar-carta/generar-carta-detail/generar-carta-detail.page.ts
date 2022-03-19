@@ -564,9 +564,9 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
 
   update(resBody) {
     this.generarCarta = resBody,
-    console.log("Consulta de Carta"),
-    console.log(this.generarCarta),
-    this.totalDistancia = 0;
+    console.log("Consulta de Carta")
+    console.log(this.generarCarta)
+    this.totalDistancia = 0
 
     /**
      * Llenando Tabla de Carga
@@ -583,9 +583,9 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
         Descripcion: value.Descripcion,
         ClaveUnidad: value.ClaveUnidad,
         PesoEnKg:  Number(value.PesoEnKg),
-        MaterialPeligroso: this.MaterialPeligroso,
-        CveMaterialPeligroso: this.CveMaterialPeligroso,
-        Embalaje: this.Embalaje,
+        MaterialPeligroso: value.MaterialPeligroso,
+        CveMaterialPeligroso: value.MaterialPeligroso,
+        Embalaje: value.Embalaje,
       };
   
   
@@ -613,6 +613,8 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
        this.table.renderRows()
 
     })
+
+    
     /**
      * Llenando Tabla de Carga
      */
@@ -746,6 +748,7 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
       this.editForm.controls['ClaveCliente'].setValue(this.generarCarta.CartaPorte.ClaveCliente),
       this.editForm.controls['Eco'].setValue(this.generarCarta.CartaPorte.Mercancias.Autotransporte.eco),
       this.Eco = this.generarCarta.CartaPorte.Mercancias.Autotransporte.eco,
+      this.PermSCT = this.generarCarta.CartaPorte.Mercancias.Autotransporte.PermSCT;
       this.editForm.controls['PermSCT'].setValue(this.generarCarta.CartaPorte.Mercancias.Autotransporte.PermSCT),
       this.editForm.controls['AnioModeloVM'].setValue(this.generarCarta.CartaPorte.Mercancias.Autotransporte.IdentificacionVehicular.AnioModeloVM),
       this.editForm.controls['PlacaVM'].setValue(this.generarCarta.CartaPorte.Mercancias.Autotransporte.IdentificacionVehicular.PlacaVM),
@@ -822,12 +825,18 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
 
   deleteRowData(index, element) {
     const data = this.dataSource;
-
+    console.log(data);
     data.splice(index, 1);
 
     this.dataSource = data;
 
     this.table.renderRows();
+    this.NumTotalMercancias=0;
+    this.PesoBrutoTotal=0;
+    this.dataSource.forEach(element => {
+      this.NumTotalMercancias += Number(element.Cantidad)
+      this.PesoBrutoTotal += Number(element.PesoBruto)
+     })
 
   }
 
@@ -921,6 +930,12 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
 
 
     this.table.renderRows();
+    this.totalDistancia=0;
+    this.dataSource1.data.forEach(element => {
+      console.log(element)
+      this.totalDistancia += Number(element.distancia)
+     })
+    
   }
 
 
@@ -1584,20 +1599,20 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
     console.log("this.CartaPorte: ", this.CartaPorte)
 
     this.generarCartaUpdate.CartaPorte = this.CartaPorte;
-    let tmpDateFechaSalida = '2021-12-28';
-    let tmpTimeSalida = '2021-12-28T';
-    let tmpDateFechaLlegada = '06:00';
-    let tmpTime = '06:00';
+    let tmpDateFechaSalida = this.editForm.controls['FechaSalida'].value;
+    let tmpTimeSalida = this.editForm.controls['HoraSalida'].value;
+    let tmpDateFechaLlegada = this.editForm.controls['FechaSalidaLlegada'].value;
+    let tmpTime = this.editForm.controls['HoraLlegada'].value;
 
 
-    let formattedDateFechaSalida = "2021-12-28T06:00:00";
-    let formattedDateFechaLlegada ="2021-12-28T06:00:00";
+    let formattedDateFechaSalida = this.datepipe.transform(tmpDateFechaSalida, 'YYYY-MM-dd') + 'T' + tmpTimeSalida + ':00';
+    let formattedDateFechaLlegada = this.datepipe.transform(tmpDateFechaLlegada, 'YYYY-MM-dd') + 'T' + tmpTime + ':00';
     //console.log(this.editForm.controls['HoraLlegada'].value);
     let generarCataAux = {
       UsuarioCreador: "4",
       DestinatariosCorreo: this.editForm.controls['Correo'].value,
-      FechaSalidaOrigen: formattedDateFechaSalida,
-      FechaLlegadaDestino: formattedDateFechaLlegada,
+      FechaSalidaOrigen: '2022-03-20T12:06:50',
+      FechaLlegadaDestino: '2022-03-21T12:06:50',
       CartaPorte: this.generarCartaUpdate
     };
 
