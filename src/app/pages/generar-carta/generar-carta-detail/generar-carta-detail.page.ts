@@ -659,10 +659,6 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
       if(element.TipoUbicacion == "Destino")
         this.dataSource1.data.push(auxubicacionElementList);
 
-        
-      console.log("DESTINOS GUARDADOS EN OBJETO");
-      console.log(this.ubicacionDestino);
-
     })
 
     
@@ -918,7 +914,6 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
     }
   }
 
-
   removeDataUbicacion(index, element) {
     const data = this.dataSource1.data;
 
@@ -937,7 +932,6 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
      })
     
   }
-
 
   onSelectEvent(value: any, type: string) {
     switch (type) {
@@ -1212,7 +1206,6 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
     return this.accountService.hasAnyAuthority(authorities);
   }
 
-
   saveData(timbrado: boolean) {
     Swal.fire({
       allowOutsideClick: false,
@@ -1308,9 +1301,6 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
     this.generarCarta.Observaciones = this.Observaciones;
     /**
     //  ****************** CARTA PORTE *********************
-    
-   
-
 
     /**
      * OPERADOR
@@ -1345,7 +1335,6 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
     };
 
 
-    //this.CartaPorte.Autotransporte = this.Autotransporte;
     /**
      * Mercancias
      */
@@ -1381,6 +1370,8 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
 
     let aux = { Ubicacion: ubicacionesTemp[0] };
     let auxFigura = { TiposFigura: [this.TiposFigura] };
+
+
     let auxMerc = {
       PesoBrutoTotal: pesoBrutoTemp,
       UnidadPeso: "KGM",
@@ -1481,8 +1472,6 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
 
     let conceptosTemp: Array<any> = [];
     this.dataSource.forEach(element => {
-      console.log("ELEMENT CONCEPTOS"),
-      console.log(element)
       let auxConcepto = {
         ClaveProdServ: element.ClaveProdServ,
         Cantidad: element.Cantidad,
@@ -1501,6 +1490,8 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
     });
 
     this.generarCartaUpdate.Conceptos = conceptosTemp;
+
+    
 
     // /**
     //  * OBSERVACIONES
@@ -1575,7 +1566,12 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
 
 
     let aux = { Ubicacion: ubicacionesTemp[0] };
-    
+    console.log("Pintar fecha ultima")
+    let FechaSalidaOrigen = aux.Ubicacion[0].FechaHoraSalidaLlegada
+    console.log(FechaSalidaOrigen)
+    let FechaLlegadaDestino = aux.Ubicacion[aux.Ubicacion.length - 1].FechaHoraSalidaLlegada
+    console.log(FechaSalidaOrigen)
+
     let auxFigura = { TiposFigura: [this.TiposFigura] };
     let auxMerc = {
       PesoBrutoTotal: pesoBrutoTemp,
@@ -1599,20 +1595,13 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
     console.log("this.CartaPorte: ", this.CartaPorte)
 
     this.generarCartaUpdate.CartaPorte = this.CartaPorte;
-    let tmpDateFechaSalida = this.editForm.controls['FechaSalida'].value;
-    let tmpTimeSalida = this.editForm.controls['HoraSalida'].value;
-    let tmpDateFechaLlegada = this.editForm.controls['FechaSalidaLlegada'].value;
-    let tmpTime = this.editForm.controls['HoraLlegada'].value;
-
-
-    let formattedDateFechaSalida = this.datepipe.transform(tmpDateFechaSalida, 'YYYY-MM-dd') + 'T' + tmpTimeSalida + ':00';
-    let formattedDateFechaLlegada = this.datepipe.transform(tmpDateFechaLlegada, 'YYYY-MM-dd') + 'T' + tmpTime + ':00';
+    
     //console.log(this.editForm.controls['HoraLlegada'].value);
     let generarCataAux = {
       UsuarioCreador: "4",
       DestinatariosCorreo: this.editForm.controls['Correo'].value,
-      FechaSalidaOrigen: '2022-03-20T12:06:50',
-      FechaLlegadaDestino: '2022-03-21T12:06:50',
+      FechaSalidaOrigen: FechaSalidaOrigen,
+      FechaLlegadaDestino: FechaLlegadaDestino,
       CartaPorte: this.generarCartaUpdate
     };
 
@@ -1620,12 +1609,8 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
     console.log(this.generarCartaUpdate);
 
     this.subscribeToSaveResponse(
-
       this.generarCartaService.create(generarCataAux, timbrado),
-      
     );
-
-   
     
   }
 
