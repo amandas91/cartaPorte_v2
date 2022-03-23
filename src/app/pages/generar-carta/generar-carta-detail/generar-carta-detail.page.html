@@ -341,6 +341,7 @@
             <h1>Origen</h1>
         <div class="mt-4" fxLayout="column" fxLayoutGap="8px" [formGroup]="editForm" >
             <div fxLayout="column" fxLayout.gt-xs="row" fxLayoutGap="8px" fxLayoutGap.gt-xs="24px" fxLayoutAlign="end">
+                
                 <mat-form-field fxFlex="50%" appearance="outline">
                     <mat-label >Fecha Salida</mat-label>
                     <input matInput [matDatepicker]="FechaSalida" formControlName="FechaSalida" >
@@ -377,7 +378,7 @@
                 <mat-form-field fxFlex="35%" appearance="outline">
                     <mat-label>Tipo de horario</mat-label>
                     <mat-select name="tipoHorario" formControlName="TipoHorario">
-                        <mat-option *ngFor="let item of tipoHorario" [value]="item">
+                        <mat-option *ngFor="let item of tipoHorario" [value]="item.Descripcion">
                             {{item.Descripcion}}
                         </mat-option>
                     </mat-select>

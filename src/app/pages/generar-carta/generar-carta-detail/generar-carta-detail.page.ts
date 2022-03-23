@@ -573,8 +573,6 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
      */
      
      resBody.CartaPorte.Mercancias.Mercancia.forEach(value => {
-      console.log("MERCANCIAS A LA TABLA CONCEPTOR")
-      console.log(value)
 
       this.cargaMercancia = {
         BienesTransp: value.BienesTransp,
@@ -622,8 +620,23 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
     /**
     * Llenando Tabla de Ubicacion 
     */
+    /*
+    * ORIGEN
+    */
+     
 
-     resBody.CartaPorte.Ubicaciones.Ubicacion.forEach(element => {
+      
+     
+     
+      this.editForm.controls['FechaSalida'].setValue( resBody.CartaPorte.Ubicaciones.Ubicacion[0].FechaHoraSalidaLlegada)
+      let tmpTime = this.editForm.controls['FechaSalida'].value;
+      let formattedDate = this.datepipe.transform(tmpTime, 'hh:mm')
+      console.log("HORA ---" + formattedDate)
+      this.editForm.controls['HoraSalida'].setValue(formattedDate)
+      this.editForm.controls['RFCRemitenteDestinatario'].setValue( resBody.CartaPorte.Ubicaciones.Ubicacion[0].RFCRemitenteDestinatario)
+      this.editForm.controls['TipoHorario'].setValue(this.tipoHorario[0].Descripcion)
+      
+      resBody.CartaPorte.Ubicaciones.Ubicacion.forEach(element => {
       let auxubicacionElementList: any;
 
       let auxdomicilio = {
@@ -659,13 +672,11 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
       if(element.TipoUbicacion == "Destino")
         this.dataSource1.data.push(auxubicacionElementList);
 
-    })
+      })
 
     
-    //this.dataSource1.data = resBody.CartaPorte.Ubicaciones.Ubicacion;
-    this.dataSource1.sort = this.sort;
-      
-     
+      //this.dataSource1.data = resBody.CartaPorte.Ubicaciones.Ubicacion;
+      this.dataSource1.sort = this.sort;
       
       //Emisor
       this.searchRfc = this.generarCarta.Emisor.Rfc;
@@ -699,13 +710,13 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
           )
           .subscribe((resBody: ICatEstados[]) => (
             this.catEstados = resBody,
-           this.searchRfc = this.generarCarta.Emisor.DomicilioFiscal.Estado,
-           this.searchArray = this.catEstados.findIndex(x => x.Nombre ===  this.searchRfc),
-           this.editForm.controls['Estado'].setValue(this.catEstados[ this.searchArray]),
-           this.estadoExpedido =this.catEstados[ this.searchArray].ClaveEstado,
+            this.searchRfc = this.generarCarta.Emisor.DomicilioFiscal.Estado,
+            this.searchArray = this.catEstados.findIndex(x => x.Nombre ===  this.searchRfc),
+            this.editForm.controls['Estado'].setValue(this.catEstados[ this.searchArray]),
+            this.estadoExpedido =this.catEstados[ this.searchArray].ClaveEstado,
       
            //MUNICIPIO
-           this.searchRfc = this.generarCarta.Emisor.DomicilioFiscal.Municipio,
+            this.searchRfc = this.generarCarta.Emisor.DomicilioFiscal.Municipio,
             this.catMunicipiosService.find(this.searchRfc)
             .pipe(
               map((res: HttpResponse<ICatMunicipios[]>) => {
