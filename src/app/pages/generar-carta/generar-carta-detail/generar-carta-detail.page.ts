@@ -631,7 +631,6 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
       this.editForm.controls['FechaSalida'].setValue( resBody.CartaPorte.Ubicaciones.Ubicacion[0].FechaHoraSalidaLlegada)
       let tmpTime = this.editForm.controls['FechaSalida'].value;
       let formattedDate = this.datepipe.transform(tmpTime, 'hh:mm')
-      console.log("HORA ---" + formattedDate)
       this.editForm.controls['HoraSalida'].setValue(formattedDate)
       this.editForm.controls['RFCRemitenteDestinatario'].setValue( resBody.CartaPorte.Ubicaciones.Ubicacion[0].RFCRemitenteDestinatario)
       this.editForm.controls['TipoHorario'].setValue(this.tipoHorario[0].Descripcion)
@@ -772,6 +771,10 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
       // this.searchArray = this.catTipoRemolque.findIndex(x => x.ClaveNomenclatura ===  this.searchRfc),
       this.editForm.controls['ConfigVehicular'].setValue(this.catTipoRemolque[1]),
      
+      /**
+       * CORREO
+       */
+      this.editForm.controls['Correo'].setValue(this.generarCarta.Correos),
 
       Swal.close()
   }

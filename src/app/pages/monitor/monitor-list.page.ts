@@ -16,6 +16,9 @@ import { MonitoreoService } from "app/services/core/monitoreo.servce";
 import { IMonitoreo, Monitoreo } from "app/models/core/monitoreo.model";
 import { MonitorDialogPages } from "./monitor-dialog.pages";
 import { FormBuilder } from "@angular/forms";
+import { map } from "rxjs/operators";
+import Swal from "sweetalert2";
+
 
 
 @Component({
@@ -143,16 +146,50 @@ editForm = this.fb.group({
       console.log("Event: " + JSON.stringify(event));
       const value = event?.row;
       switch (event?.actionType) {
-          case "delete":
-              // this.delete(value);
-              this.newItem(value);
-              console.log("DELTE");
-              break;
-          case "view":
-              console.log("VIEW");
-              // this.view(value);
-              this.router.navigate([`/editar-carta/${value.Folio}`]);
-              break;
+            case "delete":
+                // this.delete(value);
+                this.newItem(value);
+                console.log("DELTE");
+                break;
+            case "view":
+                console.log("VIEW");
+                // this.view(value);
+                this.router.navigate([`/editar-carta/${value.Folio}`]);
+                break;
+            case "pdf":
+                this.valueService.findPDF(value.Folio, "ejemplo.pdf").subscribe((resBody: any) => {
+                    if (resBody.error) {
+                        Swal.fire({
+                            title: 'Conflicto',
+                            text: resBody.error,
+                            icon: 'warning',
+                            showCloseButton: true,
+                          });
+                    } else {
+                        Swal.close()
+        
+                    }
+        
+        
+                  });
+             break;
+            case "xml":
+                this.valueService.findXML(value.Folio, "ejemplo.xml").subscribe((resBody: any) => {
+                    if (resBody.error) {
+                        Swal.fire({
+                            title: 'Conflicto',
+                            text: resBody.error,
+                            icon: 'warning',
+                            showCloseButton: true,
+                          });
+                    } else {
+                        Swal.close()
+        
+                    }
+        
+        
+                  });
+                break;
           case "update":
               console.log("UPDATE");
               // this.update(value.id);
@@ -171,8 +208,6 @@ editForm = this.fb.group({
       const columns: TableColumn<any>[] = [];
       //columns.push({ XML: 'Núm. PDF', property: 'IdComprobante', type: 'text', visible: true });
       
-       
-
         columns.push({
             label: "Folio Temporal",
             property: "Folio",
@@ -237,15 +272,18 @@ editForm = this.fb.group({
       const buttons: ButtonProperties[] = [];
         buttons.push({
             title: "XML",
-            actionType: "view",
-            icon: "file_copy"
+            actionType: "xml",
+            icon: "file_copy",
+            canDisplay: "Referencia"
         });
 
         buttons.push({
             title: "PDF",
-            actionType: "view",
-            icon: "picture_as_pdf"
+            actionType: "pdf",
+            icon: "picture_as_pdf",
+            canDisplay: "Referencia"
         });
+
         buttons.push({
             title: "Ver Detalle",
             actionType: "view",

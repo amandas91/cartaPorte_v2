@@ -17,6 +17,8 @@ export class ButtonProperties {
     | 'canDelete'
     | 'collections'
     | 'payments'
+    | 'pdf'
+    | 'xml'
     | 'cancel';
   icon: string;
   iconType?: string;
