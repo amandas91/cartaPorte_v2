@@ -181,7 +181,9 @@
                     <mat-label>Configuración Vehicular</mat-label>
                     <mat-select name="catTipoRemolque" formControlName="ConfigVehicular">
                         <mat-option *ngFor="let item of catTipoRemolque" [value]="item">
-                            {{item.ClaveTipoRemolque}} / {{item.Remolque}}
+                            {{item.ClaveNomenclatura}} / {{item.Descripcion}}
+                            <!-- {{item.ClaveTipoRemolque}} / {{item.Remolque}} -->
+                            
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
@@ -556,7 +558,7 @@
                 <mat-icon>settings</mat-icon>Guardar y Timbrar
               </button>
             <div fxLayout="column" >
-                      <p>*Escribe cada dirección de correo separados por coma</p>
+                      <p>*Escribe cada direción de correo separados por coma</p>
                  </div>
         </div>
     </mat-step> 

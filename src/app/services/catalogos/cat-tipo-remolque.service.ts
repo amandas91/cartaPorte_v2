@@ -16,6 +16,8 @@ type EntityArrayResponseType = HttpResponse<ICatTipoRemolque[]>;
 export class CatTipoRemolqueService {
 //   public resourceUrl = environment.apiUrl + '/api/owners';
     public resourceUrl = environment.apiUrlCartaPorte + '/tipoRemolque';
+    public resourceUrlConfig = environment.apiUrlCartaPorte + '/tipoAutotransporte';
+
 
   constructor(protected http: HttpClient) {}
 
@@ -28,7 +30,7 @@ export class CatTipoRemolqueService {
     //console.log('---> test: ' )
     const options = createRequestOption(req);
 
-    return this.http.get<ICatTipoRemolque[]>(`${this.resourceUrl}`, {  observe: 'response' });
+    return this.http.get<ICatTipoRemolque[]>(`${this.resourceUrlConfig}`, {  observe: 'response' });
   }
 
 }
