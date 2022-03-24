@@ -154,10 +154,10 @@ editForm = this.fb.group({
             case "view":
                 console.log("VIEW");
                 // this.view(value);
-                this.router.navigate([`/editar-carta/${value.Folio}`]);
+                this.router.navigate([`/editar-carta/${value.Referencia}`]);
                 break;
             case "pdf":
-                this.valueService.findPDF(value.Folio, "ejemplo.pdf").subscribe((resBody: any) => {
+                this.valueService.findPDF(value.Referencia, "ejemplo.pdf").subscribe((resBody: any) => {
                     if (resBody.error) {
                         Swal.fire({
                             title: 'Conflicto',
@@ -174,7 +174,7 @@ editForm = this.fb.group({
                   });
              break;
             case "xml":
-                this.valueService.findXML(value.Folio, "ejemplo.xml").subscribe((resBody: any) => {
+                this.valueService.findXML(value.Referencia, "ejemplo.xml").subscribe((resBody: any) => {
                     if (resBody.error) {
                         Swal.fire({
                             title: 'Conflicto',

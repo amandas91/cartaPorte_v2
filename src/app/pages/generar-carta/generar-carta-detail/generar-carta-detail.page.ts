@@ -1419,7 +1419,7 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
     //console.log(this.editForm.controls['HoraLlegada'].value);
     let generarCataAux = {
       UsuarioCreador: "4",
-      DestinatariosCorreo: this.editForm.controls['Correo'].value,
+      Correos: this.editForm.controls['Correo'].value,
       FechaSalidaOrigen: formattedDateFechaSalida,
       FechaLlegadaDestino: formattedDateFechaLlegada,
       CartaPorte: this.generarCarta
@@ -1613,7 +1613,7 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
     //console.log(this.editForm.controls['HoraLlegada'].value);
     let generarCataAux = {
       UsuarioCreador: "4",
-      DestinatariosCorreo: this.editForm.controls['Correo'].value,
+      Correos: this.editForm.controls['Correo'].value,
       FechaSalidaOrigen: FechaSalidaOrigen,
       FechaLlegadaDestino: FechaLlegadaDestino,
       CartaPorte: this.generarCartaUpdate
