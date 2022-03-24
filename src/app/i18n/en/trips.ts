@@ -10,13 +10,13 @@ export const locale = {
             RECORD: "Record",
             TRIP_NAME: "Trip name",
             STEPS: {
-                BUDGET: "Información Basica",
+                BUDGET: "Información Básica",
                 FLIGHT: "Flight",
                 RECEPTOR: "Receptor",
                 COLLECTIONS_INVOICING: "Operador",
                 PAYMENTS: "Unidad & Transporte",
                 COMMISSIONS: "Carga",
-                UBICACION_ORIGEN: "Ubicación & Origen",
+                UBICACION_ORIGEN: "Ubicaciones",
                 GENERACION_CARTA: "Generación de carta porte",
             },
             TABS: {

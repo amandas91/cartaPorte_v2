@@ -8,7 +8,7 @@
                 <img src="assets/images/logos/gepp-blanco.png">
             </div>
 
-            <div class="title" style="color: white;">LOGIN TO YOUR ACCOUNT</div>
+            <div class="title" style="color: white;">PORTAL CARTA PORTE</div>
 
             <form name="form" [formGroup]="form" novalidate style="color: white;">
 
@@ -36,25 +36,23 @@
 
 
                 <mat-form-field appearance="outline">
-                    <mat-label style="color: white;">User</mat-label>
+                    <mat-label style="color: white;">Usuario</mat-label>
                     <input matInput formControlName="Username" autocomplete="off">
-                    <mat-icon style="color: white;" matSuffix class="secondary-text">User</mat-icon>
+                    <mat-icon style="color: white;" matSuffix class="secondary-text">Usuario </mat-icon>
                     
                 </mat-form-field>
 
                 <mat-form-field appearance="outline">
-                    <mat-label style="color: white;">Password</mat-label>
+                    <mat-label style="color: white;">Contraseña</mat-label>
                     <input style="color: white;" matInput type="password" formControlName="Password">
                     <mat-icon style="color: white;" matSuffix class="secondary-text">vpn_key</mat-icon>
                     <mat-error>
-                        Password is required
+                        Contraseña Requerida
                     </mat-error>
                 </mat-form-field>
 
-               
-
                 <button mat-raised-button color="accent" (click)="send()" class="submit-button" aria-label="LOG IN" [disabled]="form.invalid">
-                    LOGIN
+                    INGRESAR
                 </button>
 
             </form>

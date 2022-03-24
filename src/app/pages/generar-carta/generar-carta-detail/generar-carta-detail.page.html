@@ -53,7 +53,7 @@
                 </mat-form-field>
                 
                 <mat-form-field fxFlex="33%" appearance="outline">
-                    <mat-label >Regimen Fiscal</mat-label>
+                    <mat-label >Régimen Fiscal</mat-label>
                     <input style="color: black;" autocomplete="off" matInput formControlName="RegimenFiscal" readonly />
                 </mat-form-field>
                 
@@ -205,7 +205,7 @@
                     <input style="color: black;" autocomplete="off" matInput formControlName="PlacaVM" readonly />
                 </mat-form-field>
                 <mat-form-field fxFlex="40%" appearance="outline">
-                    <mat-label >Poliza Responsabilidad Civil</mat-label>
+                    <mat-label >Póliza Responsabilidad Civil</mat-label>
                     <input style="color: black;" autocomplete="off" matInput formControlName="PolizaRespCivil" readonly />
                 </mat-form-field>
                 <mat-form-field fxFlex="40%" appearance="outline">
@@ -265,7 +265,7 @@
           
             </div>
             <div fxLayout="column" fxLayout.gt-xs="row" fxLayoutGap="8px" fxLayoutGap.gt-xs="24px" fxLayoutAlign="end">
-                <p>Total Cantidad:{{NumTotalMercancias}}</p>
+                <p>Total Cantidad: {{NumTotalMercancias}}</p>
                	<p>Bruto Peso Total (Kg): {{PesoBrutoTotal}}</p>		
             </div>
             
@@ -274,7 +274,7 @@
             
             <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 demo-table">
                 <ng-container matColumnDef="Linea">
-                    <th mat-header-cell *matHeaderCellDef># Linea </th>
+                    <th mat-header-cell *matHeaderCellDef># Línea </th>
                     <td mat-cell *matCellDef="let element; let i = index;">{{i}}</td>
                 </ng-container>
 
@@ -287,7 +287,7 @@
 
                  <!-- Symbol Column -->
                  <ng-container matColumnDef="Descripcion">
-                    <th mat-header-cell *matHeaderCellDef>Descripcion</th>
+                    <th mat-header-cell *matHeaderCellDef>Descripción</th>
                     <td mat-cell *matCellDef="let element">{{element.Descripcion}}</td>
                   </ng-container>
 
@@ -320,7 +320,7 @@
                 
 
                   <ng-container matColumnDef="action">
-                    <th mat-header-cell *matHeaderCellDef> Action </th>
+                    <th mat-header-cell *matHeaderCellDef> Acciones </th>
                     <td mat-cell *matCellDef="let element; let i = index;" class="action-link"> 
                       <a (click)="deleteRowData(i, element)"> <mat-icon >delete</mat-icon></a>  
                     </td>
@@ -461,13 +461,13 @@
             
         </div>
         <div fxLayout="column" fxLayout.gt-xs="row" fxLayoutGap="8px" fxLayoutGap.gt-xs="24px" fxLayoutAlign="end"  >
-            <p><b>Total Distancia:</b>{{totalDistancia}}</p>
+            <p><b>Total Distancia: </b> {{totalDistancia}}</p>
         </div>
 
         <div class="mt-4" fxLayout="column" fxLayoutGap="8px">
             <table mat-table [dataSource]="dataSource1" matSort (matSortChange)="announceSortChange($event)" class="mat-elevation-z8" >
                 <ng-container matColumnDef="index">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="index"> Index </th>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="index"> # Línea </th>
                     <td mat-cell *matCellDef="let element; let i = index;">{{i}}</td>
                 </ng-container>
 
@@ -498,7 +498,7 @@
                 <!-- Symbol Column -->
                 <ng-container matColumnDef="direccion">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Direccion">
-                        Direccion
+                        Dirección
                     </th>
                     <td mat-cell *matCellDef="let element"> {{element.direccion}} </td>
                 </ng-container>
@@ -519,7 +519,7 @@
                 </ng-container>
 
                 <ng-container matColumnDef="action">
-                    <th mat-header-cell *matHeaderCellDef> Action </th>
+                    <th mat-header-cell *matHeaderCellDef> Acciones </th>
                     <td mat-cell *matCellDef="let element; let i = index; " class="action-link"> 
                       <a (click)="removeDataUbicacion(i, element)"> <mat-icon >delete</mat-icon></a>  
                     </td>
@@ -556,7 +556,7 @@
                 <mat-icon>settings</mat-icon>Guardar y Timbrar
               </button>
             <div fxLayout="column" >
-                      <p>*Escribe cada direeción de correo separados por coma</p>
+                      <p>*Escribe cada dirección de correo separados por coma</p>
                  </div>
         </div>
     </mat-step> 
