@@ -20,7 +20,6 @@ export interface IGenerarCata {
     Conceptos?: Array<IConcepto>;
     Observaciones?: any;
     CartaPorte?: any;
-    Correos?: any;
 
 }
 export class GenerarCata implements IGenerarCata {

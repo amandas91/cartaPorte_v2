@@ -154,7 +154,7 @@ editForm = this.fb.group({
             case "view":
                 console.log("VIEW");
                 // this.view(value);
-                this.router.navigate([`/editar-carta/${value.Referencia}`]);
+                this.router.navigate([`/editar-carta/${value.Folio}`]);
                 break;
             case "pdf":
                 this.valueService.findPDF(value.Referencia, "ejemplo.pdf").subscribe((resBody: any) => {

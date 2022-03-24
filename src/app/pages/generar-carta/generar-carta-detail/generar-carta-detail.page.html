@@ -172,7 +172,7 @@
                 <mat-form-field fxFlex="40%" appearance="outline">
                     <mat-label>Permiso SCT</mat-label>
                     <mat-select name="catTipoPermiso" formControlName="PermSCT" (selectionChange)="onSelectEvent($event.value, 'numpermisosct')">
-                        <mat-option *ngFor="let item of catTipoPermiso" [value]="item" >
+                        <mat-option *ngFor="let item of catTipoPermiso" [value]="item.Clave" >
                           {{item.Clave}} / {{item.Descripcion}}
                         </mat-option>
                     </mat-select>
@@ -180,7 +180,7 @@
                 <mat-form-field fxFlex="40%" appearance="outline">
                     <mat-label>Configuración Vehicular</mat-label>
                     <mat-select name="catTipoRemolque" formControlName="ConfigVehicular">
-                        <mat-option *ngFor="let item of catTipoRemolque" [value]="item">
+                        <mat-option *ngFor="let item of catTipoRemolque" [value]="item.ClaveNomenclatura">
                             {{item.ClaveNomenclatura}} / {{item.Descripcion}}
                             <!-- {{item.ClaveTipoRemolque}} / {{item.Remolque}} -->
                             

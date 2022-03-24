@@ -758,18 +758,19 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
       this.editForm.controls['PermSCT'].setValue(this.generarCarta.CartaPorte.Mercancias.Autotransporte.PermSCT),
       this.editForm.controls['AnioModeloVM'].setValue(this.generarCarta.CartaPorte.Mercancias.Autotransporte.IdentificacionVehicular.AnioModeloVM),
       this.editForm.controls['PlacaVM'].setValue(this.generarCarta.CartaPorte.Mercancias.Autotransporte.IdentificacionVehicular.PlacaVM),
+      this.editForm.controls['ConfigVehicular'].setValue(this.generarCarta.CartaPorte.Mercancias.Autotransporte.IdentificacionVehicular.ConfigVehicular),
       this.editForm.controls['Eco'].setValue(this.generarCarta.CartaPorte.Mercancias.Autotransporte.eco),
       this.editForm.controls['NumPermisoSCT'].setValue(this.generarCarta.CartaPorte.Mercancias.Autotransporte.NumPermisoSCT),
       this.editForm.controls['PolizaRespCivil'].setValue(this.generarCarta.CartaPorte.Mercancias.Autotransporte.Seguros.PolizaRespCivil),
       this.editForm.controls['AseguraRespCivil'].setValue(this.generarCarta.CartaPorte.Mercancias.Autotransporte.Seguros.AseguraRespCivil),
 
-      this.searchRfc = this.generarCarta.CartaPorte.Mercancias.Autotransporte.PermSCT;
-      this.searchArray = this.catTipoPermiso.findIndex(x => x.Clave ===  this.searchRfc),
-      this.editForm.controls['PermSCT'].setValue(this.catTipoPermiso[this.searchArray]),
+      //this.searchRfc = this.generarCarta.CartaPorte.Mercancias.Autotransporte.PermSCT;
+      //this.searchArray = this.catTipoPermiso.findIndex(x => x.Clave ===  this.searchRfc),
+      //this.editForm.controls['PermSCT'].setValue(this.catTipoPermiso[this.searchArray]),
 
-      this.searchRfc = this.generarCarta.CartaPorte.Mercancias.Autotransporte.IdentificacionVehicular.ConfigVehicular;
+      //this.searchRfc = this.generarCarta.CartaPorte.Mercancias.Autotransporte.IdentificacionVehicular.ConfigVehicular;
       // this.searchArray = this.catTipoRemolque.findIndex(x => x.ClaveNomenclatura ===  this.searchRfc),
-      this.editForm.controls['ConfigVehicular'].setValue(this.catTipoRemolque[1]),
+      //this.editForm.controls['ConfigVehicular'].setValue(this.catTipoRemolque[1]),
      
       /**
        * CORREO
@@ -975,6 +976,7 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
               this.editForm.controls['AseguraRespCivil'].setValue(resBody.AseguradoraCP);
               this.editForm.controls['NumPermisoSCT'].setValue(resBody.NoPermisoCP);
               this.editForm.controls['PermSCT'].setValue(resBody.TipoPermisoCP);
+              this.editForm.controls['ConfigVehicular'].setValue(resBody.ClaseVehSctCP)
               this.Eco = this.editForm.controls['Eco'].value;
               Swal.close();
             } else {
@@ -1198,8 +1200,9 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
         break;
       case "numpermisosct":
         console.log("PERMISO SCT");
-
-        this.PermSCT = value.Clave;//this.editForm.controls['PermSCT'].value;
+        console.log(value);
+        this.PermSCT = value;
+        //this.PermSCT = value.Clave;//this.editForm.controls['PermSCT'].value;
         break;
       case "UpperCase":
         let fec = this.editForm.controls['RFCFigura'].value;
@@ -1229,6 +1232,7 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
     Swal.showLoading();
     const value = this.createFromForm();
     this.generarCarta.VersionGepp = "2.2";
+    this.generarCarta.Correos = this.editForm.controls['Correo'].value; 
     this.generarCarta.Version = "3.3";
     this.generarCarta.Serie = this.serie;
     this.generarCarta.Folio = this.folio;
@@ -1337,7 +1341,7 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
     this.IdentificacionVehicular = {
       AnioModeloVM: this.editForm.controls['AnioModeloVM'].value,
       PlacaVM: this.editForm.controls['PlacaVM'].value,
-      ConfigVehicular: "C2",
+      ConfigVehicular: this.editForm.controls['ConfigVehicular'].value,
     };
 
     this.Autotransporte = {
@@ -1403,6 +1407,7 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
       FiguraTransporte: auxFigura,
       ClaveBodega: this.editForm.controls['ClaveBodega'].value,
       ClaveCliente: this.editForm.controls['ClaveCliente'].value,
+     
     };
 
     console.log("this.CartaPorte: ", this.CartaPorte)
@@ -1419,7 +1424,6 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
     //console.log(this.editForm.controls['HoraLlegada'].value);
     let generarCataAux = {
       UsuarioCreador: "4",
-      Correos: this.editForm.controls['Correo'].value,
       FechaSalidaOrigen: formattedDateFechaSalida,
       FechaLlegadaDestino: formattedDateFechaLlegada,
       CartaPorte: this.generarCarta
