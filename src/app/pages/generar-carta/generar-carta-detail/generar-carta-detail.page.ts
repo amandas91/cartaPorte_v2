@@ -1134,6 +1134,30 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
           text: 'Cargando...',
         });
         Swal.showLoading();
+        this.clienteService.find(this.editForm.controls['ClaveBodega'].value, this.editForm.controls['ClaveCliente'].value)
+          .pipe(
+            map((res: HttpResponse<ICliente>) => {
+              return res.body ? res.body : [];
+
+            })
+          )
+          .subscribe((resBody: ICliente) => (
+            this.editForm.controls['CodigoPostalUbicacion'].setValue(resBody.CodigoPostal),
+           console.log(resBody),
+              this.catCPsService.findByCodigoPostal(resBody.CodigoPostal)
+              .pipe(
+                map((res: HttpResponse<ICatCP>) => {
+                  return res.body ? res.body : [];
+
+                })
+              )
+              .subscribe((resBody: ICatCP) => (
+              console.log(resBody),
+              
+                Swal.close()
+              ))
+           
+          ));
         this.editForm.controls['RFCDestino'].setValue(this.emisor_g.Rfc);
         this.editForm.controls['RFCRemitenteDestinatario'].setValue("XAXX010101000");
 
