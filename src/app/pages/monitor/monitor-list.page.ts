@@ -166,6 +166,12 @@ editForm = this.fb.group({
                             showCloseButton: true,
                           });
                     } else {
+
+                        const source = `data:application/pdf;base64,${resBody.data}`;
+                        const link = document.createElement("a");
+                        link.href = source;
+                        link.download =`${value.Referencia}.pdf`
+                        link.click();
                         Swal.close()
         
                     }
@@ -183,6 +189,11 @@ editForm = this.fb.group({
                             showCloseButton: true,
                           });
                     } else {
+                        const source = `data:application/xml;base64,${resBody.data}`;
+                        const link = document.createElement("a");
+                        link.href = source;
+                        link.download =`${value.Referencia}.xml`
+                        link.click();
                         Swal.close()
         
                     }
