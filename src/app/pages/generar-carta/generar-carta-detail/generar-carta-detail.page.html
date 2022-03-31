@@ -33,7 +33,10 @@
     
     <!-- [stepControl]="firstFormGroup" -->
     <mat-step label="{{'TRIPS.STEPS.BUDGET' | translate}}" state="budget">
-
+        
+        <!-- <button  (click)="importItem()" mat-mini-fab color="warn" aria-label="Importar">
+            <mat-icon>cloud_upload</mat-icon>
+        </button> -->
         <div class="mt-4" fxLayout="column" fxLayoutGap="8px" [formGroup]="editForm" >
             <h1>Emisor</h1>
             
@@ -344,40 +347,25 @@
         <div class="mt-4" fxLayout="column" fxLayoutGap="8px" [formGroup]="editForm" >
             <div fxLayout="column" fxLayout.gt-xs="row" fxLayoutGap="8px" fxLayoutGap.gt-xs="24px" fxLayoutAlign="end">
                 
-                <mat-form-field fxFlex="50%" appearance="outline">
+                <mat-form-field fxFlex="30%" appearance="outline">
                     <mat-label >Fecha Salida</mat-label>
                     <input matInput [matDatepicker]="FechaSalida" formControlName="FechaSalida" >
                     <mat-datepicker-toggle matSuffix [for]="FechaSalida"></mat-datepicker-toggle>
                     <mat-datepicker touchUi #FechaSalida></mat-datepicker>
                 </mat-form-field>
 
-                <mat-form-field fxFlex="50%" appearance="outline">
+                <mat-form-field fxFlex="30%" appearance="outline">
                     <mat-label >Hora Salida</mat-label>
                     <input [ngxTimepicker]="HoraSalida" matInput formControlName="HoraSalida" placeholder="24hr format" aria-label="24hr format" [format]="24">
                      <ngx-material-timepicker #HoraSalida></ngx-material-timepicker>
                 </mat-form-field>
-            </div>
-            
-            <div fxLayout="column" fxLayout.gt-xs="row" fxLayoutGap="8px" fxLayoutGap.gt-xs="24px" fxLayoutAlign="end">
-                <mat-form-field fxFlex="50%" appearance="outline">
-                    <mat-label >Clave Bodega</mat-label>
-                    <input  type="number" style="color: black;" autocomplete="off" matInput formControlName="ClaveBodega"  />
-                </mat-form-field>
 
-                <mat-form-field fxFlex="50%" appearance="outline" (change)="onSelectEvent($event.value, 'clavecliente')">
-                    <mat-label >Clave Cliente</mat-label>
-                    <input  type="number" style="color: black;" autocomplete="off" matInput formControlName="ClaveCliente" />
-                </mat-form-field>
-
-                <!-- <mat-form-field fxFlex="40%" appearance="outline">
-                    <mat-label >ID Ubicación</mat-label>
-                    <input style="color: black;" autocomplete="off" matInput formControlName="IDUbicacion"  />
-                </mat-form-field> -->
-                <mat-form-field fxFlex="40%" appearance="outline">
+                <mat-form-field fxFlex="30%" appearance="outline">
                     <mat-label >RFC Remitente Destinatario</mat-label>
                     <input style="color: black;" autocomplete="off" matInput formControlName="RFCRemitenteDestinatario" (selectionChange)="onSelectEvent($event.value, 'rfcremitente')" />
                 </mat-form-field>
-                <mat-form-field fxFlex="35%" appearance="outline">
+
+                <mat-form-field fxFlex="30%" appearance="outline">
                     <mat-label>Tipo de horario</mat-label>
                     <mat-select name="tipoHorario" formControlName="TipoHorario">
                         <mat-option *ngFor="let item of tipoHorario" [value]="item.Descripcion">
@@ -386,18 +374,46 @@
                     </mat-select>
                 </mat-form-field>
             </div>
+            
+            <!-- <div fxLayout="column" fxLayout.gt-xs="row" fxLayoutGap="8px" fxLayoutGap.gt-xs="24px" fxLayoutAlign="end">
+                
+                <mat-form-field fxFlex="40%" appearance="outline">
+                    <mat-label >ID Ubicación</mat-label>
+                    <input style="color: black;" autocomplete="off" matInput formControlName="IDUbicacion"  />
+                </mat-form-field>
+               
+            </div> -->
 
            
             
            
         </div>
             <h1>Destino</h1>
-        <div fxLayout="column" fxLayout.gt-xs="row" fxLayoutGap="8px" fxLayoutGap.gt-xs="24px" fxLayoutAlign="end" [formGroup]="editForm" >
-            <mat-form-field fxFlex="40%" appearance="outline">
-                
+            <div fxLayout="column" fxLayout.gt-xs="row" fxLayoutGap="8px" fxLayoutGap.gt-xs="24px" fxLayoutAlign="end">
+               <p *ngIf="NombreCliente"><b>Cliente: </b>{{NombreCliente}}</p> 
+               <p *ngIf="NombrePropietario"><b>Propietario: </b>{{NombrePropietario}}</p> 
+               
+            </div>
+        <div fxLayout="column" fxLayout.gt-xs="row" fxLayoutGap="8px" fxLayoutGap.gt-xs="24px" fxLayoutAlign="end" [formGroup]="editForm">
+            
+            <mat-form-field fxFlex="33%" appearance="outline">
+                <mat-label >Clave Bodega</mat-label>
+                <input  type="number" style="color: black;" autocomplete="off" matInput formControlName="ClaveBodega"  />
+            </mat-form-field>
+
+            <mat-form-field fxFlex="33%" appearance="outline" (change)="onSelectEvent($event.value, 'clavecliente')">
+                <mat-label >Clave Cliente</mat-label>
+                <input  type="number" style="color: black;" autocomplete="off" matInput formControlName="ClaveCliente" />
+            </mat-form-field>
+
+            <mat-form-field fxFlex="33%" appearance="outline">
+            
                 <mat-label >RFC</mat-label>
                 <input style="color: black;" autocomplete="off" matInput formControlName="RFCDestino" onkeyup="this.value = this.value.toUpperCase();"  />
             </mat-form-field>
+        </div>
+        <div fxLayout="column" fxLayout.gt-xs="row" fxLayoutGap="8px" fxLayoutGap.gt-xs="24px" fxLayoutAlign="end" [formGroup]="editForm" >
+            
 
             <mat-form-field  fxFlex="40%" appearance="outline">
                 <mat-label>Fecha Llegada</mat-label>

@@ -20,6 +20,7 @@ import { ClientPage } from './clients/client.page';
 import { RfcPage } from './rfc/rfc.page';
 import { GenerarCartaPage } from './generar-carta/generar-carta/generar-carta.page';
 import { MonitorPage } from './monitor/monitor.page';
+import { ImportExcelPages } from './import-excel/import-excel.pages';
 
 
 
@@ -73,6 +74,12 @@ import { MonitorPage } from './monitor/monitor.page';
                 canActivate: [UserRouteAccessService],
             },
             {
+              path: 'importar_excel',
+              component: ImportExcelPages,
+                // data: { authorities: ALL_ROLES },
+                canActivate: [UserRouteAccessService],
+            },
+            {
               path: 'home',
               component: HomePage,
                 // data: { authorities: ALL_ROLES },
@@ -104,4 +111,6 @@ import { MonitorPage } from './monitor/monitor.page';
         ]),
     ],
 })
-export class PagesRoutes {}
+export class PagesRoutes {
+  
+}

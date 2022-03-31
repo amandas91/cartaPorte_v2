@@ -51,9 +51,9 @@ import { DomicilioFiscalService } from "app/services/core/domicilio-fiscal";
 import { IDomicilioFiscal } from "app/models/catalogos/cat-domicilio-fiscal.model";
 import { ActivatedRoute } from "@angular/router";
 import { MonitoreoService } from "app/services/core/monitoreo.servce";
-import { threadId } from "worker_threads";
-import { THIS_EXPR } from "@angular/compiler/src/output/output_ast";
-import { Console } from "console";
+
+import { MatDialog } from "@angular/material/dialog";
+import { ImportExcelPages } from "app/pages/import-excel/import-excel.pages";
 
 
 const MaxItems = 2000;
@@ -269,7 +269,7 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
   municipioExpedido: string;
   cpExpedido: string;
 
-  paisUbicacion: number;
+  paisUbicacion: any;
   estadoUbicacion: string;
   municipioUbicacion: string;
   cpUbicacion: string;
@@ -299,6 +299,8 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
   isEdit:boolean;
   generarCartaPorteUpdate:any;
 
+  municipioTempUbicacion:any;
+
   Eco:any;
 
   @Output()
@@ -320,6 +322,9 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
   validacionCarga: string;
   cpEmisorValidate: string;
   pesoBruto=0;
+  estadoUbicacionTem: any;
+  NombreCliente: any;
+  NombrePropietario: any;
 
   constructor(
     private fb: FormBuilder,
@@ -343,7 +348,8 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
     private materialPeligrosoService: MaterialPeligrosoService,
     private domicilioFiscalService: DomicilioFiscalService,
     protected activatedRoute: ActivatedRoute,
-    private monitorService: MonitoreoService
+    private monitorService: MonitoreoService,
+    private dialog: MatDialog,
 
   ) {
     this.createForm();
@@ -414,6 +420,7 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
         this.cpEmisorValidate = "Formato CP no valido"
       }
     });
+    this.editForm.controls['RFCRemitenteDestinatario'].setValue("XAXX010101000")
   }
 
   @ViewChild(MatSort) sort: MatSort;
@@ -434,7 +441,7 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.FechaActual = this.datepipe.transform(Date.now(), 'yyyy-MM-ddTh:mm:ss');
-
+   
     this.activatedRoute.params.subscribe(params => {
       Swal.fire({
         allowOutsideClick: false,
@@ -1136,32 +1143,66 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
         Swal.showLoading();
         this.clienteService.find(this.editForm.controls['ClaveBodega'].value, this.editForm.controls['ClaveCliente'].value)
           .pipe(
-            map((res: HttpResponse<ICliente>) => {
+            map((res: HttpResponse<any>) => {
               return res.body ? res.body : [];
 
             })
           )
-          .subscribe((resBody: ICliente) => (
+          .subscribe((resBody: any) => {
+            if (resBody.Estatus == 1) {
+              this.municipioTempUbicacion = resBody.Municipio,
+            this.estadoUbicacionTem = resBody.Estado,
+            this.NombreCliente = resBody.NombreCliente,
+            this.NombrePropietario = resBody.NombrePropietario,
+            this.editForm.controls['RFCDestino'].setValue(this.emisor_g.Rfc),
+            this.editForm.controls['RFCRemitenteDestinatario'].setValue("XAXX010101000"),
+            this.editForm.controls['PaisUbicacion'].setValue(this.catPaises[0]),
+            this.paisUbicacion = this.catPaises[0].IdPais;
             this.editForm.controls['CodigoPostalUbicacion'].setValue(resBody.CodigoPostal),
-           console.log(resBody),
-              this.catCPsService.findByCodigoPostal(resBody.CodigoPostal)
-              .pipe(
-                map((res: HttpResponse<ICatCP>) => {
-                  return res.body ? res.body : [];
+             //estado
+            this.catEstadosService.find("MEX")
+            .pipe(
+              map((res: HttpResponse<ICatEstados[]>) => {
+                return res.body ? res.body : [];
+              })
+            )
+            .subscribe((resBody: ICatEstados[]) => (
+              this.estadoUbicacion = this.estadoUbicacionTem,
+              this.catEstados = resBody,
+              this.searchArray = this.catEstados.findIndex(x => x.Nombre ===  this.estadoUbicacionTem),
+                this.editForm.controls['EstadoUbicacion'].setValue(this.catEstados[ this.searchArray]),
 
+              //MUNICIPIO
+              this.catMunicipiosService.find(this.estadoUbicacionTem)
+              .pipe(
+                map((res: HttpResponse<ICatMunicipios[]>) => {
+                  return res.body ? res.body : [];
                 })
               )
-              .subscribe((resBody: ICatCP) => (
-              console.log(resBody),
-              
+              .subscribe((resBody: ICatMunicipios[]) => (
+                this.catMunicipios = resBody,
+                this.municipioUbicacion = this.municipioTempUbicacion,
+                this.searchArray = this.catMunicipios.findIndex(x => x.Municipio ===  this.municipioTempUbicacion),
+                this.editForm.controls['MunicipioUbicacion'].setValue(this.catMunicipios[ this.searchArray]),
                 Swal.close()
               ))
+        
+            ))
            
-          ));
-        this.editForm.controls['RFCDestino'].setValue(this.emisor_g.Rfc);
-        this.editForm.controls['RFCRemitenteDestinatario'].setValue("XAXX010101000");
-
-        Swal.close();
+            
+            }else{
+              Swal.fire({
+                title: 'Conflicto',
+                text: 'Cliente Inactivo',
+                icon: 'warning',
+                showCloseButton: true,
+              });
+            }
+            
+            
+          });
+        
+       
 
         break
       case "catTipoProducto":
@@ -1742,6 +1783,24 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
     } else {
      this.cpEmisorValidate = "Formato CP no valido"
     }
+  }
+
+  importItem(): void {
+    // console.log("AQUI ENTRA");
+    // console.log(value);
+    // value.trip_id = this.trip_id;
+      const params = {
+
+        title: "CLIENTS.NEW"
+      };
+      const dialogRef = this.dialog.open(ImportExcelPages, { data: params });
+      dialogRef.updateSize("100%");
+      dialogRef.afterClosed().subscribe((src: any) => {
+          if (src) {
+              //this.loadPage();
+              // this.message('Creado');
+          }
+      });
   }
 
 

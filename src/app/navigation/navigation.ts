@@ -50,6 +50,15 @@ export const navigation: FuseNavigation[] = [
                 url: "/monitor-carta",
                 roles: ALL_ROLES
             },
+            {
+                id: "importar_excel",
+                title: "Importar Excel",
+                translate: "NAV.APP.GENERAR_CARTA",
+                type: "item",
+                icon: "import_export",
+                url: "/importar_excel",
+                roles: ALL_ROLES
+            },
             
         
            

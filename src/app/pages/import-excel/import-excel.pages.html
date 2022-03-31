@@ -1,0 +1,29 @@
+<div fxLayout="column" fxLayout.gt-xs="row" fxLayoutGap="8px" fxLayoutGap.gt-xs="8px">
+    <h1>Importar Excel</h1>
+</div>
+<div fxLayout="column" fxLayout.gt-xs="row" fxLayoutGap="8px" fxLayoutGap.gt-xs="30px">
+
+    <div fxFlex="100%">
+        <button (click)="fileInput.click()" color="primary" class="w-8 h-8 leading-none flex items-center justify-center fixbuttons hover:bg-hover"
+                                mat-icon-button>
+            <mat-icon aria-hidden="false">cloud_upload</mat-icon>
+            <input style="display: none;" #fileInput type="file" (change)="onFileInput( $event.target.files)" 
+                accept=".xlsx, .xls, .csv"  />
+        </button>
+
+    </div>
+  
+   
+</div>
+<!-- <div class="p-8" [formGroup]="editForm" >
+    <div fxLayout="column" fxLayout.gt-xs="row" fxLayoutGap="8px" fxLayoutGap.gt-xs="8px">
+        <mat-form-field fxFlex="100%" appearance="outline">
+            <mat-label>Excel</mat-label>
+            <mat-select name="tipoMotivo" formControlName="motivo" (selectionChange)="onSelectEvent($event.value)">
+                <mat-option *ngFor="let item of tipoMotivo" [value]="item.Valor">
+                    {{item.Descripcion}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+</div> -->

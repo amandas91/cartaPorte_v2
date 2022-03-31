@@ -51,7 +51,7 @@ export class MonitorDialogPages implements OnInit {
   editForm = this.fb.group({
     motivo: [null, [Validators.required]],
     FolioSustitucion:[null, []],
-    });
+  });
 
   @Input()
   value: Monitoreo;

@@ -58,6 +58,7 @@ import { MonitorSearchPage } from './monitor/monitor-search.page';
 import { MonitorListPage } from './monitor/monitor-list.page';
 import { MonitorDialogPages } from './monitor/monitor-dialog.pages';
 import { GenerarCartaDetailPage } from './generar-carta/generar-carta-detail/generar-carta-detail.page';
+import { ImportExcelPages } from './import-excel/import-excel.pages';
 
 
 
@@ -113,7 +114,8 @@ import { GenerarCartaDetailPage } from './generar-carta/generar-carta-detail/gen
         MonitorPage,
         MonitorSearchPage,
         MonitorListPage,
-        MonitorDialogPages
+        MonitorDialogPages,
+        ImportExcelPages
     ],
     imports: [
         PagesRoutes,
