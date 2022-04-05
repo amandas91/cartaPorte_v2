@@ -440,14 +440,18 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
 
 
   ngOnInit(): void {
-    this.FechaActual = this.datepipe.transform(Date.now(), 'yyyy-MM-ddTh:mm:ss');
-   
+    
     this.activatedRoute.params.subscribe(params => {
       Swal.fire({
         allowOutsideClick: false,
         text: 'Cargando...',
       });
       Swal.showLoading();
+      this.FechaActual = this.datepipe.transform(Date.now(), 'yyyy-MM-ddTh:mm:ss');
+      console.log('params: ', params);
+      if(params.excel){
+        this.importItem()
+      }
       this.emisorService
         .query({ size: MaxItems }, (this.hasRol([Authority.DMC]) === true ? 2 : 1))
         .pipe(
@@ -539,7 +543,7 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
         )
         .subscribe((resBody: ICatTipoFiguraTransporte[]) => (this.catTipoFiguraTransporte = resBody));
 
-      // console.log('params: ', params);
+      
       this.serie = params.id;
       this.folio = params.id;
 
@@ -779,10 +783,6 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
       // this.searchArray = this.catTipoRemolque.findIndex(x => x.ClaveNomenclatura ===  this.searchRfc),
       //this.editForm.controls['ConfigVehicular'].setValue(this.catTipoRemolque[1]),
      
-      /**
-       * CORREO
-       */
-      this.editForm.controls['Correo'].setValue(this.generarCarta.Correos),
 
       Swal.close()
   }
@@ -1297,7 +1297,6 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
     Swal.showLoading();
     const value = this.createFromForm();
     this.generarCarta.VersionGepp = "2.2";
-    this.generarCarta.Correos = this.editForm.controls['Correo'].value; 
     this.generarCarta.Version = "3.3";
     this.generarCarta.Serie = this.serie;
     this.generarCarta.Folio = this.folio;
@@ -1491,6 +1490,7 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
       UsuarioCreador: "4",
       FechaSalidaOrigen: formattedDateFechaSalida,
       FechaLlegadaDestino: formattedDateFechaLlegada,
+      MetodoEnvio:{Email: this.editForm.controls['Correo'].value},
       CartaPorte: this.generarCarta
     };
 
@@ -1680,11 +1680,12 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
     this.generarCartaUpdate.CartaPorte = this.CartaPorte;
     
     //console.log(this.editForm.controls['HoraLlegada'].value);
+    
     let generarCataAux = {
       UsuarioCreador: "4",
-      Correos: this.editForm.controls['Correo'].value,
       FechaSalidaOrigen: FechaSalidaOrigen,
       FechaLlegadaDestino: FechaLlegadaDestino,
+      MetodoEnvio:{Email: this.editForm.controls['Correo'].value},
       CartaPorte: this.generarCartaUpdate
     };
 

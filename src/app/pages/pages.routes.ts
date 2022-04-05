@@ -74,8 +74,8 @@ import { ImportExcelPages } from './import-excel/import-excel.pages';
                 canActivate: [UserRouteAccessService],
             },
             {
-              path: 'importar_excel',
-              component: ImportExcelPages,
+              path: 'importar-excel/:excel',
+              component: GenerarCartaPage,
                 // data: { authorities: ALL_ROLES },
                 canActivate: [UserRouteAccessService],
             },

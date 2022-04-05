@@ -38,23 +38,40 @@ export class ImportExcelPages implements OnInit {
     }
 
     this.importService.upload(params).subscribe((resBody: any) => {
-      if(resBody.RespuestaTimbrado.error == null){
-        Swal.close(),
+      if(resBody.message){
         Swal.fire({
-          icon: 'success',
-          text: 'Guardado',
-          showCancelButton: false,
-          confirmButtonColor: '#3085d6',
-          confirmButtonText: 'Ok',
-          html: '<p>Folio <b>' + resBody.folio + '</b> </p>' +
-            '<p>Fecha <b>' + resBody.RespuestaTimbrado.fechaTimbre + '</b></p> ' +
-            '<p>uuid <b>' + resBody.RespuestaTimbrado.uuid + '</b></p>',
-          }).then((result) => {
-          if (result.isConfirmed) {
-            window.location.reload();
-          }
-        })
+          title: 'Conflicto',
+          text: resBody.message,
+          icon: 'warning',
+          showCloseButton: true,
+        });
+      }else{
+        if(resBody.RespuestaTimbrado.error == null){
+          Swal.close(),
+          Swal.fire({
+            icon: 'success',
+            text: 'Guardado',
+            showCancelButton: false,
+            confirmButtonColor: '#3085d6',
+            confirmButtonText: 'Ok',
+            html: '<p>Folio <b>' + resBody.folio + '</b> </p>' +
+              '<p>Fecha <b>' + resBody.RespuestaTimbrado.fechaTimbre + '</b></p> ' +
+              '<p>uuid <b>' + resBody.RespuestaTimbrado.uuid + '</b></p>',
+            }).then((result) => {
+            if (result.isConfirmed) {
+              window.location.reload();
+            }
+          })
+        }else{
+          Swal.fire({
+            title: 'Conflicto',
+            text: resBody.message,
+            icon: 'warning',
+            showCloseButton: true,
+          });
+        }
       }
+      
     })
   }
 

@@ -53,10 +53,10 @@ export const navigation: FuseNavigation[] = [
             {
                 id: "importar_excel",
                 title: "Importar Excel",
-                translate: "NAV.APP.GENERAR_CARTA",
+                translate: "NAV.APP.IMPORTAR_EXCEL",
                 type: "item",
                 icon: "import_export",
-                url: "/importar_excel",
+                url: "/importar-excel/excel",
                 roles: ALL_ROLES
             },
             

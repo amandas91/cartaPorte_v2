@@ -8,6 +8,7 @@ export const locale = {
                 'TRIPS': 'TRIPS',
                 'GENERAR_CARTA':'Generar Carta / CFDI Traslado',
                 'MONITOR':'Monitor Carta Porte',
+                'IMPORTAR_EXCEL':'Importar Excel',
                 'PAYMENTS': 'PAYMENTS',
                 'COLLECTIONS': 'COLLECTIONS',
                 'COMMISSIONS': 'COMMISSIONS',
