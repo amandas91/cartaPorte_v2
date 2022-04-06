@@ -1239,8 +1239,8 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
           ));
         break;
       case "descripcion":
-        console.log("DESCRIPCION");
-        console.log(value);
+        // console.log("DESCRIPCION");
+        // console.log(value);
         this.ClaveProdServ = value.ClaveProducto;
         this.descripcion = value.Descripcion;
         //this.ClaveUnidad = value.ClaveProducto;
