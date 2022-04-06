@@ -775,6 +775,9 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
       this.editForm.controls['PolizaRespCivil'].setValue(this.generarCarta.CartaPorte.Mercancias.Autotransporte.Seguros.PolizaRespCivil),
       this.editForm.controls['AseguraRespCivil'].setValue(this.generarCarta.CartaPorte.Mercancias.Autotransporte.Seguros.AseguraRespCivil),
 
+      //METODO DE ENVIO 
+
+      this.editForm.controls['Correo'].setValue(this.generarCarta.MetodoEnvio.Email),
       //this.searchRfc = this.generarCarta.CartaPorte.Mercancias.Autotransporte.PermSCT;
       //this.searchArray = this.catTipoPermiso.findIndex(x => x.Clave ===  this.searchRfc),
       //this.editForm.controls['PermSCT'].setValue(this.catTipoPermiso[this.searchArray]),
@@ -837,7 +840,6 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
     this.dataSource.push(this.cargaElementList);
     this.table.renderRows();
 
-    console.log(this.dataSource);
     }
   }
 
@@ -985,17 +987,25 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
               this.editForm.controls['PermSCT'].setValue(resBody.TipoPermisoCP);
               this.editForm.controls['ConfigVehicular'].setValue(resBody.ClaseVehSctCP)
               this.Eco = this.editForm.controls['Eco'].value;
+              this.PermSCT = this.editForm.controls['PermSCT'].value;
               Swal.close();
-            } else {
+            } else if(resBody.EstatusEco != 'ACTIVO'){
               Swal.fire({
                 title: 'Conflicto',
-                text: resBody.message,
+                text: resBody.EstatusEco,
                 icon: 'warning',
                 showCloseButton: true,
               });
 
-            }
+          } else {
+            Swal.fire({
+              title: 'Conflicto',
+              text: resBody.message,
+              icon: 'warning',
+              showCloseButton: true,
+            });
 
+          }
 
           });
 
@@ -1167,11 +1177,12 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
               })
             )
             .subscribe((resBody: ICatEstados[]) => (
-              this.estadoUbicacion = this.estadoUbicacionTem,
+              
+              
               this.catEstados = resBody,
               this.searchArray = this.catEstados.findIndex(x => x.Nombre ===  this.estadoUbicacionTem),
                 this.editForm.controls['EstadoUbicacion'].setValue(this.catEstados[ this.searchArray]),
-
+                this.estadoUbicacion = this.catEstados[ this.searchArray].ClaveEstado,
               //MUNICIPIO
               this.catMunicipiosService.find(this.estadoUbicacionTem)
               .pipe(
@@ -1266,8 +1277,8 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
       case "numpermisosct":
         console.log("PERMISO SCT");
         console.log(value);
-        this.PermSCT = value;
-        //this.PermSCT = value.Clave;//this.editForm.controls['PermSCT'].value;
+        //this.PermSCT = value;
+        this.PermSCT = value.Clave;//this.editForm.controls['PermSCT'].value;
         break;
       case "UpperCase":
         let fec = this.editForm.controls['RFCFigura'].value;
@@ -1381,6 +1392,9 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
 
     }];
     this.generarCarta.Observaciones = this.Observaciones;
+
+    //METODO DE ENVIO 
+    this.generarCarta.MetodoEnvio ={Email: this.editForm.controls['Correo'].value}
     /**
     //  ****************** CARTA PORTE *********************
 
@@ -1490,7 +1504,6 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
       UsuarioCreador: "4",
       FechaSalidaOrigen: formattedDateFechaSalida,
       FechaLlegadaDestino: formattedDateFechaLlegada,
-      MetodoEnvio:{Email: this.editForm.controls['Correo'].value},
       CartaPorte: this.generarCarta
     };
 
@@ -1586,6 +1599,10 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
 
     }];
     this.generarCartaUpdate.Observaciones = this.Observaciones;
+
+    //METODO DE ENVIO
+    //METODO DE ENVIO 
+    this.generarCartaUpdate.MetodoEnvio ={Email: this.editForm.controls['Correo'].value}
 
     //**OPERADOR */
     this.operador.TipoFigura = this.editForm.controls['TipoFigura'].value;

@@ -40,9 +40,9 @@ export class GenerarCata implements IGenerarCata {
     public Emisor?: IEmisor,
     public Receptor?: any,
     public Conceptos?:Array<IConcepto>,
+    public MetodoEnvio?:any,
     public Observaciones?: any,
-    public CartaPorte?: any,
-    public Correos?: any,
+    public CartaPorte?: any
 
 
   ) {
