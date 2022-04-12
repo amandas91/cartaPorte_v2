@@ -18,6 +18,7 @@ import { MonitorDialogPages } from "./monitor-dialog.pages";
 import { FormBuilder } from "@angular/forms";
 import { map } from "rxjs/operators";
 import Swal from "sweetalert2";
+import { DatePipe } from "@angular/common";
 
 
 
@@ -30,38 +31,41 @@ import Swal from "sweetalert2";
 
 export class MonitorListPage implements OnInit {
 
-editForm = this.fb.group({
-    comprobante: [null, []]
-});
+    editForm = this.fb.group({
+        comprobante: [null, []],
+        fechaEntrega: [null, []],
+        estatus: [null, []],
+    });
 
 
-  totalItems = 0;
-  itemsPerPage = 5; // ITEMS_PER_PAGE;
-  listCurentPage = 0;
-  page!: number;
-  data: any;
-  pageSize: number;
-  pageSizeOptions: number[] = [5, 10, 20, 50, 100];
-  predicate!: string;
-  ascending!: boolean;
+    datepipe: DatePipe = new DatePipe('en-US')
+    totalItems = 0;
+    itemsPerPage = 5; // ITEMS_PER_PAGE;
+    listCurentPage = 0;
+    page!: number;
+    data: any;
+    pageSize: number;
+    pageSizeOptions: number[] = [5, 10, 20, 50, 100];
+    predicate!: string;
+    ascending!: boolean;
 
-  isLinear = false;
+    isLinear = false;
 
-  headerProperties: HeaderProperties;
-  columns: TableColumn<any>[] = [];
-  buttons: ButtonProperties[];
+    headerProperties: HeaderProperties;
+    columns: TableColumn<any>[] = [];
+    buttons: ButtonProperties[];
 
-  listPage: any[];
+    listPage: any[];
 
-  list: any;
+    list: any;
 
-  @Input()
-  origen: number;
+    @Input()
+    origen: number;
 
-  
+    
 
-  @Output()
-  clientSelect: EventEmitter<Monitoreo> = new EventEmitter();
+    @Output()
+    clientSelect: EventEmitter<Monitoreo> = new EventEmitter();
 
 
   constructor(
@@ -362,7 +366,10 @@ editForm = this.fb.group({
   }
 
   search(page?: any): void {
-    const comprobante = this.editForm.controls['comprobante'].value;
+      
+    const estatus = this.editForm.controls['estatus'].value;
+    const fechaEntrega =  this.datepipe.transform(this.editForm.controls['fechaEntrega'].value, 'YYYY-MM-dd');
+   
     if (this.list) {
         // TODO Implementar paginacion para cuando sea una lista proporcionada
         this.listPage = [...this.list];
@@ -388,8 +395,8 @@ editForm = this.fb.group({
     };
 
 
-    this.valueService.find(comprobante).subscribe(
-        (res: HttpResponse<any[]>) => this.onSuccess([res.body], res.headers, pageToLoad),
+    this.valueService.findByFechaEstatus(estatus,fechaEntrega).subscribe(
+        (res: HttpResponse<any[]>) => this.onSuccess(res.body, res.headers, pageToLoad),
         (err) => this.onError(err)
       );
   }

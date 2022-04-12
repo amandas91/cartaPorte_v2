@@ -1,0 +1,45 @@
+<mat-card>
+    <div fxLayout="column" fxLayout.gt-xs="row" fxLayoutGap="8px" fxLayoutGap.gt-xs="8px">
+        <h3><b>Buscar por “Bodega/Cedis”</b> </h3>
+    </div>
+    <div class="p-8" [formGroup]="editForm">
+        <div fxLayout="column"  fxLayout.gt-xs="row" fxLayoutGap="8px" fxLayoutGap.gt-xs="8px">
+    
+            <mat-form-field fxFlex="50%" appearance="outline">
+                <mat-label >Nombre</mat-label>
+                <input style="color: black;" autocomplete="off" matInput formControlName="nombre"  />
+            </mat-form-field>
+    
+            <mat-form-field fxFlex="50%" appearance="outline">
+                <mat-label >Dirección</mat-label>
+                <input style="color: black;" autocomplete="off" matInput formControlName="direccion" />
+            </mat-form-field>
+    
+           
+        </div>
+        <div fxLayout="column" fxLayout.gt-xs="row" fxLayoutGap="8px" fxLayoutGap.gt-xs="8px">
+            <button color="primary" mat-raised-button type="button" (click)="search()" class="btn btn-primary btn-lg">
+                <mat-icon>search</mat-icon>&nbsp;<span>Buscar</span>
+            </button>
+        </div>
+        
+    </div>
+    
+    <div *ngIf="listPage" class="example-container mat-elevation-z8" style="margin-top: 25px">
+        <fuse-table
+            [columns]="columns"
+            [data]="listPage"
+            [totalItems]="totalItems"
+            [pageSize]="itemsPerPage"
+            [pageSizeOptions]="pageSizeOptions"
+            [headerProperties]="headerProperties"
+            [buttons]="buttons"
+            (paginatorEvents)="loadPage($event)"
+            (buttonsEvents)="buttonsEvents($event)">
+        </fuse-table>
+    </div>
+    
+    <div *ngIf="listPage === undefined">
+        <skeleton-loader-table></skeleton-loader-table>
+    </div>
+</mat-card>

@@ -59,6 +59,7 @@ import { MonitorListPage } from './monitor/monitor-list.page';
 import { MonitorDialogPages } from './monitor/monitor-dialog.pages';
 import { GenerarCartaDetailPage } from './generar-carta/generar-carta-detail/generar-carta-detail.page';
 import { ImportExcelPages } from './import-excel/import-excel.pages';
+import { BodegaPages } from './bodega/bodega.pages';
 
 
 
@@ -115,7 +116,8 @@ import { ImportExcelPages } from './import-excel/import-excel.pages';
         MonitorSearchPage,
         MonitorListPage,
         MonitorDialogPages,
-        ImportExcelPages
+        ImportExcelPages,
+        BodegaPages
     ],
     imports: [
         PagesRoutes,

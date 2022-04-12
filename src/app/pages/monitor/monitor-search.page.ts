@@ -12,7 +12,9 @@ import { locale as spanish } from 'app/i18n/es/clients';
 export class MonitorSearchPage implements OnInit {
 
   editForm = this.fb.group({
-    comprobante: [null, []]
+    comprobante: [null, []],
+    fechaCreacion: [null, []],
+    estatus: [null, []],
   });
 
   constructor(

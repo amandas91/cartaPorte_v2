@@ -1,17 +1,41 @@
 <div class="p-8" [formGroup]="editForm">
-    <div fxLayout="column" fxLayoutGap="8px">
+    <div fxLayout="column"  fxLayout.gt-xs="row" fxLayoutGap="8px" fxLayoutGap.gt-xs="8px">
 
         <mat-form-field fxFlex="50%" appearance="outline">
-            <mat-label>Comprobante</mat-label>
-            <input autocomplete="off" matInput formControlName="comprobante" />
+            <mat-label >Fecha de Creación</mat-label>
+            <input matInput [matDatepicker]="fechaEntrega" formControlName="fechaEntrega" >
+            <mat-datepicker-toggle matSuffix [for]="fechaEntrega"></mat-datepicker-toggle>
+            <mat-datepicker touchUi #fechaEntrega></mat-datepicker>
         </mat-form-field>
 
-        <div fxLayout="column" fxLayout.gt-xs="row" fxLayoutGap="8px" fxLayoutGap.gt-xs="8px">
-            <button color="primary" mat-raised-button type="button" (click)="loadPage()" class="btn btn-primary btn-lg">
-                <mat-icon>search</mat-icon>&nbsp;<span>{{'CLIENTS.FIELDS.SEARCH' | translate}}</span>
-            </button>
-        </div>
+        <mat-form-field fxFlex="50%" appearance="outline">
+            <mat-label>Estatus</mat-label>
+            <mat-select name="estatus" formControlName="estatus">
+                <mat-option [value]="'TIMBRADO'" >
+                    Timbrado
+                </mat-option>
+                <mat-option  [value]="'DESCARTADO'">
+                    Descartado
+                </mat-option>
+                <mat-option  [value]="'SINTIMBRAR'">
+                   Sin Timbrar
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <!-- <mat-form-field fxFlex="50%" appearance="outline">
+            <mat-label>Comprobante</mat-label>
+            <input autocomplete="off" matInput formControlName="comprobante" />
+        </mat-form-field> -->
+
+       
     </div>
+    <div fxLayout="column" fxLayout.gt-xs="row" fxLayoutGap="8px" fxLayoutGap.gt-xs="8px">
+        <button color="primary" mat-raised-button type="button" (click)="search()" class="btn btn-primary btn-lg">
+            <mat-icon>search</mat-icon>&nbsp;<span>{{'CLIENTS.FIELDS.SEARCH' | translate}}</span>
+        </button>
+    </div>
+    
 </div>
 
 <div *ngIf="listPage" class="example-container mat-elevation-z8" style="margin-top: 25px">

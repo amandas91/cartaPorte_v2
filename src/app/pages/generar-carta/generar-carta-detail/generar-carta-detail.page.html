@@ -62,7 +62,7 @@
                 
             </div>
 
-            <h1>Expedido</h1>
+            <!-- <h1>Expedido</h1>
             <div fxLayout="column" fxLayout.gt-xs="row" fxLayoutGap="8px" fxLayoutGap.gt-xs="24px" fxLayoutAlign="end">
                 
                 <mat-form-field fxFlex="35%" appearance="outline">
@@ -99,7 +99,7 @@
                         <mat-hint><p style="color: red;">{{cpEmisorValidate}}</mat-hint>
                 </mat-form-field>
                 
-            </div>
+            </div> -->
         </div>
 
     </mat-step>
@@ -134,7 +134,12 @@
   
     <mat-step label="{{'TRIPS.STEPS.COLLECTIONS_INVOICING' |  translate}}" state="collection" >
         <div fxLayout="column" fxLayout.gt-xs="row" fxLayoutGap="8px" fxLayoutGap.gt-xs="24px" fxLayoutAlign="end" [formGroup]="editForm">
-                <mat-form-field fxFlex="40%" appearance="outline">
+            <mat-form-field fxFlex="40%" appearance="outline">
+                <mat-label >Número de Empleado</mat-label>
+                <input style="color: black;" autocomplete="off" matInput formControlName="NumeroEmpleado" (change)="onSelectEvent($event.value, 'operador')" onkeyup="this.value = this.value.toUpperCase();" />
+            </mat-form-field>
+
+            <mat-form-field fxFlex="40%" appearance="outline">
                     <mat-label >RFC operador</mat-label>
                     <input style="color: black;" autocomplete="off" matInput formControlName="RFCFigura" (change)="onSelectEvent($event.value, 'UpperCase')" onkeyup="this.value = this.value.toUpperCase();" />
                 </mat-form-field>
@@ -344,9 +349,20 @@
 
     <mat-step label="{{'TRIPS.STEPS.UBICACION_ORIGEN' | translate}}" state="ubicacion_origen">
             <h1>Origen</h1>
+           
         <div class="mt-4" fxLayout="column" fxLayoutGap="8px" [formGroup]="editForm" >
+            <div fxLayout="column" fxLayout.gt-xs="row" fxLayoutGap="8px" fxLayoutGap.gt-xs="24px" fxLayoutAlign="end" *ngIf="showDetailOrigen">
+                <div fxFlex="100%">
+                    <app-bodega  (bodegatSelect)="addBodega(1,$event)"></app-bodega>
+                </div>
+            </div>
+
             <div fxLayout="column" fxLayout.gt-xs="row" fxLayoutGap="8px" fxLayoutGap.gt-xs="24px" fxLayoutAlign="end">
-                
+                <mat-form-field fxFlex="30%" appearance="outline">
+                    <mat-label >Bodega</mat-label>
+                    <input style="color: black;" autocomplete="off" matInput formControlName="bodega" (click)="buscarBodega(1,$event)" />
+                </mat-form-field>
+
                 <mat-form-field fxFlex="30%" appearance="outline">
                     <mat-label >Fecha Salida</mat-label>
                     <input matInput [matDatepicker]="FechaSalida" formControlName="FechaSalida" >
@@ -394,165 +410,180 @@
                <p *ngIf="NombrePropietario"><b>Propietario: </b>{{NombrePropietario}}</p> 
                
             </div>
-        <div fxLayout="column" fxLayout.gt-xs="row" fxLayoutGap="8px" fxLayoutGap.gt-xs="24px" fxLayoutAlign="end" [formGroup]="editForm">
-            
-            <mat-form-field fxFlex="33%" appearance="outline">
-                <mat-label >Clave Bodega</mat-label>
-                <input  type="number" style="color: black;" autocomplete="off" matInput formControlName="ClaveBodega"  />
-            </mat-form-field>
+            <div fxLayout="column" fxLayout.gt-xs="row" fxLayoutGap="8px" fxLayoutGap.gt-xs="24px" fxLayoutAlign="end">
+                <!-- <button mat-flat-button color="primary" (click)="buscarBodega(2,$event)">
+                    <mat-icon>search</mat-icon>Buscar por “Bodega/Cedis” 
+                </button> -->
+                <mat-slide-toggle (change)="buscarBodega(2,$event)">Buscar por “Bodega/Cedis” </mat-slide-toggle>
 
-            <mat-form-field fxFlex="33%" appearance="outline" (change)="onSelectEvent($event.value, 'clavecliente')">
-                <mat-label >Clave Cliente</mat-label>
-                <input  type="number" style="color: black;" autocomplete="off" matInput formControlName="ClaveCliente" />
-            </mat-form-field>
+            </div>
 
-            <mat-form-field fxFlex="33%" appearance="outline">
-            
-                <mat-label >RFC</mat-label>
-                <input style="color: black;" autocomplete="off" matInput formControlName="RFCDestino" onkeyup="this.value = this.value.toUpperCase();"  />
-            </mat-form-field>
-        </div>
-        <div fxLayout="column" fxLayout.gt-xs="row" fxLayoutGap="8px" fxLayoutGap.gt-xs="24px" fxLayoutAlign="end" [formGroup]="editForm" >
+            <div fxLayout="column" fxLayout.gt-xs="row" fxLayoutGap="8px" fxLayoutGap.gt-xs="24px" fxLayoutAlign="end" *ngIf="showDetailDestino">
+                <div fxFlex="100%">
+                    <app-bodega (bodegatSelect)="addBodega(2,$event)"></app-bodega>
+                </div>
+            </div>
+
+            <div fxLayout="column" fxLayout.gt-xs="row" fxLayoutGap="8px" fxLayoutGap.gt-xs="24px" fxLayoutAlign="end" [formGroup]="editForm">
             
 
-            <mat-form-field  fxFlex="40%" appearance="outline">
-                <mat-label>Fecha Llegada</mat-label>
-                <input matInput [matDatepicker]="picker" formControlName="FechaSalidaLlegada" >
-                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                <mat-datepicker touchUi #picker></mat-datepicker>
-            </mat-form-field>
+                <mat-form-field fxFlex="33%" appearance="outline">
+                    <mat-label >Clave Bodega</mat-label>
+                    <input  type="number" style="color: black;" autocomplete="off" matInput formControlName="ClaveBodega"  />
+                </mat-form-field>
 
-            <mat-form-field fxFlex="40%" appearance="outline">
-                <mat-label >Hora Llegada</mat-label>
-                <input [ngxTimepicker]="HoraLlegada" matInput formControlName="HoraLlegada" placeholder="24hr format" aria-label="24hr format" [format]="24">
-                <ngx-material-timepicker #HoraLlegada></ngx-material-timepicker>
-            </mat-form-field>
+                <mat-form-field fxFlex="33%" appearance="outline" (change)="onSelectEvent($event.value, 'clavecliente')">
+                    <mat-label >Clave Cliente</mat-label>
+                    <input  type="number" style="color: black;" autocomplete="off" matInput formControlName="ClaveCliente" />
+                </mat-form-field>
 
-
-            <mat-form-field fxFlex="40%" appearance="outline">
-                <mat-label >Distancia (Km)</mat-label>
-                <input  type="number" style="color: black;" autocomplete="off" matInput formControlName="DistanciaRecorrida"  />
-            </mat-form-field>
-
-            
- 
-        </div>
-        <div fxLayout="column" fxLayout.gt-xs="row" fxLayoutGap="8px" fxLayoutGap.gt-xs="24px" fxLayoutAlign="end" [formGroup]="editForm" >
-            <mat-form-field fxFlex="35%" appearance="outline">
-                <mat-label>País</mat-label>
-                <mat-select name="catPaises" formControlName="PaisUbicacion" (selectionChange)="onSelectEvent($event.value, 'paisUbicacion')">
-                    <mat-option *ngFor="let item of catPaises" [value]="item">
-                        {{item.Nombre}}
-                    </mat-option>
-                </mat-select>
-            </mat-form-field>
-            
-            <mat-form-field fxFlex="35%" appearance="outline">
-                <mat-label>Estado</mat-label>
-                <mat-select name="catEstados" formControlName="EstadoUbicacion" (selectionChange)="onSelectEvent($event.value, 'estadoUbicacion')">
-                    <mat-option *ngFor="let item of catEstados" [value]="item">
-                        {{item.Nombre}}
-                    </mat-option>
-                </mat-select>
-            </mat-form-field>
-
-            <mat-form-field fxFlex="35%" appearance="outline">
-                <mat-label>Municipio</mat-label>
-                <mat-select name="catMunicipios" formControlName="MunicipioUbicacion" (selectionChange)="onSelectEvent($event.value, 'municipioUbicacion')">
-                    <mat-option *ngFor="let item of catMunicipios" [value]="item">
-                        {{item.Descripcion}}
-                    </mat-option>
-                </mat-select>
-            </mat-form-field>
-
-            <mat-form-field fxFlex="35%" appearance="outline">
-                <mat-label>CP</mat-label>
-                <input type="text" style="color: black;" autocomplete="off" matInput formControlName="CodigoPostalUbicacion" matInput min="0" maxlength="5" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" />
-            </mat-form-field> 
-
-
-            <button mat-mini-fab color="primary"  mat-raised-button (click)="addDataUbicacion()">
+                <mat-form-field fxFlex="33%" appearance="outline">
                 
-                <mat-icon >add</mat-icon>
-            </button>
-            <mat-hint><p style="color: red;">{{validacionUbicacion}}</p></mat-hint>
-            
-        </div>
-        <div fxLayout="column" fxLayout.gt-xs="row" fxLayoutGap="8px" fxLayoutGap.gt-xs="24px" fxLayoutAlign="end"  >
-            <p><b>Total Distancia: </b> {{totalDistancia}}</p>
-        </div>
+                    <mat-label >RFC</mat-label>
+                    <input style="color: black;" autocomplete="off" matInput formControlName="RFCDestino" onkeyup="this.value = this.value.toUpperCase();"  />
+                </mat-form-field>
+            </div>
+            <div fxLayout="column" fxLayout.gt-xs="row" fxLayoutGap="8px" fxLayoutGap.gt-xs="24px" fxLayoutAlign="end" [formGroup]="editForm" >
+                
 
-        <div class="mt-4" fxLayout="column" fxLayoutGap="8px">
-            <table mat-table [dataSource]="dataSource1" matSort (matSortChange)="announceSortChange($event)" class="mat-elevation-z8" >
-                <ng-container matColumnDef="index">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="index"> # Línea </th>
-                    <td mat-cell *matCellDef="let element; let i = index;">{{i}}</td>
-                </ng-container>
+                <mat-form-field  fxFlex="40%" appearance="outline">
+                    <mat-label>Fecha Llegada</mat-label>
+                    <input matInput [matDatepicker]="picker" formControlName="FechaSalidaLlegada" >
+                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker touchUi #picker></mat-datepicker>
+                </mat-form-field>
 
-                <!-- Position Column -->
-                <ng-container matColumnDef="rfc">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="RFC">
-                        RFC
-                    </th>
-                    <td mat-cell *matCellDef="let element"> {{element.rfc}} </td>
-                </ng-container>
-
-                <!-- Name Column -->
-                <ng-container matColumnDef="fecha">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Fecha">
-                        Fecha
-                    </th>
-                    <td mat-cell *matCellDef="let element"> {{element.fecha}} </td>
-                </ng-container>
-
-                <!-- Weight Column -->
-                <ng-container matColumnDef="hora">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Hora">
-                        Hora
-                    </th>
-                    <td mat-cell *matCellDef="let element"> {{element.hora}} </td>
-                </ng-container>
-
-                <!-- Symbol Column -->
-                <ng-container matColumnDef="direccion">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Direccion">
-                        Dirección
-                    </th>
-                    <td mat-cell *matCellDef="let element"> {{element.direccion}} </td>
-                </ng-container>
+                <mat-form-field fxFlex="40%" appearance="outline">
+                    <mat-label >Hora Llegada</mat-label>
+                    <input [ngxTimepicker]="HoraLlegada" matInput formControlName="HoraLlegada" placeholder="24hr format" aria-label="24hr format" [format]="24">
+                    <ngx-material-timepicker #HoraLlegada></ngx-material-timepicker>
+                </mat-form-field>
 
 
-                <ng-container matColumnDef="cp">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="CP">
-                        CP
-                    </th>
-                    <td mat-cell *matCellDef="let element"> {{element.cp}} </td>
-                </ng-container>
+                <mat-form-field fxFlex="40%" appearance="outline">
+                    <mat-label >Distancia (Km)</mat-label>
+                    <input  type="number" style="color: black;" autocomplete="off" matInput formControlName="DistanciaRecorrida"  />
+                </mat-form-field>
 
-                <ng-container matColumnDef="distancia">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Distancia">
-                        Distancia
-                    </th>
-                    <td mat-cell *matCellDef="let element"> {{element.distancia}} </td>
-                </ng-container>
+                
+    
+            </div>
+            <div fxLayout="column" fxLayout.gt-xs="row" fxLayoutGap="8px" fxLayoutGap.gt-xs="24px" fxLayoutAlign="end" [formGroup]="editForm" >
+                <mat-form-field fxFlex="35%" appearance="outline">
+                    <mat-label>País</mat-label>
+                    <mat-select name="catPaises" formControlName="PaisUbicacion" (selectionChange)="onSelectEvent($event.value, 'paisUbicacion')">
+                        <mat-option *ngFor="let item of catPaises" [value]="item">
+                            {{item.Nombre}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+                
+                <mat-form-field fxFlex="35%" appearance="outline">
+                    <mat-label>Estado</mat-label>
+                    <mat-select name="catEstados" formControlName="EstadoUbicacion" (selectionChange)="onSelectEvent($event.value, 'estadoUbicacion')">
+                        <mat-option *ngFor="let item of catEstados" [value]="item">
+                            {{item.Nombre}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
 
-                <ng-container matColumnDef="action">
-                    <th mat-header-cell *matHeaderCellDef> Acciones </th>
-                    <td mat-cell *matCellDef="let element; let i = index; " class="action-link"> 
-                      <a (click)="removeDataUbicacion(i, element)"> <mat-icon >delete</mat-icon></a>  
-                    </td>
-                  </ng-container>
+                <mat-form-field fxFlex="35%" appearance="outline">
+                    <mat-label>Municipio</mat-label>
+                    <mat-select name="catMunicipios" formControlName="MunicipioUbicacion" (selectionChange)="onSelectEvent($event.value, 'municipioUbicacion')">
+                        <mat-option *ngFor="let item of catMunicipios" [value]="item">
+                            {{item.Descripcion}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
 
-                <tr mat-header-row *matHeaderRowDef="displayedColumns1"></tr>
-                <tr mat-row *matRowDef="let row; columns: displayedColumns1;"></tr>
-            </table>
+                <mat-form-field fxFlex="35%" appearance="outline">
+                    <mat-label>CP</mat-label>
+                    <input type="text" style="color: black;" autocomplete="off" matInput formControlName="CodigoPostalUbicacion" matInput min="0" maxlength="5" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" />
+                </mat-form-field> 
 
-            
-        </div>
 
-        <div class="mt-4" fxLayout="column" fxLayoutGap="8px">
-            
-        </div>
+                <button mat-mini-fab color="primary"  mat-raised-button (click)="addDataUbicacion()">
+                    
+                    <mat-icon >add</mat-icon>
+                </button>
+                <mat-hint><p style="color: red;">{{validacionUbicacion}}</p></mat-hint>
+                
+            </div>
+            <div fxLayout="column" fxLayout.gt-xs="row" fxLayoutGap="8px" fxLayoutGap.gt-xs="24px" fxLayoutAlign="end"  >
+                <p><b>Total Distancia: </b> {{totalDistancia}}</p>
+            </div>
+
+            <div class="mt-4" fxLayout="column" fxLayoutGap="8px">
+                <table mat-table [dataSource]="dataSource1" matSort (matSortChange)="announceSortChange($event)" class="mat-elevation-z8" >
+                    <ng-container matColumnDef="index">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="index"> # Línea </th>
+                        <td mat-cell *matCellDef="let element; let i = index;">{{i}}</td>
+                    </ng-container>
+
+                    <!-- Position Column -->
+                    <ng-container matColumnDef="rfc">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="RFC">
+                            RFC
+                        </th>
+                        <td mat-cell *matCellDef="let element"> {{element.rfc}} </td>
+                    </ng-container>
+
+                    <!-- Name Column -->
+                    <ng-container matColumnDef="fecha">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Fecha">
+                            Fecha
+                        </th>
+                        <td mat-cell *matCellDef="let element"> {{element.fecha}} </td>
+                    </ng-container>
+
+                    <!-- Weight Column -->
+                    <ng-container matColumnDef="hora">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Hora">
+                            Hora
+                        </th>
+                        <td mat-cell *matCellDef="let element"> {{element.hora}} </td>
+                    </ng-container>
+
+                    <!-- Symbol Column -->
+                    <ng-container matColumnDef="direccion">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Direccion">
+                            Dirección
+                        </th>
+                        <td mat-cell *matCellDef="let element"> {{element.direccion}} </td>
+                    </ng-container>
+
+
+                    <ng-container matColumnDef="cp">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="CP">
+                            CP
+                        </th>
+                        <td mat-cell *matCellDef="let element"> {{element.cp}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="distancia">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Distancia">
+                            Distancia
+                        </th>
+                        <td mat-cell *matCellDef="let element"> {{element.distancia}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="action">
+                        <th mat-header-cell *matHeaderCellDef> Acciones </th>
+                        <td mat-cell *matCellDef="let element; let i = index; " class="action-link"> 
+                        <a (click)="removeDataUbicacion(i, element)"> <mat-icon >delete</mat-icon></a>  
+                        </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns1"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns1;"></tr>
+                </table>
+
+                
+            </div>
+
+            <div class="mt-4" fxLayout="column" fxLayoutGap="8px">
+                
+            </div>
 
         
     </mat-step>
@@ -566,11 +597,11 @@
                     <input style="color: black;" autocomplete="off" matInput formControlName="Correo"  />
                 </mat-form-field>    
             </div>
-            <button mat-flat-button color="primary" (click)="save(false)">
+            <button mat-flat-button color="primary" (click)="save(false)" [disabled]="!editForm.valid">
                 <mat-icon>save</mat-icon> Guardar
               </button>
               &nbsp;&nbsp;
-              <button mat-flat-button color="primary" (click)="save(true)">
+              <button mat-flat-button color="primary" (click)="save(true)" [disabled]="!editForm.valid">
                 <mat-icon>settings</mat-icon>Guardar y Timbrar
               </button>
             <div fxLayout="column" >

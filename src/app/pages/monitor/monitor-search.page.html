@@ -3,11 +3,19 @@
     <div fxLayout="column" fxLayoutGap="8px">
 
         <div fxLayout="column" fxLayout.gt-xs="row" fxLayoutGap="8px" fxLayoutGap.gt-xs="8px">
-
             <mat-form-field fxFlex="50%" appearance="outline">
+                <mat-label>Fecha de Creación</mat-label>
+                <input autocomplete="off" matInput formControlName="fechaCreacion" />
+            </mat-form-field>
+            <mat-form-field fxFlex="50%" appearance="outline">
+                <mat-label>Estatus</mat-label>
+                <input autocomplete="off" matInput formControlName="estatus" />
+            </mat-form-field>
+
+            <!-- <mat-form-field fxFlex="50%" appearance="outline">
                 <mat-label>Comprobante</mat-label>
                 <input autocomplete="off" matInput formControlName="comprobante" />
-            </mat-form-field>
+            </mat-form-field> -->
 
         </div>
 

@@ -50,6 +50,8 @@ import { ShortenPipe } from 'ngx-pipes';
 import { NgPipesModule } from 'ngx-pipes'; // https://github.com/danrevah/ngx-pipes
 
 import {NgxMaterialTimepickerModule} from 'ngx-material-timepicker';
+import {MatSlideToggleModule} from '@angular/material/slide-toggle';
+
 
 
 
@@ -103,6 +105,8 @@ import {NgxMaterialTimepickerModule} from 'ngx-material-timepicker';
     //TimePicker
     NgxMaterialTimepickerModule,
 
+    MatSlideToggleModule,
+
   ],
   exports: [
     CommonModule,
@@ -151,6 +155,8 @@ import {NgxMaterialTimepickerModule} from 'ngx-material-timepicker';
     
     //TimePicker
     NgxMaterialTimepickerModule,
+
+    MatSlideToggleModule,
 
     // NGX-Pipes
     // BytesPipe,

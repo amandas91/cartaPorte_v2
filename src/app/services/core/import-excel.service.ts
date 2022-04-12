@@ -17,7 +17,9 @@ export class ImportarExcelService {
     upload(params):Observable<any> {
         // Make http post request over api
         // with formData as req
-        return this.http.post(`${this.resourceUrl}` ,params.formData)
+       
+        console.log(params)
+        return this.http.post(`${this.resourceUrl}/4` , params.formData)
     }
 }
 

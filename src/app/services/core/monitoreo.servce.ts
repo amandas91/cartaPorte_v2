@@ -31,6 +31,10 @@ public resourceUrlUser = environment.apiUrlCartaPorte + '/cartaPorteMonitor';
     return this.http.get<IMonitoreo[]>(`${this.resourceUrl}/cancelacion/${id}`, { observe: 'response' });
   }
 
+  findByFechaEstatus(estatus: string, fechaEntrega:string): Observable<EntityArrayResponseType> {
+    return this.http.get<IMonitoreo[]>(`${this.resourceUrlUser}?createUser=4&estatus=${estatus}&fechaEntrega=${fechaEntrega}`, { observe: 'response' });
+  }
+
   findByUser(id: string): Observable<EntityArrayResponseType> {
     return this.http.get<IMonitoreo[]>(`${this.resourceUrlUser}?createUser=4`, { observe: 'response' });
   }

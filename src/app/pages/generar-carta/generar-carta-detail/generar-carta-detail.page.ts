@@ -54,6 +54,9 @@ import { MonitoreoService } from "app/services/core/monitoreo.servce";
 
 import { MatDialog } from "@angular/material/dialog";
 import { ImportExcelPages } from "app/pages/import-excel/import-excel.pages";
+import { CatOperadorService } from "app/services/catalogos/cat-operador.service";
+import { CatIOperador } from "app/models/catalogos/cat-operador.model";
+
 
 
 const MaxItems = 2000;
@@ -103,6 +106,8 @@ export interface Observaciones {
 
 
 export interface ExpedidoEn {
+  Calle: string;
+  Colonia: string;
   Municipio: string;
   Estado: string;
   Pais: string;
@@ -302,6 +307,7 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
   municipioTempUbicacion:any;
 
   Eco:any;
+  searchBodega:any;
 
   @Output()
   auxSave: EventEmitter<boolean> = new EventEmitter();
@@ -309,11 +315,18 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
   @Input()
   parentForm?: FormGroup;
 
+  @Input()
+  bodegatSelect?: any;
+
   @Output()
   formChange: EventEmitter<FormGroup> = new EventEmitter<FormGroup>();
 
   ELEMENT_DATA: UbicacionElementTable[] = [];
   dataSource1 = new MatTableDataSource(this.ELEMENT_DATA);
+
+  showDetailDestino: boolean = false;
+  showDetailOrigen: boolean = false;
+
   //dataSource1: MatTableDataSource<any> = new MatTableDataSource<any>([]);
 
   @ViewChild(MatTable) table: MatTable<CargaElementTable>;
@@ -350,6 +363,7 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
     protected activatedRoute: ActivatedRoute,
     private monitorService: MonitoreoService,
     private dialog: MatDialog,
+    private catOperadorService: CatOperadorService,
 
   ) {
     this.createForm();
@@ -359,12 +373,13 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
   createForm() {
     this.editForm = this.fb.group({
       Nombre: [null, [Validators.required]],
+      bodega: [null, [Validators.required]],
       Rfc: [null, [Validators.required]],
       RegimenFiscal: [null, [Validators.required]],
-      Pais: [null, [Validators.required]],
-      Estado: [null, [Validators.required]],
-      Municipio: [null, [Validators.required]],
-      CodigoPostal: [null, [Validators.required]],
+      Pais: [null, []],
+      Estado: [null, []],
+      Municipio:[null, []],
+      CodigoPostal: [null, []],
       RfcReceptor: [null, [Validators.required,
       Validators.maxLength(13),
       Validators.minLength(13)
@@ -375,8 +390,8 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
       Validators.maxLength(13),
       Validators.minLength(13)
       ]],
-      NumLicencia: [null, []],
-      NombreFigura: [null, []],
+      NumLicencia: [null, [Validators.required]],
+      NombreFigura: [null, [Validators.required]],
       TipoFigura: [null, [Validators.required]],
       PermSCT: [null, [Validators.required]],
       ConfigVehicular: [null, [Validators.required]],
@@ -401,13 +416,14 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
       Correo: [null, [Validators.required]],
       DistanciaRecorrida: [null, []],
       Eco: [null, []],
-      FechaSalidaLlegada: [null, [Validators.required]],
-      FechaSalida: [null, [Validators.required]],
-      HoraSalida: [null, [Validators.required]],
-      HoraSalidaLlegada: [null, [Validators.required]],
-      HoraLlegada: [null, [Validators.required]],
+      FechaSalidaLlegada: [null, []],
+      FechaSalida: [null, []],
+      HoraSalida: [null, []],
+      HoraSalidaLlegada: [null, []],
+      HoraLlegada: [null, []],
       ClaveBodega: [null, []],
-      ClaveCliente: [null, []]
+      ClaveCliente: [null, []],
+      NumeroEmpleado:[null, [Validators.required]],
     });
 
     this.editForm.controls['CodigoPostal'].valueChanges.subscribe(data => {
@@ -541,7 +557,10 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
             return res.body ? res.body : [];
           })
         )
-        .subscribe((resBody: ICatTipoFiguraTransporte[]) => (this.catTipoFiguraTransporte = resBody));
+        .subscribe((resBody: ICatTipoFiguraTransporte[]) => (
+          this.catTipoFiguraTransporte = resBody,
+          this.editForm.controls['TipoFigura'].setValue(resBody[2].ClaveTransporte)
+          ));
 
       
       this.serie = params.id;
@@ -601,7 +620,7 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
   
       this.cargaElementList = {
         ClaveProdServ:value.BienesTransp,
-        TipoProducto: this.tipoProductoTable,
+        TipoProducto: value.ClaveUnidad,//this.tipoProductoTable,
         Cantidad:value.Cantidad,
         ClaveUnidad:  value.ClaveUnidad,
         Unidad: value.Unidad,
@@ -743,10 +762,7 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
             ))
       ))
 
-      
-      
-     
-
+    
       //Receptor
       this.searchRfc = this.generarCarta.Receptor.Rfc;
       this.searchArray = this.receptor.findIndex(x => x.Rfc ===  this.searchRfc),
@@ -978,34 +994,43 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
             })
           )
           .subscribe((resBody: IEamFlota) => {
-            if (resBody.EstatusEco == 'ACTIVO') {
-              this.editForm.controls['AnioModeloVM'].setValue(resBody.AnioCP);
-              this.editForm.controls['PlacaVM'].setValue(resBody.PlacaCP);
-              this.editForm.controls['PolizaRespCivil'].setValue(resBody.PolizaCP);
-              this.editForm.controls['AseguraRespCivil'].setValue(resBody.AseguradoraCP);
-              this.editForm.controls['NumPermisoSCT'].setValue(resBody.NoPermisoCP);
-              this.editForm.controls['PermSCT'].setValue(resBody.TipoPermisoCP);
-              this.editForm.controls['ConfigVehicular'].setValue(resBody.ClaseVehSctCP)
-              this.Eco = this.editForm.controls['Eco'].value;
-              this.PermSCT = this.editForm.controls['PermSCT'].value;
-              Swal.close();
-            } else if(resBody.EstatusEco != 'ACTIVO'){
+            if(!resBody.status){
+              if (resBody.EstatusEco == 'ACTIVO') {
+                this.editForm.controls['AnioModeloVM'].setValue(resBody.AnioCP);
+                this.editForm.controls['PlacaVM'].setValue(resBody.PlacaCP);
+                this.editForm.controls['PolizaRespCivil'].setValue(resBody.PolizaCP);
+                this.editForm.controls['AseguraRespCivil'].setValue(resBody.AseguradoraCP);
+                this.editForm.controls['NumPermisoSCT'].setValue(resBody.NoPermisoCP);
+                this.editForm.controls['PermSCT'].setValue(resBody.TipoPermisoCP);
+                this.editForm.controls['ConfigVehicular'].setValue(resBody.ClaseVehSctCP)
+                this.Eco = this.editForm.controls['Eco'].value;
+                this.PermSCT = this.editForm.controls['PermSCT'].value;
+                Swal.close();
+              } else if(resBody.EstatusEco != 'ACTIVO'){
+                Swal.fire({
+                  title: 'No se pudo realizar la acción',
+                  text: resBody.EstatusEco,
+                  icon: 'warning',
+                  showCloseButton: true,
+                });
+  
+              } else {
+                Swal.fire({
+                  title: 'No se pudo realizar la acción',
+                  text: resBody.message,
+                  icon: 'warning',
+                  showCloseButton: true,
+                });
+    
+              }
+            }else{
               Swal.fire({
-                title: 'Conflicto',
-                text: resBody.EstatusEco,
+                title: 'No se pudo realizar la acción',
+                text: resBody.message,
                 icon: 'warning',
                 showCloseButton: true,
               });
-
-          } else {
-            Swal.fire({
-              title: 'Conflicto',
-              text: resBody.message,
-              icon: 'warning',
-              showCloseButton: true,
-            });
-
-          }
+            }
 
           });
 
@@ -1203,7 +1228,7 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
             
             }else{
               Swal.fire({
-                title: 'Conflicto',
+                title: 'No se pudo realizar la acción',
                 text: 'Cliente Inactivo',
                 icon: 'warning',
                 showCloseButton: true,
@@ -1288,7 +1313,40 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
         let frev = this.editForm.controls['RFCRemitenteDestinatario'].value;
         this.editForm.controls['RFCRemitenteDestinatario'].setValue(frev.toUpperCase());
         break;
-      default:
+      case "operador":
+        
+        Swal.fire({
+          allowOutsideClick: false,
+          text: 'Cargando...',
+        });
+        Swal.showLoading();
+
+
+        this.catOperadorService.find(this.editForm.controls['NumeroEmpleado'].value)
+          .pipe(
+            map((res: HttpResponse<CatIOperador>) => {
+              return res.body ? res.body : [];
+            })
+          )
+          .subscribe((resBody: CatIOperador) => {
+            if(resBody){
+              this.editForm.controls['RFCFigura'].setValue(resBody.RFC),
+              this.editForm.controls['NumLicencia'].setValue(resBody.NumeroLicencia),
+              this.editForm.controls['NombreFigura'].setValue(resBody.ApellidoPaterno + ' ' + resBody.ApellidoPaterno + ' ' + resBody.Nombre),
+              Swal.close()
+            }else{
+              Swal.fire({
+                title: 'No se pudo realizar la acción',
+                text: '',
+                icon: 'warning',
+                showCloseButton: true,
+              });
+            }
+
+          });
+
+        break;
+        default:
         console.log("No such day exists!");
         break;
     }
@@ -1325,6 +1383,8 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
      */
 
     this.ExpedidoEn = {
+      Calle:'',
+      Colonia:'',
       Municipio: this.municipioExpedido,
       Estado: this.estadoExpedido,
       Pais: this.paisExpedido,
@@ -1539,6 +1599,8 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
      */
 
       this.ExpedidoEn = {
+        Calle:'',
+        Colonia:'',
         Municipio: this.municipioExpedido,
         Estado: this.estadoExpedido,
         Pais: this.paisExpedido,
@@ -1741,41 +1803,75 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
 
   protected onSaveSuccess(res): void {
     console.log("Respuesta");
-    console.log(res);
-
-    if (res.body.Serie == "" && res.body.Serie == "") {
-      this.isSaving = false;
-      if (this.auxSave) {
-        this.auxSave.emit(false);
-      }
-
-      Swal.fire({
-        title: 'Conflicto',
-        text: 'No fue Posible Realizar la Acción',
-        icon: 'warning',
-        showCloseButton: true,
-      });
-    } else {
-      this.isSaving = true;
-      Swal.close();
-      Swal.fire({
-        icon: 'success',
-        text: 'Guardado',
-        showCancelButton: false,
-        confirmButtonColor: '#3085d6',
-        confirmButtonText: 'Ok',
-        html: '<p>Folio <b>' + res.body.Folio + '</b> </p>' +
-          '<p>Fecha <b>' + res.body.RespuestaTimbrado.fechaTimbre + '</b></p> ' +
-          '<p>uuid <b>' + res.body.RespuestaTimbrado.uuid + '</b></p>' +
-          '<p>Mensage' + res.body.RespuestaTimbrado.error + '</p>',
-        }).then((result) => {
-        if (result.isConfirmed) {
-          //window.location.reload();
-          this.folio =  res.body.Folio;
-          this.serie = res.body.Serie;
+    console.log(res.body);
+    if(res.body.RespuestaTimbrado != null){
+      if (res.body.Serie == "" && res.body.Serie == "") {
+        this.isSaving = false;
+        if (this.auxSave) {
+          this.auxSave.emit(false);
         }
-      })
+  
+        Swal.fire({
+          title: 'No se pudo realizar la acción',
+          text: 'No fue Posible Realizar la Acción',
+          icon: 'warning',
+          showCloseButton: true,
+        });
+      } else {
+        this.isSaving = true;
+        Swal.close();
+        if(res.body.RespuestaTimbrado.error == null){
+          Swal.fire({
+            icon: 'success',
+            text: 'Guardado',
+            showCancelButton: false,
+            confirmButtonColor: '#3085d6',
+            confirmButtonText: 'Ok',
+            html: '<p>Folio <b>' + res.body.Folio + '</b> </p>' +
+              '<p>Fecha <b>' + res.body.RespuestaTimbrado.fechaTimbre + '</b></p> ' +
+              '<p>uuid <b>' + res.body.RespuestaTimbrado.uuid + '</b></p>',
+            }).then((result) => {
+            if (result.isConfirmed) {
+              //window.location.reload();
+              this.folio =  res.body.Folio;
+              this.serie = res.body.Serie;
+            }
+          })
+        }else{
+          Swal.fire({
+            icon: 'warning',
+            text: 'Guardado',
+            showCancelButton: false,
+            confirmButtonColor: '#3085d6',
+            confirmButtonText: 'Ok',
+            html: '<p>Folio <b>' + res.body.Folio + '</b> </p>' +
+              '<p>Fecha <b>' + res.body.RespuestaTimbrado.fechaTimbre + '</b></p> ' +
+              '<p>uuid <b>' + res.body.RespuestaTimbrado.uuid + '</b></p>' +
+              '<p>Mensage' + res.body.RespuestaTimbrado.error + '</p>',
+            }).then((result) => {
+            if (result.isConfirmed) {
+              //window.location.reload();
+              this.folio =  res.body.Folio;
+              this.serie = res.body.Serie;
+            }
+          })
+        }
+        
+      }
+    }else{
+      this.isSaving = false;
+        if (this.auxSave) {
+          this.auxSave.emit(false);
+        }
+  
+        Swal.fire({
+          title: 'No se pudo realizar la acción',
+          text: 'No fue Posible Realizar la Acción',
+          icon: 'warning',
+          showCloseButton: true,
+        });
     }
+   
 
   }
 
@@ -1786,7 +1882,7 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
     }
 
     Swal.fire({
-      title: 'Conflicto',
+      title: 'No se pudo realizar la acción',
       text: 'No fue Posible Realizar la Acción',
       icon: 'warning',
       showCloseButton: true,
@@ -1821,8 +1917,156 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
       });
   }
 
+  changedBodega(value: any){
+    console.log("entro",value)
+    
+  }
 
+  buscarBodega(origen:number, value: any): void {
 
+    if(origen == 1){
+      
+      if( this.showDetailOrigen){
+        this.showDetailOrigen = false;
+      }else{
+        this.showDetailOrigen = true;
+      }
+    }else{
+      if(value.checked){
+        this.editForm.controls['ClaveBodega'].disable()
+        this.editForm.controls['ClaveCliente'].disable()
+      }else{
+        this.editForm.controls['ClaveBodega'].enable()
+        this.editForm.controls['ClaveCliente'].enable()
+      }
+      if( this.showDetailDestino){
+        this.showDetailDestino = false;
+      }else{
+        this.showDetailDestino = true;
+      }
+    }
+    
+    
+    // const params = {
+    //   title: "CLIENTS.NEW"
+    // };
+
+    // const dialogRef = this.dialog.open(BodegaPages, { data: params });
+    // dialogRef.updateSize("100%");
+    // dialogRef.afterClosed().subscribe((bodegatSelect: any) => {
+    //   console.log("SRC AQUI", this.bodegatSelect)
+        
+    // });
+  }
+
+  
+
+  addBodega(origen:number, src: any){
+    Swal.fire({
+      allowOutsideClick: false,
+      text: 'Cargando...',
+    });
+    Swal.showLoading();
+    console.log('Bodega CP...: ', src);
+    if(origen == 1){
+      this.LugarExpedicion = src.CodigoPostal
+      this.editForm.controls['bodega'].setValue(src.Nombre)
+      this.paisExpedido = 'MEX',
+      this.catCPsService.findByCodigoPostal(src.CodigoPostal)
+      .pipe(
+        map((res: HttpResponse<any>) => {
+          return res.body ? res.body : [];
+        })
+      )
+      .subscribe((resBodyCp: ICatCP[]) => (
+        this.searchBodega = resBodyCp[0],
+        //estado
+        this.catEstadosService.find('MEX')
+        .pipe(
+          map((res: HttpResponse<ICatEstados[]>) => {
+            return res.body ? res.body : [];
+          })
+        )
+        .subscribe((resBody: ICatEstados[]) => (
+          this.catEstados = resBody,
+          this.searchArray = this.catEstados.findIndex(x => x.ClaveEstado ===  this.searchBodega.Estado),
+          this.estadoExpedido = this.catEstados[ this.searchArray].ClaveEstado,
+          //MUNICIPIO
+          
+          this.catMunicipiosService.find(this.catEstados[ this.searchArray].Nombre)
+          .pipe(
+            map((res: HttpResponse<ICatMunicipios[]>) => {
+              return res.body ? res.body : [];
+            })
+          )
+          .subscribe((resBody: ICatMunicipios[]) => (
+            this.catMunicipios = resBody,
+            this.searchArray = this.catMunicipios.findIndex(x => x.Municipio ===  this.searchBodega.Municipio),
+            this.municipioExpedido = this.catMunicipios[ this.searchArray].Municipio,
+            Swal.close()
+    
+           ))
+        
+          ))
+
+        
+      ))
+        
+    }else{
+      this.showDetailDestino = false;
+      // this.paisUbicacion == undefined || this.municipioUbicacion == undefined || this.estadoUbicacion == undefined
+      this.editForm.controls['RFCRemitenteDestinatario'].setValue("XAXX010101000")
+      if( src ){
+        this.editForm.controls['PaisUbicacion'].setValue(this.catPaises[0]),
+        this.paisUbicacion = this.catPaises[0].IdPais,
+        this.editForm.controls['CodigoPostalUbicacion'].setValue(src.CodigoPostal),
+        this.catCPsService.findByCodigoPostal(src.CodigoPostal)
+        .pipe(
+          map((res: HttpResponse<any>) => {
+            return res.body ? res.body : [];
+          })
+        )
+        .subscribe((resBodyCp: ICatCP[]) => (
+          this.searchBodega = resBodyCp[0],
+          //estado
+          this.catEstadosService.find('MEX')
+          .pipe(
+            map((res: HttpResponse<ICatEstados[]>) => {
+              return res.body ? res.body : [];
+            })
+          )
+          .subscribe((resBody: ICatEstados[]) => (
+            this.catEstados = resBody,
+            this.searchArray = this.catEstados.findIndex(x => x.ClaveEstado ===  this.searchBodega.Estado),
+            this.editForm.controls['EstadoUbicacion'].setValue(this.catEstados[ this.searchArray]),
+            this.estadoUbicacion = this.catEstados[ this.searchArray].ClaveEstado,
+            //MUNICIPIO
+            
+            this.catMunicipiosService.find(this.catEstados[ this.searchArray].Nombre)
+            .pipe(
+              map((res: HttpResponse<ICatMunicipios[]>) => {
+                return res.body ? res.body : [];
+              })
+            )
+            .subscribe((resBody: ICatMunicipios[]) => (
+              this.catMunicipios = resBody,
+              
+              this.searchArray = this.catMunicipios.findIndex(x => x.Municipio ===  this.searchBodega.Municipio),
+              this.editForm.controls['MunicipioUbicacion'].setValue(this.catMunicipios[ this.searchArray]),
+              this.municipioUbicacion =this.catMunicipios[ this.searchArray].Municipio,
+              Swal.close()
+      
+             ))
+          
+            ))
+  
+          
+        ))
+         
+      }
+    }
+   
+  }
 
 
 }

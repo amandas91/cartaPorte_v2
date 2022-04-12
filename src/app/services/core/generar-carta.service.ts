@@ -21,7 +21,7 @@ export class GenerarCartaService {
 
   create(generarCarta: any, timbrado:boolean): Observable<EntityResponseType> {
     //const copy = this.convertDateFromClient(generarCarta);
-    console.log("GENERAR CARTA");
+    //console.log("GENERAR CARTA");
     //console.log(copy);
     
     return this.http
