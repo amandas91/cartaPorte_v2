@@ -996,15 +996,24 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
           .subscribe((resBody: IEamFlota) => {
             if(!resBody.status){
               if (resBody.EstatusEco == 'ACTIVO') {
-                this.editForm.controls['AnioModeloVM'].setValue(resBody.AnioCP);
-                this.editForm.controls['PlacaVM'].setValue(resBody.PlacaCP);
-                this.editForm.controls['PolizaRespCivil'].setValue(resBody.PolizaCP);
-                this.editForm.controls['AseguraRespCivil'].setValue(resBody.AseguradoraCP);
-                this.editForm.controls['NumPermisoSCT'].setValue(resBody.NoPermisoCP);
-                this.editForm.controls['PermSCT'].setValue(resBody.TipoPermisoCP);
+                this.editForm.controls['AnioModeloVM'].setValue(resBody.AnioCP)
+                this.editForm.controls['PlacaVM'].setValue(resBody.PlacaCP)
+                this.editForm.controls['PolizaRespCivil'].setValue(resBody.PolizaCP)
+                this.editForm.controls['AseguraRespCivil'].setValue(resBody.AseguradoraCP)
+                this.editForm.controls['NumPermisoSCT'].setValue(resBody.NoPermisoCP)
+                this.editForm.controls['PermSCT'].setValue(resBody.TipoPermisoCP)
                 this.editForm.controls['ConfigVehicular'].setValue(resBody.ClaseVehSctCP)
-                this.Eco = this.editForm.controls['Eco'].value;
-                this.PermSCT = this.editForm.controls['PermSCT'].value;
+                this.Eco = this.editForm.controls['Eco'].value
+                this.PermSCT = this.editForm.controls['PermSCT'].value
+                //Disable
+                this.editForm.controls['AnioModeloVM'].enable()
+                this.editForm.controls['PlacaVM'].enable()
+                this.editForm.controls['PolizaRespCivil'].enable()
+                this.editForm.controls['AseguraRespCivil'].enable()
+                this.editForm.controls['NumPermisoSCT'].enable()
+                this.editForm.controls['PermSCT'].enable()
+                this.editForm.controls['ConfigVehicular'].enable()
+                this.editForm.controls['PermSCT'].enable()
                 Swal.close();
               } else if(resBody.EstatusEco != 'ACTIVO'){
                 Swal.fire({
@@ -1333,6 +1342,9 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
               this.editForm.controls['RFCFigura'].setValue(resBody.RFC),
               this.editForm.controls['NumLicencia'].setValue(resBody.NumeroLicencia),
               this.editForm.controls['NombreFigura'].setValue(resBody.ApellidoPaterno + ' ' + resBody.ApellidoPaterno + ' ' + resBody.Nombre),
+              this.editForm.controls['RFCFigura'].disable(),
+              this.editForm.controls['NumLicencia'].disable(),
+              this.editForm.controls['NombreFigura'].disable(),
               Swal.close()
             }else{
               Swal.fire({

@@ -43,7 +43,7 @@ export class ImportExcelPages implements OnInit {
           title: 'No se pudo realizar la acción',
           text: '',
           icon: 'warning',
-          html: '<p>' + resBody.mensajes + '</p>',
+          html: '<p></p>',
           showCloseButton: true,
         });
       }else{
