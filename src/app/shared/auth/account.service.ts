@@ -1,26 +1,31 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { SessionStorageService } from 'ngx-webstorage';
+import { SessionStorageService, LocalStorageService } from 'ngx-webstorage';
 import { Observable, ReplaySubject, of } from 'rxjs';
 import { shareReplay, tap, catchError } from 'rxjs/operators';
 import { StateStorageService } from './state-storage.service';
-
+import { DatePipe } from '@angular/common';
 import { environment } from 'app/../environments/environment';
 import { Account } from 'app/shared/models/account.model';
 import { Authorities } from 'app/shared/models/authorities.model';
+import { AuthServerProvider } from './auth-jwt.service';
+
 
 @Injectable({ providedIn: 'root' })
 export class AccountService {
   private userIdentity: Account | null = null;
   private authenticationState = new ReplaySubject<Account | null>(1);
   private accountCache$?: Observable<Account | null>;
+  datepipe: DatePipe = new DatePipe('en-US')
 
   constructor(
     private sessionStorage: SessionStorageService,
     private http: HttpClient,
     private stateStorageService: StateStorageService,
-    private router: Router
+    private router: Router,
+    private localStorage: LocalStorageService,
+    private AuthServerProviderService: AuthServerProvider
   ) {}
 
   save(account: Account): Observable<{}> {
@@ -28,9 +33,8 @@ export class AccountService {
   }
 
   authenticate(identity: Account | null): void {
-    // console.log(" #### authenticate:  " ,identity);
-    this.userIdentity = identity;
-    this.authenticationState.next(this.userIdentity);
+    this.userIdentity = identity
+    this.authenticationState.next(this.userIdentity)
   }
 
   
@@ -50,13 +54,12 @@ export class AccountService {
     // console.log('User Auth: ' + JSON.stringify(this.userIdentity.roles));
 
     // return this.userIdentity.rol.some((rol: any) => {
-      // console.log('Rol: ' + rol + ', has autorization?: ' + authorities.includes(rol));
+    // console.log('Rol: ' + rol + ', has autorization?: ' + authorities.includes(rol));
     //   return authorities.includes(rol);
     // });
 
     console.log(authorities.includes(this.userIdentity.rol));
     return authorities.includes(this.userIdentity.rol);
-
   }
 
 
@@ -80,7 +83,31 @@ export class AccountService {
   }
 
   isAuthenticated(): boolean {
+    let fechaActual = this.datepipe.transform(Date.now(), 'yyyy-MM-ddTh:mm:ss')
+    let fechaExpired = this.datepipe.transform(this.localStorage.retrieve('ExpirationDate'), 'yyyy-MM-ddTh:mm:ss')
+    // console.log(" #### fechaActual ####  ", fechaActual )
+    // console.log(" #### fechaExpired ####  ", fechaExpired )
+
+    if(fechaExpired < fechaActual ){
+        sessionStorage.removeItem('authenticationToken')
+        sessionStorage.removeItem('Username')
+        sessionStorage.removeItem('UserId')
+        sessionStorage.removeItem('ExpirationDate')
+        this.router.navigate(['/login']);
+    }else{
+      const credentials = {
+        refreshToken: this.localStorage.retrieve('refreshToken'),
+        userid: this.localStorage.retrieve('UserId')
+      }
+  
+      this.AuthServerProviderService.refreshToken(credentials);
+    }
+
     return this.userIdentity !== null;
+  }
+
+  authenticateSuccess(response){
+
   }
 
   getAuthenticationState(): Observable<Account | null> {
@@ -97,14 +124,14 @@ export class AccountService {
   }
 
   public getStudents(): Observable<Account> {
-    console.log('###### PRUEBAS DE INVOCACIÓN ########');
-    console.log('########## TEMPORAL PARA OBTENER LOS DETALLES DE LA SESSIÓN ###');
+    // console.log('###### PRUEBAS DE INVOCACIÓN ########');
+    // console.log('########## TEMPORAL PARA OBTENER LOS DETALLES DE LA SESSIÓN ###');
 
     let aux: Account = {
       login: true,
       email: "",
       picture: "",
-      name: "Admin",
+      name: this.localStorage.retrieve('Username'),
       admin: "SABINO",
       rol: 'Admin',
       id: 1,

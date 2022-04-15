@@ -172,8 +172,11 @@ export class ToolbarComponent implements OnInit, OnDestroy
 
     logout() {
         // this.popoverRef.close();
-        this.loginService.logout();
-        sessionStorage.removeItem('textosAyuda');
+        this.loginService.logout()
+        sessionStorage.removeItem('authenticationToken')
+        sessionStorage.removeItem('Username')
+        sessionStorage.removeItem('UserId')
+        sessionStorage.removeItem('ExpirationDate')
         this.router.navigate(['/login']);
       }
 }

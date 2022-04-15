@@ -14,6 +14,9 @@ type JwtToken = {
   UserId: string;
   Username: string;
   Roles: any;
+  RefreshToken: string;
+  ExpirationDate: string;
+
 };
 
 @Injectable({ providedIn: 'root' })
@@ -31,6 +34,13 @@ export class AuthServerProvider {
     .pipe(map(response => this.authenticateSuccess(response, credentials.rememberMe)));
   }
 
+  refreshToken(credentials: any): Observable<void> {
+    
+    return  this.http
+    .post<JwtToken>(`${environment.apiUrlCartaPorte}/auth/refreshtoken`, credentials)
+    .pipe(map(response => this.authenticateSuccess(response, credentials.rememberMe)));
+  }
+
   logout(): Observable<void> {
     return new Observable(observer => {
       this.$localStorage.clear('authenticationToken');
@@ -40,13 +50,18 @@ export class AuthServerProvider {
   }
 
   private authenticateSuccess(response: JwtToken, rememberMe: boolean): void {
-    // console.log("Aqui guarda el Token");
-    // console.log(response);
+    // console.log("Aqui guarda el Token")
     const jwt = response.AccessToken;
     if (rememberMe) {
-      this.$localStorage.store('authenticationToken', jwt);
+      this.$localStorage.store('authenticationToken', jwt)
+      this.$localStorage.store('Username', response.Username)
+      this.$localStorage.store('UserId', response.UserId)
+      this.$localStorage.store('ExpirationDate', response.ExpirationDate)
     } else {
-      this.$sessionStorage.store('authenticationToken', jwt);
+      this.$sessionStorage.store('authenticationToken', jwt)
+      this.$localStorage.store('Username', response.Username)
+      this.$localStorage.store('UserId', response.UserId)
+      this.$localStorage.store('ExpirationDate', response.ExpirationDate)
     }
   }
 }

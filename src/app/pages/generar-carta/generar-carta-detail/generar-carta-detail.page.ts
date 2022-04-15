@@ -57,6 +57,8 @@ import { ImportExcelPages } from "app/pages/import-excel/import-excel.pages";
 import { CatOperadorService } from "app/services/catalogos/cat-operador.service";
 import { CatIOperador } from "app/models/catalogos/cat-operador.model";
 
+import { SessionStorageService, LocalStorageService } from 'ngx-webstorage';
+
 
 
 const MaxItems = 2000;
@@ -364,6 +366,7 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
     private monitorService: MonitoreoService,
     private dialog: MatDialog,
     private catOperadorService: CatOperadorService,
+    private localStorage: LocalStorageService
 
   ) {
     this.createForm();
@@ -1573,7 +1576,7 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
     let formattedDateFechaLlegada = this.datepipe.transform(tmpDateFechaLlegada, 'YYYY-MM-dd') + 'T' + tmpTime + ':00';
     //console.log(this.editForm.controls['HoraLlegada'].value);
     let generarCataAux = {
-      UsuarioCreador: "4",
+      UsuarioCreador: this.localStorage.retrieve('UserId'),
       FechaSalidaOrigen: formattedDateFechaSalida,
       FechaLlegadaDestino: formattedDateFechaLlegada,
       CartaPorte: this.generarCarta
@@ -1912,7 +1915,7 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
   }
 
   importItem(): void {
-    // console.log("AQUI ENTRA");
+    console.log("AQUI ENTRA");
     // console.log(value);
     // value.trip_id = this.trip_id;
       const params = {

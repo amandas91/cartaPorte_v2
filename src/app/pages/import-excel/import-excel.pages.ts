@@ -43,39 +43,30 @@ export class ImportExcelPages implements OnInit {
           title: 'No se pudo realizar la acción',
           text: '',
           icon: 'warning',
-          html: '<p></p>',
+          html: '<p>'+ resBody.mensajes + '</p>',
           showCloseButton: true,
         });
       }else{
-        if(resBody.message){
+        if(resBody.RespuestaTimbrado != null){
+          Swal.close(),
           Swal.fire({
-            title: 'No se pudo realizar la acción',
+            icon: 'success',
+            text: 'Guardado',
+            showCancelButton: false,
+            confirmButtonColor: '#3085d6',
+            confirmButtonText: 'Ok',
+            html: '<p>Folio <b>' + resBody.folio + '</b> </p>' +
+              '<p>Fecha <b>' + resBody.RespuestaTimbrado.fechaTimbre + '</b></p> ' +
+              '<p>uuid <b>' + resBody.RespuestaTimbrado.uuid + '</b></p>',
+            showCloseButton: true,
+            })
+        }else{
+          Swal.fire({
+            title: 'Conflicto',
             text: resBody.message,
             icon: 'warning',
             showCloseButton: true,
           });
-        }else{
-          if(resBody.RespuestaTimbrado.error == null){
-            Swal.close(),
-            Swal.fire({
-              icon: 'success',
-              text: 'Guardado',
-              showCancelButton: false,
-              confirmButtonColor: '#3085d6',
-              confirmButtonText: 'Ok',
-              html: '<p>Folio <b>' + resBody.folio + '</b> </p>' +
-                '<p>Fecha <b>' + resBody.RespuestaTimbrado.fechaTimbre + '</b></p> ' +
-                '<p>uuid <b>' + resBody.RespuestaTimbrado.uuid + '</b></p>',
-              showCloseButton: true,
-              })
-          }else{
-            Swal.fire({
-              title: 'Conflicto',
-              text: resBody.message,
-              icon: 'warning',
-              showCloseButton: true,
-            });
-          }
         }
       }
       
