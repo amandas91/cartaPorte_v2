@@ -60,18 +60,62 @@ export class ImportExcelPages implements OnInit {
             this.editForm.controls['fileInput'].setValue("")
       }else{
         if(resBody.RespuestaTimbrado != null){
-          Swal.close(),
-          Swal.fire({
-            icon: 'success',
-            text: 'Guardado',
-            showCancelButton: false,
-            confirmButtonColor: '#3085d6',
-            confirmButtonText: 'Ok',
-            html: '<p>Folio <b>' + resBody.folio + '</b> </p>' +
+          if(resBody.RespuestaTimbrado.error == null){
+            if(resBody.RespuestaCancelacion == null){
+              let html ='<div>' + 
+              '<p>Folio <b>' + resBody.folio + '</b> </p>' +
               '<p>Fecha <b>' + resBody.RespuestaTimbrado.fechaTimbre + '</b></p> ' +
-              '<p>uuid <b>' + resBody.RespuestaTimbrado.uuid + '</b></p>',
-            showCloseButton: true,
-            })
+              '<p>uuid <b>' + resBody.RespuestaTimbrado.uuid + '</b></p></div>'
+
+              Swal.close()
+              Swal.fire({
+                icon: 'success',
+                title: 'Guardado',
+                text: '',
+                showCancelButton: false,
+                confirmButtonColor: '#3085d6',
+                confirmButtonText: 'Ok',
+                html:html,
+                showCloseButton: true,
+                })
+            }else{
+              let html ='<div>' + 
+              '<p>Folio <b>' + resBody.folio + '</b> </p>' +
+              '<p>Fecha <b>' + resBody.RespuestaTimbrado.fechaTimbre + '</b></p> ' +
+              '<p>uuid <b>' + resBody.RespuestaTimbrado.uuid + '</b></p>'+
+              '<p>Fecha de Cancelación <b>' + resBody.RespuestaCancelacion.FechaCancelacion + '</b></p>'+
+              '<p>Error <b>' +  resBody.RespuestaCancelacion.Error + '</b></p></div>'
+
+              Swal.close()
+              Swal.fire({
+                icon: 'success',
+                title: 'Guardado',
+                text: '',
+                showCancelButton: false,
+                confirmButtonColor: '#3085d6',
+                confirmButtonText: 'Ok',
+                html:html,
+                showCloseButton: true,
+                })
+            }
+           
+
+          }else{
+            let html ='<div>' + 
+            '<p><b>Error:</b>' + resBody.RespuestaTimbrado.error + '</p></div>'
+
+            Swal.close()
+            Swal.fire({
+              icon: 'warning',
+              text: 'Guardado',
+              showCancelButton: false,
+              confirmButtonColor: '#3085d6',
+              confirmButtonText: 'Ok',
+              html: html,
+              showCloseButton: true,
+              })
+          }
+          
         }else{
           Swal.fire({
             title: 'Conflicto',
