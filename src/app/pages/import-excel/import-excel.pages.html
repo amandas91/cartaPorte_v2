@@ -8,7 +8,7 @@
                                 mat-icon-button>
             <mat-icon aria-hidden="false">cloud_upload</mat-icon>
             <input style="display: none;" #fileInput type="file" (change)="onFileInput( $event.target.files)" 
-                accept=".xlsx, .xls, .csv"  />
+                accept=".xlsx, .xls, .csv"  formControlName="fileInput" name="fileInput">
             
         </button>
         <p>Subir aquí el archivo </p>
