@@ -657,10 +657,6 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
     * ORIGEN
     */
      
-
-      
-     
-     
       this.editForm.controls['FechaSalida'].setValue( resBody.CartaPorte.Ubicaciones.Ubicacion[0].FechaHoraSalidaLlegada)
       let tmpTime = this.editForm.controls['FechaSalida'].value;
       let formattedDate = this.datepipe.transform(tmpTime, 'hh:mm')
@@ -782,8 +778,8 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
       this.editForm.controls['NombreFigura'].setValue(this.generarCarta.CartaPorte.FiguraTransporte.TiposFigura[0].NombreFigura),
 
       //Unidad y Transporte
-      this.editForm.controls['ClaveBodega'].setValue(this.generarCarta.CartaPorte.ClaveBodega),
-      this.editForm.controls['ClaveCliente'].setValue(this.generarCarta.CartaPorte.ClaveCliente),
+      // this.editForm.controls['ClaveBodega'].setValue(this.generarCarta.CartaPorte.ClaveBodega),
+      // this.editForm.controls['ClaveCliente'].setValue(this.generarCarta.CartaPorte.ClaveCliente),
       this.editForm.controls['Eco'].setValue(this.generarCarta.CartaPorte.Mercancias.Autotransporte.eco),
       this.Eco = this.generarCarta.CartaPorte.Mercancias.Autotransporte.eco,
       this.PermSCT = this.generarCarta.CartaPorte.Mercancias.Autotransporte.PermSCT;
