@@ -685,7 +685,7 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
         RFCRemitenteDestinatario: element.RFCRemitenteDestinatario,
         IDUbicacion: element.IDUbicacion,
         FechaHoraSalidaLlegada: element.FechaHoraSalidaLlegada,
-        DistanciaRecorrida: element.DistanciaRecorrida,
+        DistanciaRecorrida: this.round(element.DistanciaRecorrida),
         Domicilio: auxdomicilio
       };
   
@@ -694,10 +694,11 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
         fecha: element.FechaHoraSalidaLlegada,
         direccion: element.Domicilio.Estado,
         cp: element.Domicilio.CodigoPostal,
-        distancia: element.DistanciaRecorrida
+        distancia:this.round( element.DistanciaRecorrida)
       }
+      
   
-      this.totalDistancia +=Number(element.DistanciaRecorrida) 
+      this.totalDistancia +=this.round(Number(element.DistanciaRecorrida) )
   
       this.ubicacionDestino.push(aux);
       
@@ -774,6 +775,7 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
       this.editForm.controls['UsoCFDI'].setValue(this.generarCarta.Receptor.UsoCFDI),
       this.receptor_g =  this.generarCarta.Receptor,
       //Operador
+      this.editForm.controls['NumeroEmpleado'].setValue(this.generarCarta.CartaPorte.FiguraTransporte.TiposFigura[0].NumeroEmpleado),
       this.editForm.controls['RFCFigura'].setValue(this.generarCarta.CartaPorte.FiguraTransporte.TiposFigura[0].RFCFigura),
       this.editForm.controls['NumLicencia'].setValue(this.generarCarta.CartaPorte.FiguraTransporte.TiposFigura[0].NumLicencia),
       this.editForm.controls['TipoFigura'].setValue(this.generarCarta.CartaPorte.FiguraTransporte.TiposFigura[0].TipoFigura),
@@ -807,6 +809,12 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
      
 
       Swal.close()
+  }
+
+
+  round(num) {
+    var m = Number((Math.abs(num) * 100).toPrecision(15));
+    return Math.round(m) / 100 * Math.sign(num);
   }
 
 
@@ -936,11 +944,11 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
       fecha: formattedDate,
       direccion: this.domicilio.Estado,
       cp: this.editForm.controls['CodigoPostalUbicacion'].value,
-      distancia: this.editForm.controls['DistanciaRecorrida'].value,
+      distancia:this.round( this.editForm.controls['DistanciaRecorrida'].value),
       ubicacion: aux
     };
 
-    this.totalDistancia += Number(this.editForm.controls['DistanciaRecorrida'].value);
+    this.totalDistancia += this.round(Number(this.editForm.controls['DistanciaRecorrida'].value))
 
     this.ubicacionDestino.push(aux);
     this.dataSource1.data.push(this.ubicacionElementList);
