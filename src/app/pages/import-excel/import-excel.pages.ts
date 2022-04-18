@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy, Input, ViewChild, AfterContentInit, Output, EventEmitter } from '@angular/core';
 import { ImportarExcelService } from 'app/services/core/import-excel.service';
 import Swal from 'sweetalert2';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-import-excel',
@@ -10,8 +11,12 @@ import Swal from 'sweetalert2';
 
 
 export class ImportExcelPages implements OnInit {
+  editForm = this.fb.group({
+    fileInput: [null, []]
+  })
+
   fileToUpload:File | null = null;
-  constructor(private importService:ImportarExcelService) { }
+  constructor(private fb: FormBuilder, private importService:ImportarExcelService) { }
 
   ngOnInit(): void {
   }
@@ -39,13 +44,20 @@ export class ImportExcelPages implements OnInit {
 
     this.importService.upload(params).subscribe((resBody: any) => {
       if(resBody.estatus >= 1){
-        Swal.fire({
-          title: 'No se pudo realizar la acción',
-          text: '',
-          icon: 'warning',
-          html: '<p>'+ resBody.mensajes + '</p>',
-          showCloseButton: true,
-        });
+        let html = '<ul>'
+            resBody.mensajes.forEach(value => {
+              html += '<li><p>' + value + '</p></li>'
+            }) 
+            html += '</ul>'
+            console.log(html)
+            Swal.fire({
+              title: 'No se pudo realizar la acción',
+              text: '',
+              icon: 'warning',
+              html: html,
+              showCloseButton: true,
+            })
+            this.editForm.controls['fileInput'].setValue("")
       }else{
         if(resBody.RespuestaTimbrado != null){
           Swal.close(),
