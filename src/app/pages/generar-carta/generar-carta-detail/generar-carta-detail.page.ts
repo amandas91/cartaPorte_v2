@@ -931,7 +931,7 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
       RFCRemitenteDestinatario: this.editForm.controls['RFCDestino'].value.toUpperCase(),
       IDUbicacion: 0,
       FechaHoraSalidaLlegada: formattedDate,
-      DistanciaRecorrida: Number(this.editForm.controls['DistanciaRecorrida'].value),
+      DistanciaRecorrida:this.round( Number(this.editForm.controls['DistanciaRecorrida'].value)),
       Domicilio: this.domicilio
     };
 
@@ -975,7 +975,7 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
     this.totalDistancia=0;
     this.dataSource1.data.forEach(element => {
       console.log(element)
-      this.totalDistancia += Number(element.distancia)
+      this.totalDistancia += this.round(Number(element.distancia))
      })
     
   }
