@@ -37,3 +37,9 @@
     <fuse-theme-options></fuse-theme-options>
 </fuse-sidebar>
 <!-- / THEME OPTIONS PANEL -->
+
+<ngx-idle-timeout *ngIf="idleTimer"
+                 [allowedIdleTimeInSeconds]="120" 
+                 [message]="'This is a test message'"
+                 [warningTimeInSeconds]="10">
+                </ngx-idle-timeout>

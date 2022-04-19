@@ -14,6 +14,9 @@ import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.
 import { navigation } from 'app/navigation/navigation';
 import { locale as navigationEnglish } from 'app/navigation/i18n/en';
 import { locale as navigationTurkish } from 'app/navigation/i18n/es';
+import { IdleService,IdleWarningStates  } from 'ngx-idle-timeout';
+
+
 
 @Component({
     selector   : 'app',
@@ -24,6 +27,10 @@ export class AppComponent implements OnInit, OnDestroy
 {
     fuseConfig: any;
     navigation: any;
+
+    //timeout
+    title = 'test-area';
+    idleTimer = true;
 
     // Private
     private _unsubscribeAll: Subject<any>;
@@ -48,7 +55,8 @@ export class AppComponent implements OnInit, OnDestroy
         private _fuseSplashScreenService: FuseSplashScreenService,
         private _fuseTranslationLoaderService: FuseTranslationLoaderService,
         private _translateService: TranslateService,
-        private _platform: Platform
+        private _platform: Platform,
+        private _idleService: IdleService
     )
     {
         // Get default navigation
@@ -124,6 +132,8 @@ export class AppComponent implements OnInit, OnDestroy
      */
     ngOnInit(): void
     {
+        this.timerSubscribe();
+        
         // Subscribe to config changes
         this._fuseConfigService.config
             .pipe(takeUntil(this._unsubscribeAll))
@@ -155,6 +165,24 @@ export class AppComponent implements OnInit, OnDestroy
                 this.document.body.classList.add(this.fuseConfig.colorTheme);
             });
     }
+
+    resubscribe(): void {
+        this.idleTimer = true;
+        this.timerSubscribe();
+      }
+    
+      private timerSubscribe(): void {
+        this._idleService
+          .idleStateChanged()
+          .subscribe(
+            val => {
+              if (val === IdleWarningStates.SecondaryTimerExpired) {
+                this._idleService.stopTimer();
+                this.idleTimer = false;
+              }
+            }
+          );
+      }
 
     /**
      * On destroy

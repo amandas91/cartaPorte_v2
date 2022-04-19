@@ -98,7 +98,7 @@ export class LoginComponent implements OnInit {
    
       Swal.fire({
         title: 'Conflicto',
-        text: 'No fue Posible Realizar la Acción',
+        text: 'Usuario y contraseña invalidos',
         icon: 'warning',
         showCloseButton: true,
       });

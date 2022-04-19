@@ -25,6 +25,7 @@ import { errorRoute } from './layout/components/error/error.route';
 
 import { NgxIdleTimeoutModule } from 'ngx-idle-timeout';
 
+
 const LAYOUT_ROUTES = [...errorRoute];
 
 @NgModule({
