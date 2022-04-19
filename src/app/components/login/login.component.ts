@@ -81,15 +81,29 @@ export class LoginComponent implements OnInit {
   }
 
   protected onLoginSuccess(result: any): void {
-    // console.log('##### onLoginSuccess ##### ')
-    let loginPage = 'generar-carta'
-    // if (!this.hasRol( [ Authority.LEISURE, Authority.LEISURE_DMC, ] )) {
-      loginPage = 'generar-carta';
-    //} 
-    // console.log('loginPage: ' , loginPage);
-    this.router.navigate([loginPage]);
-    this.isLoading = false;
-    Swal.close();
+
+    console.log('##### onLoginSuccess ##### ')
+    console.log(result)
+    if(result.verified){
+      let loginPage = 'generar-carta'
+      // if (!this.hasRol( [ Authority.LEISURE, Authority.LEISURE_DMC, ] )) {
+        loginPage = 'generar-carta';
+      //} 
+      // console.log('loginPage: ' , loginPage);
+      this.router.navigate([loginPage]);
+      this.isLoading = false;
+      Swal.close();
+    }else{
+      this.isLoading = false;
+   
+      Swal.fire({
+        title: 'Conflicto',
+        text: 'No fue Posible Realizar la Acción',
+        icon: 'warning',
+        showCloseButton: true,
+      });
+    }
+    
   }
 
   hasRol(authorities: string[] | string): boolean {

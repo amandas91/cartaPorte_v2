@@ -135,7 +135,7 @@ export class AccountService {
       admin: "SABINO",
       rol: 'Admin',
       id: 1,
-      verified: "",
+      verified: this.localStorage.retrieve('Verified'),
       occupation_name: ""
     }
     const studentsObservable = new Observable<Account>(observer => {

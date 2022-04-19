@@ -16,6 +16,7 @@ type JwtToken = {
   Roles: any;
   RefreshToken: string;
   ExpirationDate: string;
+  Verified:boolean;
 
 };
 
@@ -50,18 +51,24 @@ export class AuthServerProvider {
   }
 
   private authenticateSuccess(response: JwtToken, rememberMe: boolean): void {
-    // console.log("Aqui guarda el Token")
-    const jwt = response.AccessToken;
-    if (rememberMe) {
-      this.$localStorage.store('authenticationToken', jwt)
-      this.$localStorage.store('Username', response.Username)
-      this.$localStorage.store('UserId', response.UserId)
-      this.$localStorage.store('ExpirationDate', response.ExpirationDate)
-    } else {
-      this.$sessionStorage.store('authenticationToken', jwt)
-      this.$localStorage.store('Username', response.Username)
-      this.$localStorage.store('UserId', response.UserId)
-      this.$localStorage.store('ExpirationDate', response.ExpirationDate)
-    }
+    
+    if(response.AccessToken){
+      const jwt = response.AccessToken;
+      if (rememberMe) {
+        this.$localStorage.store('Verified', true)
+        this.$localStorage.store('authenticationToken', jwt)
+        this.$localStorage.store('Username', response.Username)
+        this.$localStorage.store('UserId', response.UserId)
+        this.$localStorage.store('ExpirationDate', response.ExpirationDate)
+      } else {
+        this.$localStorage.store('Verified', true)
+        this.$sessionStorage.store('authenticationToken', jwt)
+        this.$localStorage.store('Username', response.Username)
+        this.$localStorage.store('UserId', response.UserId)
+        this.$localStorage.store('ExpirationDate', response.ExpirationDate)
+      }
+    }else{
+      this.$localStorage.store('Verified', false)
+    }    
   }
 }
