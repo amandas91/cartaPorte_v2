@@ -63,6 +63,7 @@
     "ngx-cookie-service": "11.0.2",
     "ngx-filesaver": "11.0.0",
     "ngx-google-places-autocomplete": "2.0.5",
+    "ngx-idle-timeout": "1.0.0",
     "ngx-mask": "11.1.5",
     "ngx-material-timepicker": "5.5.3",
     "ngx-pipes": "2.7.5",

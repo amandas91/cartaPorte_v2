@@ -23,6 +23,8 @@ import { AppRoutingModule } from './app.routes';
 import { ErrorComponent } from './layout/components/error/error.component';
 import { errorRoute } from './layout/components/error/error.route';
 
+import { NgxIdleTimeoutModule } from 'ngx-idle-timeout';
+
 const LAYOUT_ROUTES = [...errorRoute];
 
 @NgModule({
@@ -46,7 +48,9 @@ const LAYOUT_ROUTES = [...errorRoute];
         LayoutModule,
         PageModule,
         MatFormFieldModule,
-        SharedModule        
+        SharedModule,
+        
+        NgxIdleTimeoutModule
     ],
     bootstrap: [AppComponent],
 })
