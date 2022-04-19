@@ -1,10 +1,12 @@
 <div id="orders" class="page-layout carded fullwidth inner-scroll" [@fadeInOut]="{value:'*',params:{delay:'300ms',scale:'100', opacity:'0.5'}}">
+    
     <!-- TOP BACKGROUND -->
     <div class="top-bg primary"></div>
     <!-- / TOP BACKGROUND -->
 
     <!-- CENTER -->
     <div class="center">
+        
 
         <!-- HEADER -->
 
@@ -14,8 +16,18 @@
         <div class="sidenav-content" style="overflow: auto">
             
             <app-generar-carta-detail></app-generar-carta-detail>
+           
         </div>
         <!-- / CONTENT CARD -->
     </div>
     <!-- / CENTER -->
+</div>
+
+<div style="position:absolute;">
+    
+<ngx-idle-timeout *ngIf="idleTimer"
+[allowedIdleTimeInSeconds]="1800" 
+[message]="'This is a test message'"
+[warningTimeInSeconds]="10"></ngx-idle-timeout>
+
 </div>

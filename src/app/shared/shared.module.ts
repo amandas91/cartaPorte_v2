@@ -51,6 +51,7 @@ import { NgPipesModule } from 'ngx-pipes'; // https://github.com/danrevah/ngx-pi
 
 import {NgxMaterialTimepickerModule} from 'ngx-material-timepicker';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
+import { NgxIdleTimeoutModule } from 'ngx-idle-timeout';
 
 
 
@@ -157,6 +158,8 @@ import {MatSlideToggleModule} from '@angular/material/slide-toggle';
     NgxMaterialTimepickerModule,
 
     MatSlideToggleModule,
+
+    NgxIdleTimeoutModule
 
     // NGX-Pipes
     // BytesPipe,

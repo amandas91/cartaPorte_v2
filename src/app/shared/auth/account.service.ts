@@ -83,26 +83,6 @@ export class AccountService {
   }
 
   isAuthenticated(): boolean {
-    let fechaActual = this.datepipe.transform(Date.now(), 'yyyy-MM-ddTh:mm:ss')
-    let fechaExpired = this.datepipe.transform(this.localStorage.retrieve('ExpirationDate'), 'yyyy-MM-ddTh:mm:ss')
-    // console.log(" #### fechaActual ####  ", fechaActual )
-    // console.log(" #### fechaExpired ####  ", fechaExpired )
-
-    if(fechaExpired < fechaActual ){
-        sessionStorage.removeItem('authenticationToken')
-        sessionStorage.removeItem('Username')
-        sessionStorage.removeItem('UserId')
-        sessionStorage.removeItem('ExpirationDate')
-        this.router.navigate(['/login']);
-    }else{
-      const credentials = {
-        refreshToken: this.localStorage.retrieve('refreshToken'),
-        userid: this.localStorage.retrieve('UserId')
-      }
-  
-      this.AuthServerProviderService.refreshToken(credentials);
-    }
-
     return this.userIdentity !== null;
   }
 

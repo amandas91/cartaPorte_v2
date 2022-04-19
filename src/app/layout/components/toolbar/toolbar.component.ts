@@ -11,6 +11,9 @@ import { navigation } from 'app/navigation/navigation';
 import { LoginService } from 'app/shared/auth/login.service';
 import { Router } from '@angular/router';
 
+import { LocalStorageService, SessionStorageService } from 'ngx-webstorage';
+
+
 @Component({
     selector     : 'toolbar',
     templateUrl  : './toolbar.component.html',
@@ -43,7 +46,8 @@ export class ToolbarComponent implements OnInit, OnDestroy
         private _fuseSidebarService: FuseSidebarService,
         private _translateService: TranslateService,
         private loginService: LoginService,
-        private router: Router
+        private router: Router,
+        private $localStorage: LocalStorageService, private $sessionStorage: SessionStorageService
     )
     {
         // Set the defaults
@@ -173,10 +177,16 @@ export class ToolbarComponent implements OnInit, OnDestroy
     logout() {
         // this.popoverRef.close();
         this.loginService.logout()
+        this.$localStorage.clear('authenticationToken')
+        this.$localStorage.clear('Username');
+        this.$localStorage.clear('UserId');
+        this.$localStorage.clear('ExpirationDate');
+        this.$localStorage.clear('Verified');
         sessionStorage.removeItem('authenticationToken')
         sessionStorage.removeItem('Username')
         sessionStorage.removeItem('UserId')
         sessionStorage.removeItem('ExpirationDate')
+        sessionStorage.removeItem('Verified')
         this.router.navigate(['/login']);
       }
 }
