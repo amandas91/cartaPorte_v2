@@ -1221,13 +1221,14 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
                   )
                   .subscribe((resBody: ICatEstados[]) => {
 
-
-                    if(this.estadoUbicacionTem != undefined){
                     this.catEstados = resBody
+                    if(this.estadoUbicacionTem != undefined){
+                    
                     this.searchArray = this.catEstados.findIndex(x => x.Nombre === this.estadoUbicacionTem)
-                    this.editForm.controls['EstadoUbicacion'].setValue(this.catEstados[this.searchArray])
+                   
                     this.estadoUbicacion =  this.catEstados[this.searchArray].ClaveEstado != undefined ? this.catEstados[this.searchArray].ClaveEstado : "" 
                   }
+                   this.editForm.controls['EstadoUbicacion'].setValue(this.catEstados[this.searchArray])
                     //MUNICIPIO
                     this.catMunicipiosService.find(this.estadoUbicacionTem)
                       .pipe(
