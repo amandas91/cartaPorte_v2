@@ -1222,13 +1222,13 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
                   .subscribe((resBody: ICatEstados[]) => {
 
                     this.catEstados = resBody
-                    if(this.estadoUbicacionTem != undefined){
-                    
-                    this.searchArray = this.catEstados.findIndex(x => x.Nombre === this.estadoUbicacionTem)
-                   
-                    this.estadoUbicacion =  this.catEstados[this.searchArray].ClaveEstado != undefined ? this.catEstados[this.searchArray].ClaveEstado : "" 
-                  }
-                   this.editForm.controls['EstadoUbicacion'].setValue(this.catEstados[this.searchArray])
+                    if (this.estadoUbicacionTem != undefined) {
+
+                      this.searchArray = this.catEstados.findIndex(x => x.Nombre === this.estadoUbicacionTem)
+
+                      this.estadoUbicacion = this.catEstados[this.searchArray].ClaveEstado != undefined ? this.catEstados[this.searchArray].ClaveEstado : ""
+                    }
+                    this.editForm.controls['EstadoUbicacion'].setValue(this.catEstados[this.searchArray])
                     //MUNICIPIO
                     this.catMunicipiosService.find(this.estadoUbicacionTem)
                       .pipe(
@@ -1244,8 +1244,8 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
                         Swal.close()
                       ))
 
-                    });
-                  
+                  });
+
 
 
             } else {
@@ -1352,13 +1352,30 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
           )
           .subscribe((resBody: CatIOperador) => {
             if (resBody) {
-              this.editForm.controls['RFCFigura'].setValue(resBody.RFC),
-                this.editForm.controls['NumLicencia'].setValue(resBody.NumeroLicencia),
-                this.editForm.controls['NombreFigura'].setValue(resBody.ApellidoPaterno + ' ' + resBody.ApellidoPaterno + ' ' + resBody.Nombre),
-                this.editForm.controls['RFCFigura'].disable(),
-                this.editForm.controls['NumLicencia'].disable(),
-                this.editForm.controls['NombreFigura'].disable(),
-                Swal.close()
+              if (resBody.NumeroLicencia == null || resBody.NumeroLicencia == undefined || resBody.RFC == null || resBody.RFC == undefined || resBody.Nombre == null || resBody.Nombre == undefined) {
+                this.editForm.controls['RFCFigura'].setValue(resBody.RFC),
+                  this.editForm.controls['NumLicencia'].setValue(resBody.NumeroLicencia),
+                  this.editForm.controls['NombreFigura'].setValue(resBody.ApellidoPaterno + ' ' + resBody.ApellidoPaterno + ' ' + resBody.Nombre),
+                  this.editForm.controls['RFCFigura'].disable(),
+                  this.editForm.controls['NumLicencia'].disable(),
+                  this.editForm.controls['NombreFigura'].disable(),
+                  Swal.fire({
+                    title: 'No se pudieron cargar todos los datos del operador',
+                    text: '',
+                    icon: 'warning',
+                    showCloseButton: true,
+                  });
+              } else {
+                this.editForm.controls['RFCFigura'].setValue(resBody.RFC),
+                  this.editForm.controls['NumLicencia'].setValue(resBody.NumeroLicencia),
+                  this.editForm.controls['NombreFigura'].setValue(resBody.ApellidoPaterno + ' ' + resBody.ApellidoPaterno + ' ' + resBody.Nombre),
+                  this.editForm.controls['RFCFigura'].disable(),
+                  this.editForm.controls['NumLicencia'].disable(),
+                  this.editForm.controls['NombreFigura'].disable(),
+                  Swal.close()
+              }
+
+
             } else {
               Swal.fire({
                 title: 'No se pudo realizar la acción',
