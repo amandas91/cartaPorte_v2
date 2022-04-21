@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, ElementRef, ViewChild,  Input, Output, EventEmitter  } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { FuseConfigService } from '@fuse/services/config.service';
@@ -21,6 +21,12 @@ export class LoginComponent implements OnInit {
     
     @ViewChild('passFormInput', { static: true })
     passFormInput: ElementRef;
+
+    @Output () 
+    propagar = new EventEmitter<boolean>();
+
+    message: boolean = false
+
 
     isLoading = false;
 
@@ -85,6 +91,8 @@ export class LoginComponent implements OnInit {
     console.log('##### onLoginSuccess ##### ')
     console.log(result)
     if(result.verified){
+      this.propagar.emit(true)
+      this.message = true
       let loginPage = 'generar-carta'
       // if (!this.hasRol( [ Authority.LEISURE, Authority.LEISURE_DMC, ] )) {
         loginPage = 'generar-carta';
@@ -93,6 +101,7 @@ export class LoginComponent implements OnInit {
       this.router.navigate([loginPage]);
       this.isLoading = false;
       Swal.close();
+      
     }else{
       this.isLoading = false;
    

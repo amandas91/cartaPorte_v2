@@ -16,11 +16,17 @@ import { locale as navigationEnglish } from 'app/navigation/i18n/en';
 import { locale as navigationTurkish } from 'app/navigation/i18n/es';
 import { IdleService,IdleWarningStates  } from 'ngx-idle-timeout';
 
+import { SessionStorageService, LocalStorageService } from 'ngx-webstorage';
+import { LoginService } from "app/shared/auth/login.service";
+import { Router } from '@angular/router';
+import { AuthServerProvider } from './shared/auth/auth-jwt.service';
+
 
 
 @Component({
     selector   : 'app',
     templateUrl: './app.component.html',
+    template: `<login (propagar)="procesaPropagar($event)"></login>` ,
     styleUrls  : ['./app.component.scss']
 })
 export class AppComponent implements OnInit, OnDestroy
@@ -28,9 +34,13 @@ export class AppComponent implements OnInit, OnDestroy
     fuseConfig: any;
     navigation: any;
 
+    
+
+
     //timeout
-    title = 'test-area';
-    idleTimer = true;
+    title = 'Tu sesión esta por vencer';
+    idleTimer:boolean//this.localStorage.retrieve('Verified')
+    modalTimeOut = "modalTimeOut"
 
     // Private
     private _unsubscribeAll: Subject<any>;
@@ -56,7 +66,11 @@ export class AppComponent implements OnInit, OnDestroy
         private _fuseTranslationLoaderService: FuseTranslationLoaderService,
         private _translateService: TranslateService,
         private _platform: Platform,
-        private _idleService: IdleService
+        private _idleService: IdleService,
+        private localStorage: LocalStorageService,
+        private loginService: LoginService,
+        private AuthServerProviderService: AuthServerProvider,
+        protected router: Router,
     )
     {
         // Get default navigation
@@ -132,8 +146,6 @@ export class AppComponent implements OnInit, OnDestroy
      */
     ngOnInit(): void
     {
-        this.timerSubscribe();
-        
         // Subscribe to config changes
         this._fuseConfigService.config
             .pipe(takeUntil(this._unsubscribeAll))
@@ -164,6 +176,20 @@ export class AppComponent implements OnInit, OnDestroy
 
                 this.document.body.classList.add(this.fuseConfig.colorTheme);
             });
+
+             setInterval(() => {
+                // console.log("Aqui")
+                // console.log(this.localStorage.retrieve('Verified'))
+                if(this.localStorage.retrieve('Verified'))
+                    this.idleTimer = this.localStorage.retrieve('Verified')
+                else
+                this.idleTimer = false
+
+             }, 2000);
+    }
+
+    ngAfterViewInit() {
+        this.timerSubscribe();
     }
 
     resubscribe(): void {
@@ -171,18 +197,52 @@ export class AppComponent implements OnInit, OnDestroy
         this.timerSubscribe();
       }
     
-      private timerSubscribe(): void {
+    //   private timerSubscribe(): void {
+    //     this._idleService
+    //       .idleStateChanged()
+    //       .subscribe(
+    //         val => {
+    //           if (val === IdleWarningStates.SecondaryTimerExpired) {
+    //             this._idleService.stopTimer();
+    //             this.idleTimer = false;
+    //           }
+    //         }
+    //       );
+    //   }
+
+    private timerSubscribe(): void {
         this._idleService
-          .idleStateChanged()
-          .subscribe(
+        .idleStateChanged()
+        .subscribe(
             val => {
-              if (val === IdleWarningStates.SecondaryTimerExpired) {
-                this._idleService.stopTimer();
-                this.idleTimer = false;
-              }
+                if (val === IdleWarningStates.SecondaryTimerExpired) {
+                        this._idleService.stopTimer();
+                        this.idleTimer = false;
+                        this.loginService.logout()
+                        this.localStorage.clear('authenticationToken')
+                        this.localStorage.clear('Username');
+                        this.localStorage.clear('UserId');
+                        this.localStorage.clear('ExpirationDate');
+                        this.localStorage.clear('Verified');
+                        sessionStorage.removeItem('authenticationToken')
+                        sessionStorage.removeItem('Username')
+                        sessionStorage.removeItem('UserId')
+                        sessionStorage.removeItem('ExpirationDate')
+                        sessionStorage.removeItem('Verified')
+                        this.router.navigate(['/login']);
+                }else if(val === IdleWarningStates.SecondaryTimerCancelled){
+                    const credentials = {
+                        refreshToken: this.localStorage.retrieve('RefreshToken'),
+                        userid: this.localStorage.retrieve('UserId')
+                    }
+                
+                    this.AuthServerProviderService.refreshToken(credentials).subscribe(result => {
+                        console.log(result)
+                    });
+                }
             }
-          );
-      }
+        );
+    } 
 
     /**
      * On destroy

@@ -54,9 +54,7 @@ export class GenerarCartaPage implements OnInit {
     }
 
     ngOnInit(): void {
-        this.timerSubscribe()
        
-
         this.activatedRoute.params.subscribe(params => {
             // console.log('params: ', params);
             this.trip_id = params.id;
@@ -69,46 +67,6 @@ export class GenerarCartaPage implements OnInit {
         var diffSeconds = (fechaExpired - fechaActual)
         return diffSeconds
     }
-
-    resubscribe(): void {
-        this.idleTimer = true;
-        this.timerSubscribe();
-
-    }
-    
-    private timerSubscribe(): void {
-        this._idleService
-        .idleStateChanged()
-        .subscribe(
-            val => {
-                if (val === IdleWarningStates.SecondaryTimerExpired) {
-                        this._idleService.stopTimer();
-                        this.idleTimer = false;
-                        this.loginService.logout()
-                        this.localStorage.clear('authenticationToken')
-                        this.localStorage.clear('Username');
-                        this.localStorage.clear('UserId');
-                        this.localStorage.clear('ExpirationDate');
-                        this.localStorage.clear('Verified');
-                        sessionStorage.removeItem('authenticationToken')
-                        sessionStorage.removeItem('Username')
-                        sessionStorage.removeItem('UserId')
-                        sessionStorage.removeItem('ExpirationDate')
-                        sessionStorage.removeItem('Verified')
-                        this.router.navigate(['/login']);
-                }else if(val === IdleWarningStates.SecondaryTimerCancelled){
-                    const credentials = {
-                        refreshToken: this.localStorage.retrieve('RefreshToken'),
-                        userid: this.localStorage.retrieve('UserId')
-                    }
-                
-                    this.AuthServerProviderService.refreshToken(credentials).subscribe(result => {
-                        console.log(result)
-                    });
-                }
-            }
-        );
-    } 
 
     ngAfterContentInit(): void {
         if (this.extras.state) {

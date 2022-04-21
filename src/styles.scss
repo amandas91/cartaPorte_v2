@@ -97,3 +97,11 @@ tbody tr:nth-child(odd) {
     font-weight: bold;
     color: #ff0000 !important;
 }
+
+#demo-modal{
+    z-index: 99 !important;
+}
+
+// .modal{
+//     z-index: 99 !important;
+// }

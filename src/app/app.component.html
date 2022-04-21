@@ -5,12 +5,18 @@
 <!-- VERTICAL LAYOUT 1 -->
 <ng-container *ngIf="fuseConfig.layout.style === 'vertical-layout-1'">
     <vertical-layout-1></vertical-layout-1>
+    <ngx-idle-timeout *ngIf="idleTimer" 
+    [id]="modalTimeOut"
+    [allowedIdleTimeInSeconds]="1800" 
+    [message]="title"
+    [warningTimeInSeconds]="15"></ngx-idle-timeout>
 </ng-container>
 <!-- / VERTICAL LAYOUT 1 -->
 
 <!-- VERTICAL LAYOUT 2 -->
 <ng-container *ngIf="fuseConfig.layout.style === 'vertical-layout-2'">
     <vertical-layout-2></vertical-layout-2>
+    
 </ng-container>
 <!-- / VERTICAL LAYOUT 2 -->
 
@@ -37,3 +43,4 @@
     <fuse-theme-options></fuse-theme-options>
 </fuse-sidebar>
 <!-- / THEME OPTIONS PANEL -->
+
