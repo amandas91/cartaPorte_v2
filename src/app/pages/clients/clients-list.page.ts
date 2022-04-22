@@ -14,11 +14,16 @@ import { locale as english } from "app/i18n/en/clients";
 import { locale as spanish } from "app/i18n/es/clients";
 import { ClientsService } from '../../services/operacion/client.service';
 import { HttpResponse, HttpHeaders } from "@angular/common/http";
+import { FormBuilder } from '@angular/forms';
 @Component({
     selector: "app-clients-list",
     templateUrl: "./clients-list.page.html",
 })
 export class ClientsListPage implements OnInit {
+    editForm = this.fb.group({
+        name: [null, []],
+      });
+
     totalItems = 0;
     itemsPerPage = 5; // ITEMS_PER_PAGE;
     listCurentPage = 0;
@@ -51,7 +56,8 @@ export class ClientsListPage implements OnInit {
         private dialog: MatDialog,
         private _fuseTranslationLoaderService: FuseTranslationLoaderService,
         private translate: TranslateService,
-        private valueService:ClientsService
+        private valueService:ClientsService,
+        private fb: FormBuilder,
     ) {
         this._fuseTranslationLoaderService.loadTranslations(english, spanish);
     }
@@ -293,5 +299,9 @@ export class ClientsListPage implements OnInit {
                 // this.message('Creado');
             }
         });
+    }
+
+    search(){
+        console.log("search")
     }
 }

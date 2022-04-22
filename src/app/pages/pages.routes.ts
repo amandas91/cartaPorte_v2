@@ -92,7 +92,7 @@ import { ImportExcelPages } from './import-excel/import-excel.pages';
                 canActivate: [UserRouteAccessService],
             },
             {
-              path: 'clients',
+              path: 'users',
               component: ClientsPage,
                 data: { authorities: ALL_ROLES },
                 canActivate: [UserRouteAccessService],

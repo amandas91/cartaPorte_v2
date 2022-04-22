@@ -15,21 +15,20 @@ type EntityArrayResponseType = HttpResponse<IClients[]>;
 
 @Injectable({ providedIn: 'root' })
 export class ClientsService {
-  public resourceUrl = environment.apiUrl + '/api/client';
+  public resourceUrl = environment.apiUrlCartaPorte  + '/auth/signup';
 
   constructor(protected http: HttpClient) {}
 
   create(client: IClients): Observable<EntityResponseType> {
-    const copy = this.convertDateFromClient(client);
-    return this.http
-      .post<IClients>(this.resourceUrl, copy, { observe: 'response' })
+      return this.http
+      .post<IClients>(`${this.resourceUrl}`, client, { observe: 'response' })
       .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
+
   }
 
   update(client: IClients): Observable<EntityResponseType> {
-    const copy = this.convertDateFromClient(client);
     return this.http
-      .put<IClients>(this.resourceUrl, copy, { observe: 'response' })
+      .put<IClients>(`${this.resourceUrl}`, client, { observe: 'response' })
       .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
   }
 
@@ -60,18 +59,12 @@ export class ClientsService {
 
   protected convertDateFromClient(client: IClients): IClients {
     const copy: IClients = Object.assign({}, client, {
-      created_at: moment(client.created_at).isValid() ?
-      moment(client.created_at).format(DATE_FORMAT) : undefined,
-      updated_at: moment(client.updated_at).isValid() ?
-      moment(client.updated_at).format(DATE_FORMAT) : undefined,
     });
     return copy;
   }
 
   protected convertDateFromServer(res: EntityResponseType): EntityResponseType {
     if (res.body) {
-      res.body.created_at = res.body.created_at ? moment(res.body.created_at) : undefined;
-      res.body.updated_at = res.body.updated_at ? moment(res.body.updated_at) : undefined;
     }
     return res;
   }
@@ -80,8 +73,6 @@ export class ClientsService {
     
     if (res.body && res.body.length > 0) {
       res.body.forEach((client: IClients) => {
-        client.created_at = client.created_at ? moment(client.created_at) : undefined;
-        client.updated_at = client.updated_at ? moment(client.updated_at) : undefined;
       });
     }
     return res;

@@ -16,21 +16,7 @@ export const navigation: FuseNavigation[] = [
                 icon: "home",
                 url: "/home",
                 roles: [Authority.LEISURE, Authority.LEISURE_DMC,]
-                // badge    : {
-                //     title    : '25',
-                //     translate: 'NAV.SAMPLE.BADGE',
-                //     bg       : '#F44336',
-                //     fg       : '#FFFFFF'
-                // }
             },
-            // {
-            //     id: "trips",
-            //     title: "TRIPS",
-            //     translate: "NAV.APP.TRIPS",
-            //     type: "item",
-            //     icon: "card_travel",
-            //     url: "/trips",
-            // },
             {
                 id: "generar_carta",
                 title: "Generar Carta / CFDI Traslado",
@@ -58,6 +44,27 @@ export const navigation: FuseNavigation[] = [
                 icon: "import_export",
                 url: "/importar-excel/excel",
                 roles: ALL_ROLES
+            },
+            {
+                id: "administation",
+                title: "ADMINISTRACIÓN",
+                translate: "NAV.APP.ADMINISTRATION.TITLE",
+                type: "collapsable",
+                roles: [Authority.ADMIN],
+                children: [
+                    {
+                        id: "clients",
+                        title: "Users",
+                        translate: "NAV.APP.CLIENTS",
+                        type: "item",
+                        icon: "people",
+                        url: "/users",
+                        // roles: [Authority.LEISURE_DMC, Authority.LEISURE]
+                        roles: [Authority.ADMIN]
+                    },
+                    
+                   
+                ]
             },
             
         

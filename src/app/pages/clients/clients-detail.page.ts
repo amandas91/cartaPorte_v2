@@ -8,8 +8,6 @@ import { HttpResponse } from '@angular/common/http';
 import { IFlight } from 'app/models/core/flight.model';
 import { Observable } from 'rxjs';
 import Swal from 'sweetalert2';
-import { ICatOwners } from "app/models/catalogos/cat-owners.model";
-import { CatOwnersService } from "app/services/catalogos/cat-owners.service";
 import { AccountService } from "app/shared/auth/account.service";
 import { Authority } from "app/shared/constant/authority.constants";
 
@@ -22,13 +20,17 @@ const MaxItems = 2000;
 export class ClientsDetailPage implements OnInit {
 
   editForm = this.fb.group({
-    name: [null, []],
-    last_name_father: [null, []],
-    email: [null, []],
-    owner: [null, []]
+    GeppId:  [null, []],
+    Username:  [null, []],
+    Role:  [null, []],
+    Password:  [null, []],
+    FirstName:  [null, []],
+    MiddleName:  [null, []],
+    LastName:  [null, []],
+    SecondLastName:  [null, []],
+    Email:  [null, []]
   });
 
-  catOwners: ICatOwners[];
   Authority = Authority;
 
   LATIN_PATTERNS = LATIN_PATTERNS;
@@ -45,7 +47,6 @@ export class ClientsDetailPage implements OnInit {
   constructor(
     private fb: FormBuilder,
     private valueService: ClientsService,
-    private catOwnersService: CatOwnersService,
     protected accountService: AccountService) { }
 
   ngOnInit(): void {
@@ -55,8 +56,8 @@ export class ClientsDetailPage implements OnInit {
   loadPage() {
 
     // console.log(this.value);
-    if (this.value.id) {
-      this.valueService.find(this.value.id)
+    if (this.value.GeppId) {
+      this.valueService.find(this.value.GeppId)
         .pipe(map((res: HttpResponse<IClients>) => {
           return res.body ? res.body : new Clients();
         }))
@@ -66,14 +67,6 @@ export class ClientsDetailPage implements OnInit {
         });
     }
 
-    this.catOwnersService
-      .query({ size: MaxItems },  (this.hasRol([Authority.DMC]) === true ? 2 : 1))
-      .pipe(
-          map((res: HttpResponse<ICatOwners[]>) => {
-              return res.body ? res.body : [];
-          })
-      )
-      .subscribe((resBody: ICatOwners[]) => (this.catOwners = resBody));
   }
 
   save() {
@@ -84,7 +77,7 @@ export class ClientsDetailPage implements OnInit {
     Swal.showLoading();
     const value = this.createFromForm();
     console.log('save: ', JSON.stringify(value));
-    if (this.value.id === undefined) {
+    if (this.value.GeppId === undefined) {
       this.subscribeToSaveResponse(this.valueService.create(value));
     } else {
       this.subscribeToSaveResponse(this.valueService.update(value));
@@ -92,13 +85,10 @@ export class ClientsDetailPage implements OnInit {
 
   }
 
-  private createFromForm(): IFlight {
+  private createFromForm(): IClients {
     // FIXME quitar el pnr que aun no es obligatorio.
     return {
-      ...this.editForm.value,
-      pnr: 'test',
-      // trip_id: this.value.trip_id,
-      id: this.value.id
+      ...this.editForm.value
     };
   }
 

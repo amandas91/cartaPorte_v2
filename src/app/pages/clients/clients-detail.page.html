@@ -1,38 +1,65 @@
 <!-- FIXME EN IF CAMBIAR POR EL OBJETO QUE CORRESPONDA CAANDO SE TENGA. -->
 <div *ngIf="true" [formGroup]="editForm" >
     <div fxLayout="column" fxLayoutGap="8px">
-        
-        <div fxLayout="column" fxLayout.gt-xs="row" fxLayoutGap="8px" fxLayoutGap.gt-xs="30px">
-            <mat-form-field fxFlex="35%" appearance="outline">
-                <mat-label>Owner</mat-label>
-                <mat-select name="catOwners" formControlName="owner">
-                    <mat-option *ngFor="let item of catOwners" [value]="item.owner">
-                        {{item.name}}
-                    </mat-option>
-                </mat-select>
-            </mat-form-field>
-        </div>
-        
-        <div fxLayout="column" fxLayout.gt-xs="row" fxLayoutGap="8px" fxLayoutGap.gt-xs="30px">
-            <!-- CAMPO Name-->
-            <mat-form-field fxFlex="50%" appearance="outline">
-                <mat-label>{{'CLIENTS.FIELDS.NAME' | translate}}</mat-label>
-                <input autocomplete="off" matInput formControlName="name" [validation]="false" mask="N{45}" [dropSpecialCharacters]="false" [patterns]="LATIN_PATTERNS" />
+
+        <div fxLayout="column" fxLayout.gt-xs="row" fxLayoutGap="8px" fxLayoutGap.gt-xs="8px">
+
+            <mat-form-field fxFlex="33%" appearance="outline">
+                <mat-label>ID</mat-label>
+                <input autocomplete="off" matInput formControlName="GeppId" />
             </mat-form-field>
 
-            <!-- CAMPO last name-->
-            <mat-form-field fxFlex="50%" appearance="outline">
-                <mat-label>{{'CLIENTS.FIELDS.LAST_NAME' | translate}}</mat-label>
-                <input autocomplete="off" matInput formControlName="last_name_father" [validation]="false" mask="N{45}" [dropSpecialCharacters]="false" [patterns]="LATIN_PATTERNS" />
+            <mat-form-field fxFlex="33%" appearance="outline">
+                <mat-label>Nombre de usuario</mat-label>
+                <input autocomplete="off" matInput formControlName="Username" />
             </mat-form-field>
+
+            <mat-form-field fxFlex="33%" appearance="outline">
+                <mat-label>Rol</mat-label>
+                <input autocomplete="off" matInput formControlName="Role" />
+            </mat-form-field>
+
+
         </div>
 
-        <div fxLayout="column" fxLayout.gt-xs="row" fxLayoutGap="8px" fxLayoutGap.gt-xs="30px">
-            <!--CAMPO ID NAME USER-->
-            <mat-form-field fxFlex="50%" appearance="outline">
-                <mat-label>{{'CLIENTS.FIELDS.EMAIL' | translate}}</mat-label>
-                <input autocomplete="off" matInput formControlName="email" [validation]="false"  [dropSpecialCharacters]="false" [patterns]="LATIN_PATTERNS" />
+        <div fxLayout="column" fxLayout.gt-xs="row" fxLayoutGap="8px" fxLayoutGap.gt-xs="8px">
+            <mat-form-field fxFlex="25%" appearance="outline">
+                <mat-label>Nombre</mat-label>
+                <input autocomplete="off" matInput formControlName="FirstName" />
             </mat-form-field>
+
+            <mat-form-field fxFlex="25%" appearance="outline">
+                <mat-label>Segundo Nombre</mat-label>
+                <input autocomplete="off" matInput formControlName="MiddleName" />
+            </mat-form-field>
+
+            <mat-form-field fxFlex="25%" appearance="outline">
+                <mat-label>Apellido Paterno</mat-label>
+                <input autocomplete="off" matInput formControlName="LastName" />
+            </mat-form-field>
+
+            <mat-form-field fxFlex="25%" appearance="outline">
+                <mat-label>Apellido Materno</mat-label>
+                <input autocomplete="off" matInput formControlName="SecondLastName" />
+            </mat-form-field>
+
+           
+        </div>
+
+
+        <div fxLayout="column" fxLayout.gt-xs="row" fxLayoutGap="8px" fxLayoutGap.gt-xs="8px">
+            <mat-form-field fxFlex="50%" appearance="outline">
+                <mat-label>Correo</mat-label>
+                <input autocomplete="off" matInput formControlName="Email" />
+            </mat-form-field>
+
+            <mat-form-field fxFlex="50%" appearance="outline">
+                <mat-label>Contraseña</mat-label>
+                <input autocomplete="off" matInput formControlName="Password" />
+            </mat-form-field>
+
+           
+           
         </div>
 
     </div>
