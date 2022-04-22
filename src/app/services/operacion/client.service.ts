@@ -24,6 +24,8 @@ export class ClientsService {
       .post<IClients>(`${this.resourceUrl}`, client, { observe: 'response' })
       .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
 
+
+      
   }
 
   update(client: IClients): Observable<EntityResponseType> {

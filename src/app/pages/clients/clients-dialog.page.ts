@@ -21,6 +21,8 @@ export class ClientsDialogPage implements OnInit {
   @ViewChild(ClientsDetailPage, { static: false })
   updateComponent?: ClientsDetailPage;
 
+
+  
   constructor(
     public dialogRef: MatDialogRef<any>,
     @Inject(MAT_DIALOG_DATA) public data: any,

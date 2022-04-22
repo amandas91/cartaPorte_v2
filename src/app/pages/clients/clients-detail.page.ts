@@ -92,6 +92,8 @@ export class ClientsDetailPage implements OnInit {
     };
   }
 
+  
+
   private updateForm(value: any): void {
     this.editForm.patchValue({
       ...value,

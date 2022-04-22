@@ -18,6 +18,8 @@ export class ClientDeatilPage implements OnInit {
     email:  [null, []]
   });
 
+  
+
   constructor(
     private _fuseTranslationLoaderService: FuseTranslationLoaderService,
     private fb: FormBuilder,

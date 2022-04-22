@@ -24,6 +24,8 @@ export class Clients implements IClients {
   public LastName?: string,
   public SecondLastName?: string,
   public Email?: string,
+
+  
   ) {
     // this.editarContrasena = false;
   }
