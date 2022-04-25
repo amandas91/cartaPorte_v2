@@ -161,63 +161,57 @@ export class ClientsListPage implements OnInit {
         // columns.push({ label: 'Núm. Folio', property: 'numeroExpediente', type: 'text', visible: true });
 
         columns.push({
-            label: "ID(DK)",
-            property: "id",
+            label: "ID",
+            property: "UserId",
             type: "text",
             visible: true,
         });
 
         columns.push({
-            label: this.translate.instant('CLIENTS.COLUMNS.NAME'),
-            property: "name",
+            label:"Usuario",
+            property: "Username",
             type: "text",
             visible: true,
         });
         columns.push({
-            label: this.translate.instant('CLIENTS.COLUMNS.LAST_NAME'),
-            property: "last_name_father",
+            label: "Nombre",
+            property: "FirstName",
             type: "text",
             visible: true,
         });
-        
-        if (origen === CatOrigen.CLIENTS) {
-            columns.push({
-                label: "EMAIL",
-                property: "email",
-                type: "text",
-                visible: true,
-            });
-            columns.push({
-                label: "RFC",
-                property: "rfc",
-                type: "text",
-                visible: true,
-            });
-            columns.push({
-                label: this.translate.instant('CLIENTS.COLUMNS.CONTACT'),
-                property: "contacto",
-                type: "text",
-                visible: true,
-            });
-        }
-        columns.push({
-            label: this.translate.instant('CLIENTS.COLUMNS.ACTIONS'),
-            property: "buttonsActions",
-            type: "button",
-            visible: true,
-        });
-        
-        // columns.push({ label: 'Fecha Solicitud', property: 'fechaHoraRecibido', type: 'pipe',
-        //   pipe: DatePipe, pipeArgs: ['shortDate'], visible: true });
-        
-        // if (origen === CatOrigen.EXPEDIENTE) {
-            //   columns.push({ label: 'Notificación', property: 'notificacion', valueAsTooltip: true, type: 'pipe',
-        //     pipe: ShortenPipe, pipeArgs: ['15', '...'], visible: true });
-        // }
 
-        // columns.push({ label: 'Asesor', property: 'imputado', valueAsTooltip: true, type: 'pipe',
-        //   pipe: ShortenPipe, pipeArgs: ['15', '...'], visible: true });
-        // columns.push({ label: 'Estatus', property: 'estado', type: 'text', visible: true });
+        columns.push({
+            label: "Segundo Nombre",
+            property: "MiddleName",
+            type: "text",
+            visible: true,
+        });
+
+
+        columns.push({
+            label: "Apellido Paterno",
+            property: "SecondLastName",
+            type: "text",
+            visible: true,
+        });
+
+        
+
+        columns.push({
+            label: "Correo",
+            property: "Email",
+            type: "text",
+            visible: true,
+        });
+        
+      
+        // columns.push({
+        //     label: this.translate.instant('CLIENTS.COLUMNS.ACTIONS'),
+        //     property: "buttonsActions",
+        //     type: "button",
+        //     visible: true,
+        // });
+        
         return columns;
     }
 

@@ -35,8 +35,6 @@ export class GenerarCartaPage implements OnInit {
 
     //timeout
   title = 'test-area';
-  idleTimer = true;
-  showTimer = true
   datepipe: DatePipe = new DatePipe('en-US')
 
     constructor(

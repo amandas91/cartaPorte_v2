@@ -389,12 +389,12 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
       ]],
       NombreReceptor: [null, []],
       UsoCFDI: [null, []],
-      RFCFigura: [null, [Validators.required,
+      RFCFigura: [{value: '', disabled: true}, [Validators.required,
       Validators.maxLength(13),
       Validators.minLength(13)
       ]],
-      NumLicencia: [null, [Validators.required]],
-      NombreFigura: [null, [Validators.required]],
+      NumLicencia: [{value: '', disabled: true}, [Validators.required]],
+      NombreFigura: [{value: '', disabled: true}, [Validators.required]],
       TipoFigura: [null, [Validators.required]],
       PermSCT: [null, [Validators.required]],
       ConfigVehicular: [null, [Validators.required]],
@@ -562,7 +562,8 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
         )
         .subscribe((resBody: ICatTipoFiguraTransporte[]) => (
           this.catTipoFiguraTransporte = resBody,
-          this.editForm.controls['TipoFigura'].setValue(resBody[2].ClaveTransporte)
+          this.editForm.controls['TipoFigura'].setValue(resBody[2].ClaveTransporte),
+          this.editForm.controls['TipoFigura'].disable()
         ));
 
 
@@ -764,9 +765,7 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
 
 
     //Receptor
-    this.searchRfc = this.generarCarta.Receptor.Rfc;
-    this.searchArray = this.receptor.findIndex(x => x.Rfc === this.searchRfc),
-      this.editForm.controls['RfcReceptor'].setValue(this.receptor[this.searchArray]),
+      this.editForm.controls['RfcReceptor'].setValue(this.generarCarta.Receptor.Rfc),
       this.editForm.controls['NombreReceptor'].setValue(this.generarCarta.Receptor.Nombre),
       this.editForm.controls['UsoCFDI'].setValue(this.generarCarta.Receptor.UsoCFDI),
       this.receptor_g = this.generarCarta.Receptor,
@@ -1137,6 +1136,18 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
         this.editForm.controls['RegimenFiscal'].setValue(value.RegimenFiscal);
         this.emisor_g = this.editForm.controls['Rfc'].value;
 
+        /**
+         * RECEPTOR
+         */
+         this.editForm.controls['RfcReceptor'].setValue(value.Rfc);
+         this.editForm.controls['NombreReceptor'].setValue(value.Nombre);
+         this.editForm.controls['UsoCFDI'].setValue(value.RegimenFiscal);
+         this.editForm.controls['RfcReceptor'].disable()
+         this.editForm.controls['NombreReceptor'].disable();
+         this.editForm.controls['UsoCFDI'].disable();
+
+         this.receptor_g.Rfc = value.Rfc;
+         
         this.domicilioFiscalService.findDomicilioFiscal(value.Rfc)
           .pipe(
             map((res: HttpResponse<IDomicilioFiscal[]>) => {

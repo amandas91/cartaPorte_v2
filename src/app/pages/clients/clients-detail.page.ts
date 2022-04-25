@@ -55,17 +55,17 @@ export class ClientsDetailPage implements OnInit {
 
   loadPage() {
 
-    // console.log(this.value);
-    if (this.value.GeppId) {
-      this.valueService.find(this.value.GeppId)
-        .pipe(map((res: HttpResponse<IClients>) => {
-          return res.body ? res.body : new Clients();
-        }))
-        .subscribe((resBody: IClients) => {
-          this.value = resBody;
-          this.updateForm(this.value);
-        });
-    }
+    // // console.log(this.value);
+    // if (this.value.GeppId) {
+    //   this.valueService.find(this.value.GeppId)
+    //     .pipe(map((res: HttpResponse<IClients>) => {
+    //       return res.body ? res.body : new Clients();
+    //     }))
+    //     .subscribe((resBody: IClients) => {
+    //       this.value = resBody;
+    //       this.updateForm(this.value);
+    //     });
+    // }
 
   }
 
@@ -76,11 +76,13 @@ export class ClientsDetailPage implements OnInit {
     });
     Swal.showLoading();
     const value = this.createFromForm();
+    value.Role = [value.Role]
     console.log('save: ', JSON.stringify(value));
     if (this.value.GeppId === undefined) {
       this.subscribeToSaveResponse(this.valueService.create(value));
     } else {
-      this.subscribeToSaveResponse(this.valueService.update(value));
+      //this.subscribeToSaveResponse(this.valueService.update(value));
+      this.subscribeToSaveResponse(this.valueService.create(value));
     }
 
   }
@@ -102,31 +104,62 @@ export class ClientsDetailPage implements OnInit {
 
   protected subscribeToSaveResponse(result: Observable<HttpResponse<any>>): void {
     result.subscribe(
-      () => this.onSaveSuccess(),
-      () => this.onSaveError()
+      (res) => this.onSaveSuccess(res),
+      (res) => this.onSaveError(res)
     );
   }
 
-  protected onSaveSuccess(): void {
-    this.isSaving = false;
-    if (this.auxSave) {
-      this.auxSave.emit(true);
-      Swal.close();
+  protected onSaveSuccess(res): void {
+    if(res.body.status == 400){
+      this.isSaving = false;
+      if (this.auxSave) {
+        this.auxSave.emit(false);
+      }
+
+      Swal.fire({
+        icon: 'warning',
+        title: 'Conflicto al Guardar',
+        text: res.error.Message,
+        showCancelButton: false,
+        confirmButtonColor: '#3085d6',
+        confirmButtonText: 'Ok',
+        showCloseButton: true,
+        })
+
+    }else{
+      Swal.fire({
+        icon: 'success',
+        title: 'Guardado',
+        text: '',
+        showCancelButton: false,
+        confirmButtonColor: '#3085d6',
+        confirmButtonText: 'Ok',
+        showCloseButton: true,
+        })
     }
+    // this.isSaving = false;
+    // if (this.auxSave) {
+    //   this.auxSave.emit(true);
+    //   Swal.close();
+    // }
   }
 
-  protected onSaveError(): void {
+  protected onSaveError(res): void {
     this.isSaving = false;
-    if (this.auxSave) {
-      this.auxSave.emit(false);
-    }
+    // if (this.auxSave) {
+    //   this.auxSave.emit(false);
+    // }
 
+    console.log(res)
     Swal.fire({
-      title: 'Conflicto',
-      text: 'No fue Posible Realizar la Acción',
       icon: 'warning',
+      title: 'Conflicto al Guardar',
+      text: res.error.Message,
+      showCancelButton: false,
+      confirmButtonColor: '#3085d6',
+      confirmButtonText: 'Ok',
       showCloseButton: true,
-    });
+      })
   }
 
   hasRol(authorities: string[] | string): boolean {
