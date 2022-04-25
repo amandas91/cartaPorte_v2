@@ -657,7 +657,7 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
     /*
     * ORIGEN
     */
-
+    this.editForm.controls['bodega'].setValue(resBody.CartaPorte.Ubicaciones.Ubicacion[0].BodegaCedis)
     this.editForm.controls['FechaSalida'].setValue(resBody.CartaPorte.Ubicaciones.Ubicacion[0].FechaHoraSalidaLlegada)
     let tmpTime = this.editForm.controls['FechaSalida'].value;
     let formattedDate = this.datepipe.transform(tmpTime, 'hh:mm')
@@ -1480,7 +1480,7 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
         Descripcion: value.Descripcion,
         ValorUnitario: 0,
         Importe: 0,
-        TipoProducto: "text",
+        TipoProducto: "",
         PesoBrut: 0,
         PesoUnidad: 0,
         PesoBrutoTotal: 0,
