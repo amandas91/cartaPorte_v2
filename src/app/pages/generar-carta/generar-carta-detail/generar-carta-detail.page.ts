@@ -59,6 +59,9 @@ import { CatIOperador } from "app/models/catalogos/cat-operador.model";
 
 import { SessionStorageService, LocalStorageService } from 'ngx-webstorage';
 
+import { LoginService } from "app/shared/auth/login.service";
+import { Router } from '@angular/router';
+
 
 
 const MaxItems = 2000;
@@ -366,7 +369,9 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
     private monitorService: MonitoreoService,
     private dialog: MatDialog,
     private catOperadorService: CatOperadorService,
-    private localStorage: LocalStorageService
+    private localStorage: LocalStorageService,
+    private loginService: LoginService,
+    protected router: Router
 
   ) {
     this.createForm();
@@ -459,7 +464,28 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
 
 
   ngOnInit(): void {
+    let fechaActual = Math.floor(Date.now()/1000);
+    let fechaExpired = Date.parse(this.localStorage.retrieve('ExpirationDate')) /1000
+    if(fechaActual  >= fechaExpired ){
+      this.loginService.logout()
+      this.localStorage.clear('authenticationToken')
+      this.localStorage.clear('Username');
+      this.localStorage.clear('UserId');
+      this.localStorage.clear('ExpirationDate');
+      this.localStorage.clear('Verified');
+      sessionStorage.removeItem('authenticationToken')
+      sessionStorage.removeItem('Username')
+      sessionStorage.removeItem('UserId')
+      sessionStorage.removeItem('ExpirationDate')
+      sessionStorage.removeItem('Verified')
+      this.router.navigate(['/login']);
+    }else{
+      this.cargaServicios()
+    }
+  }
 
+
+  cargaServicios(){
     this.activatedRoute.params.subscribe(params => {
       Swal.fire({
         allowOutsideClick: false,
@@ -592,7 +618,6 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
       }
 
     });
-
   }
 
 
