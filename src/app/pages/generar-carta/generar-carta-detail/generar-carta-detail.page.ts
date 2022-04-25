@@ -1166,7 +1166,7 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
          */
          this.editForm.controls['RfcReceptor'].setValue(value.Rfc);
          this.editForm.controls['NombreReceptor'].setValue(value.Nombre);
-         this.editForm.controls['UsoCFDI'].setValue(value.RegimenFiscal);
+         this.editForm.controls['UsoCFDI'].setValue("P01");
          this.editForm.controls['RfcReceptor'].disable()
          this.editForm.controls['NombreReceptor'].disable();
          this.editForm.controls['UsoCFDI'].disable();
