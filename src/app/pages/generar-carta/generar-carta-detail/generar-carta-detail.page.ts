@@ -944,46 +944,47 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
 
         this.ubicacionOrigen.push(aux);
         this.origen = true;
-        console.log("AGREGAR ORIGEN");
-        console.log(this.ubicacionOrigen);
+        // console.log("AGREGAR ORIGEN");
+        // console.log(this.ubicacionOrigen);
+      }else{
+        let tmpDate = this.editForm.controls['FechaSalidaLlegada'].value;
+        let tmpTime = this.editForm.controls['HoraLlegada'].value;
+        let formattedDate = this.datepipe.transform(tmpDate, 'YYYY-MM-dd') + 'T' + tmpTime + ':00';
+  
+        let aux = {
+          TipoUbicacion: "Destino",
+          RFCRemitenteDestinatario: this.editForm.controls['RFCDestino'].value.toUpperCase(),
+          IDUbicacion: 0,
+          FechaHoraSalidaLlegada: formattedDate,
+          DistanciaRecorrida: this.round(Number(this.editForm.controls['DistanciaRecorrida'].value)),
+          Domicilio: this.domicilio
+        };
+
+        this.ubicacionElementList = {
+          rfc: this.editForm.controls['RFCDestino'].value,
+          fecha: formattedDate,
+          direccion: this.domicilio.Estado,
+          cp: this.editForm.controls['CodigoPostalUbicacion'].value,
+          distancia: this.round(this.editForm.controls['DistanciaRecorrida'].value),
+          ubicacion: aux
+        };
+  
+        this.totalDistancia += this.round(Number(this.editForm.controls['DistanciaRecorrida'].value))
+  
+        this.ubicacionDestino.push(aux);
+        this.dataSource1.data.push(this.ubicacionElementList);
+        this.dataSource1.sort = this.sort;
+        // console.log("AGREGAR Destino");
+        // console.log(this.ubicacionDestino);
+        this.editForm.controls['DistanciaRecorrida'].setValue('');
+        this.editForm.controls['PaisUbicacion'].setValue('');
+        this.editForm.controls['EstadoUbicacion'].setValue('');
+        this.editForm.controls['MunicipioUbicacion'].setValue('');
+        this.editForm.controls['CodigoPostalUbicacion'].setValue('');
+
       }
 
-      let tmpDate = this.editForm.controls['FechaSalidaLlegada'].value;
-      let tmpTime = this.editForm.controls['HoraLlegada'].value;
-      let formattedDate = this.datepipe.transform(tmpDate, 'YYYY-MM-dd') + 'T' + tmpTime + ':00';
-
-      let aux = {
-        TipoUbicacion: "Destino",
-        RFCRemitenteDestinatario: this.editForm.controls['RFCDestino'].value.toUpperCase(),
-        IDUbicacion: 0,
-        FechaHoraSalidaLlegada: formattedDate,
-        DistanciaRecorrida: this.round(Number(this.editForm.controls['DistanciaRecorrida'].value)),
-        Domicilio: this.domicilio
-      };
-
-      this.ubicacionElementList = {
-        rfc: this.editForm.controls['RFCDestino'].value,
-        fecha: formattedDate,
-        direccion: this.domicilio.Estado,
-        cp: this.editForm.controls['CodigoPostalUbicacion'].value,
-        distancia: this.round(this.editForm.controls['DistanciaRecorrida'].value),
-        ubicacion: aux
-      };
-
-      this.totalDistancia += this.round(Number(this.editForm.controls['DistanciaRecorrida'].value))
-
-      this.ubicacionDestino.push(aux);
-      this.dataSource1.data.push(this.ubicacionElementList);
-      this.dataSource1.sort = this.sort;
-      console.log("AGREGAR Destino");
-      console.log(this.ubicacionDestino);
-
-
-      this.editForm.controls['DistanciaRecorrida'].setValue('');
-      this.editForm.controls['PaisUbicacion'].setValue('');
-      this.editForm.controls['EstadoUbicacion'].setValue('');
-      this.editForm.controls['MunicipioUbicacion'].setValue('');
-      this.editForm.controls['CodigoPostalUbicacion'].setValue('');
+      
     }
   }
 
@@ -1523,7 +1524,7 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
         Descripcion: value.Descripcion,
         ValorUnitario: 0,
         Importe: 0,
-        TipoProducto: "",
+        TipoProducto: this.conceptoClaveUnidad,
         PesoBrut: 0,
         PesoUnidad: 0,
         PesoBrutoTotal: 0,
@@ -1734,7 +1735,7 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
         Descripcion: element.Descripcion,
         ValorUnitario: 0,
         Importe: 0,
-        TipoProducto: "dev",
+        TipoProducto: this.conceptoClaveUnidad,
         pesoCarga: 0,
         PesoBruto: 0,
         PesoUnidad: 0
