@@ -27,7 +27,8 @@ export class BodegasService {
 
   query(req?: any, type?: string): Observable<EntityArrayResponseType> {
     const options = createRequestOption(req);
-    return this.http.get<any[]>(`${this.resourceUrl}`, { params: options, observe: 'response' });
+    //return this.http.get<any[]>(`${this.resourceUrl}`, { params: options, observe: 'response' });
+    return this.http.get<any[]>(`${this.resourceUrl}?nombre=EJEMPLONOBUSCAR&direccion=`, { observe: 'response' });
   }
 
 }

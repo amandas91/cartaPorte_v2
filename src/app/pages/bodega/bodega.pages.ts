@@ -91,6 +91,7 @@ ngOnChanges(changes: any) {
 }
 
 loadPage(page?: any): void {
+  
   if (this.list) {
       // TODO Implementar paginacion para cuando sea una lista proporcionada
       this.listPage = [...this.list];
@@ -115,10 +116,10 @@ loadPage(page?: any): void {
       sort: this.sort(),
   };
 
-  // this.bodegaService.query(params).subscribe(
-  //   (res: HttpResponse<any[]>) => this.onSuccess(res.body, res.headers, pageToLoad),
-  //   (err) => this.onError(err)
-  // );
+  this.bodegaService.query(params).subscribe(
+    (res: HttpResponse<any[]>) => this.onSuccess(res.body, res.headers, pageToLoad),
+    (err) => this.onError(err)
+  );
 }
 
 protected onSuccess(data: any[] | null, headers: HttpHeaders, page: number): void {
