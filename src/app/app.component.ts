@@ -187,18 +187,16 @@ export class AppComponent implements OnInit, OnDestroy
             var timeout;
             var moveCursor;
             this.canRefreshToken = false;
-            console.log(document.onmousemove)
             document.onmousemove = function(){
                 /**
                  * Aqui el cursor esta en mivimiento
                  */
 
                 clearTimeout(timeout);
-                console.log("Si se mueve el cursor")
+                
                 moveCursor = true
                 timeout = setTimeout(function(){
                     //No m ueve el cursor
-                    console.log("No se mueve el cursor")
                     moveCursor = false
                 }, 5000);
             }

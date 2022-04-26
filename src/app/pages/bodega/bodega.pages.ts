@@ -282,9 +282,18 @@ const params: any = {
   );
 
 
+  // this.bodegaService.findByNombreDireccion(nombre, direccion).pipe(
+  //   map((res: HttpResponse<any[]>) => {
+  //     return res.body ? res.body : [];
+  //   })
+  // )
+  // .subscribe((resBody: any[]) => (
+  //   console.log()
+  //   ));
+
+
 
 }
-
 
 
 }

@@ -340,7 +340,6 @@
                 <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
             </table>
 
-            
                     
         </div>
 
@@ -351,14 +350,20 @@
             <h1>Origen</h1>
            
         <div class="mt-4" fxLayout="column" fxLayoutGap="8px" [formGroup]="editForm" >
-            <div fxLayout="column" fxLayout.gt-xs="row" fxLayoutGap="8px" fxLayoutGap.gt-xs="24px" fxLayoutAlign="end" *ngIf="showDetailOrigen">
-                <div fxFlex="100%">
-                    <app-bodega  (bodegatSelect)="addBodega(1,$event)"></app-bodega>
+            
+            <div fxLayout="column" fxLayout.gt-xs="row" fxLayoutGap="8px" fxLayoutGap.gt-xs="24px" fxLayoutAlign="end">
+                <div fxFlex="30%">
+                    <button mat-flat-button color="primary" (click)="buscarBodega(1,$event)">
+                        <mat-icon>search</mat-icon>Buscar por “Bodega/Cedis” 
+                    </button>
+                </div>
+                <div fxFlex="70%">
                 </div>
             </div>
-
+            
             <div fxLayout="column" fxLayout.gt-xs="row" fxLayoutGap="8px" fxLayoutGap.gt-xs="24px" fxLayoutAlign="end">
-                <mat-form-field fxFlex="30%" appearance="outline">
+               
+                <mat-form-field fxFlex="30%" appearance="outline" >
                     <mat-label >Bodega</mat-label>
                     <input style="color: black;" autocomplete="off" matInput formControlName="bodega" (click)="buscarBodega(1,$event)" />
                 </mat-form-field>
@@ -390,32 +395,22 @@
                     </mat-select>
                 </mat-form-field>
             </div>
-            
-            <!-- <div fxLayout="column" fxLayout.gt-xs="row" fxLayoutGap="8px" fxLayoutGap.gt-xs="24px" fxLayoutAlign="end">
-                
-                <mat-form-field fxFlex="40%" appearance="outline">
-                    <mat-label >ID Ubicación</mat-label>
-                    <input style="color: black;" autocomplete="off" matInput formControlName="IDUbicacion"  />
-                </mat-form-field>
-               
-            </div> -->
 
-           
+            <div fxLayout="column" fxLayout.gt-xs="row" fxLayoutGap="8px" fxLayoutGap.gt-xs="24px" fxLayoutAlign="end" *ngIf="showDetailOrigen">
+                <div fxFlex="100%">
+                    <app-bodega  (bodegatSelect)="addBodega(1,$event)"></app-bodega>
+                </div>
+            </div>
             
-           
         </div>
             <h1>Destino</h1>
+
             <div fxLayout="column" fxLayout.gt-xs="row" fxLayoutGap="8px" fxLayoutGap.gt-xs="24px" fxLayoutAlign="end">
                <p *ngIf="NombreCliente"><b>Cliente: </b>{{NombreCliente}}</p> 
                <p *ngIf="NombrePropietario"><b>Propietario: </b>{{NombrePropietario}}</p> 
-               
             </div>
             <div fxLayout="column" fxLayout.gt-xs="row" fxLayoutGap="8px" fxLayoutGap.gt-xs="24px" fxLayoutAlign="end">
-                <!-- <button mat-flat-button color="primary" (click)="buscarBodega(2,$event)">
-                    <mat-icon>search</mat-icon>Buscar por “Bodega/Cedis” 
-                </button> -->
                 <mat-slide-toggle (change)="buscarBodega(2,$event)">Buscar por “Bodega/Cedis” </mat-slide-toggle>
-
             </div>
 
             <div fxLayout="column" fxLayout.gt-xs="row" fxLayoutGap="8px" fxLayoutGap.gt-xs="24px" fxLayoutAlign="end" *ngIf="showDetailDestino">

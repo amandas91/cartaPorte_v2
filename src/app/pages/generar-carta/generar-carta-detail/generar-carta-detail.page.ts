@@ -649,7 +649,7 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
 
       this.cargaElementList = {
         ClaveProdServ: value.BienesTransp,
-        TipoProducto: this.tipoProductoTable,//this.tipoProductoTable,
+        TipoProducto: '',//this.tipoProductoTable,
         Cantidad: value.Cantidad,
         ClaveUnidad: value.ClaveUnidad,
         Unidad: value.Unidad,
@@ -867,11 +867,9 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
         Embalaje: this.Embalaje,
       };
 
-
-
       this.cargaElementList = {
         ClaveProdServ: "" + this.ClaveProdServ,
-        TipoProducto: this.tipoProductoTable,
+        TipoProducto: '',
         Cantidad: Number(this.editForm.controls['Cantidad'].value),
         ClaveUnidad: this.ClaveUnidad,
         Unidad: this.Unidad,
@@ -882,7 +880,6 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
         PesoEnKg: parseInt(this.editForm.controls['PesoEnKg'].value),
         PesoBruto: pesoBrutoPoducto
       };
-
 
       this.dataSource.push(this.cargaElementList);
       this.table.renderRows();
@@ -1524,7 +1521,7 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
         Descripcion: value.Descripcion,
         ValorUnitario: 0,
         Importe: 0,
-        TipoProducto: this.tipoProductoTable,
+        TipoProducto: '',
         PesoBrut: 0,
         PesoUnidad: 0,
         PesoBrutoTotal: 0,
@@ -2067,16 +2064,6 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
     }
 
 
-    // const params = {
-    //   title: "CLIENTS.NEW"
-    // };
-
-    // const dialogRef = this.dialog.open(BodegaPages, { data: params });
-    // dialogRef.updateSize("100%");
-    // dialogRef.afterClosed().subscribe((bodegatSelect: any) => {
-    //   console.log("SRC AQUI", this.bodegatSelect)
-
-    // });
   }
 
 
@@ -2095,44 +2082,29 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
         this.catCPsService.findByCodigoPostal(src.CodigoPostal)
           .pipe(
             map((res: HttpResponse<any>) => {
-              console.log('CP...: ', res.body);
               return res.body ? res.body : [];
               
             })
+          ).subscribe(
+              (res: HttpResponse<ICatCP[]>) => {
+                if(res[0]){
+                  this.estadoExpedido = res[0].Estado,
+                  this.municipioExpedido = res[0].Municipio,
+                  Swal.close()
+                }else{
+                  
+                  Swal.fire({
+                    title: 'Sin información',
+                    text: 'No se encontraron datos con ese CP',
+                    icon: 'warning',
+                    showCloseButton: true,
+                  });
+                }
+
+              },
+              (err) => this.onError(err)
           )
-          .subscribe((resBodyCp: ICatCP[]) => (
-            this.searchBodega = resBodyCp[0],
-            //estado
-            this.catEstadosService.find('MEX')
-              .pipe(
-                map((res: HttpResponse<ICatEstados[]>) => {
-                  return res.body ? res.body : [];
-                })
-              )
-              .subscribe((resBody: ICatEstados[]) => (
-                this.catEstados = resBody,
-                this.searchArray = this.catEstados.findIndex(x => x.ClaveEstado === this.searchBodega.Estado),
-                this.estadoExpedido = this.catEstados[this.searchArray].ClaveEstado,
-                //MUNICIPIO
-
-                this.catMunicipiosService.find(this.catEstados[this.searchArray].Nombre)
-                  .pipe(
-                    map((res: HttpResponse<ICatMunicipios[]>) => {
-                      return res.body ? res.body : [];
-                    })
-                  )
-                  .subscribe((resBody: ICatMunicipios[]) => (
-                    this.catMunicipios = resBody,
-                    this.searchArray = this.catMunicipios.findIndex(x => x.Municipio === this.searchBodega.Municipio),
-                    this.municipioExpedido = this.catMunicipios[this.searchArray].Municipio,
-                    Swal.close()
-
-                  ))
-
-              ))
-
-
-          ))
+           
 
     } else {
       this.showDetailDestino = false;
@@ -2190,5 +2162,16 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
 
   }
 
+
+  /**
+   * RESPUESTAS DE LOS SERVICIOS
+   */
+  //  protected onSuccess(data: any[]): void {
+  //   console.log('onSuccess data: ', data);
+  // }
+  
+  onError(err: HttpResponse<any>) {
+    console.error('onError data: ', err);
+  }
 
 }
