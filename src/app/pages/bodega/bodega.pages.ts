@@ -115,10 +115,10 @@ loadPage(page?: any): void {
       sort: this.sort(),
   };
 
-  this.bodegaService.query(params).subscribe(
-    (res: HttpResponse<any[]>) => this.onSuccess(res.body, res.headers, pageToLoad),
-    (err) => this.onError(err)
-  );
+  // this.bodegaService.query(params).subscribe(
+  //   (res: HttpResponse<any[]>) => this.onSuccess(res.body, res.headers, pageToLoad),
+  //   (err) => this.onError(err)
+  // );
 }
 
 protected onSuccess(data: any[] | null, headers: HttpHeaders, page: number): void {

@@ -1171,7 +1171,13 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
          this.editForm.controls['NombreReceptor'].disable();
          this.editForm.controls['UsoCFDI'].disable();
 
+         ////////////////
+
          this.receptor_g.Rfc = value.Rfc;
+         this.receptor_g.Nombre = value.Nombre;
+         this.receptor_g.UsoCFDI = "P01";
+         this.generarCarta.Receptor = this.receptor_g;
+
          
         this.domicilioFiscalService.findDomicilioFiscal(value.Rfc)
           .pipe(
@@ -1180,20 +1186,32 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
             })
           )
           .subscribe((resBody: IDomicilioFiscal[]) => (
-            this.domFiscal = resBody
+            this.domFiscal = resBody,
+
+            this.DomicilioFiscal = {
+              Calle: '',
+              NoExterior: this.domFiscal[0].NoExterior,
+              NoInterior: this.domFiscal[0].NoInterior,
+              Colonia: this.domFiscal[0].Colonia,
+              Localidad: this.domFiscal[0].Localidad,
+              Municipio: this.domFiscal[0].Municipio,
+              Estado: this.domFiscal[0].Estado,
+              Pais: this.domFiscal[0].Pais,
+              CodigoPostal: this.domFiscal[0].CodigoPostal,
+            }
 
 
           ));
 
 
-        this.receptorService
-          .query({ size: MaxItems }, (this.hasRol([Authority.DMC]) === true ? 2 : 1))
-          .pipe(
-            map((res: HttpResponse<IReceptor[]>) => {
-              return res.body ? res.body : [];
-            })
-          )
-          .subscribe((resBody: IReceptor[]) => (this.receptor = resBody));
+        // this.receptorService
+        //   .query({ size: MaxItems }, (this.hasRol([Authority.DMC]) === true ? 2 : 1))
+        //   .pipe(
+        //     map((res: HttpResponse<IReceptor[]>) => {
+        //       return res.body ? res.body : [];
+        //     })
+        //   )
+        //   .subscribe((resBody: IReceptor[]) => (this.receptor = resBody));
 
 
 
@@ -1883,7 +1901,7 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
     console.log("Respuesta");
     console.log(res.body);
     if (res.body.RespuestaTimbrado != null) {
-      if (res.body.Serie == "" && res.body.Serie == "") {
+      if (res.body.Serie == "" && res.body.Folio == "") {
         this.isSaving = false;
         if (this.auxSave) {
           this.auxSave.emit(false);
@@ -1901,11 +1919,12 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
         if (res.body.RespuestaTimbrado.error == null) {
           Swal.fire({
             icon: 'success',
-            text: 'Guardado',
+            text: 'Guardado y Timbrado',
             showCancelButton: false,
             confirmButtonColor: '#3085d6',
             confirmButtonText: 'Ok',
-            html: '<p>Folio <b>' + res.body.Folio + '</b> </p>' +
+            html: '<p>Folio Timbrado <b>' + res.body.FolioTimbrado + '</b> </p>' +
+              '<p>Folio <b>' + res.body.Folio + '</b> </p>' +
               '<p>Fecha <b>' + res.body.RespuestaTimbrado.fechaTimbre + '</b></p> ' +
               '<p>uuid <b>' + res.body.RespuestaTimbrado.uuid + '</b></p>',
           }).then((result) => {
@@ -1916,38 +1935,60 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
             }
           })
         } else {
-          Swal.fire({
-            icon: 'warning',
-            text: 'Guardado',
-            showCancelButton: false,
-            confirmButtonColor: '#3085d6',
-            confirmButtonText: 'Ok',
-            html: '<p>Folio <b>' + res.body.Folio + '</b> </p>' +
-              '<p>Fecha <b>' + res.body.RespuestaTimbrado.fechaTimbre + '</b></p> ' +
-              '<p>uuid <b>' + res.body.RespuestaTimbrado.uuid + '</b></p>' +
-              '<p>Mensage' + res.body.RespuestaTimbrado.error + '</p>',
-          }).then((result) => {
-            if (result.isConfirmed) {
-              //window.location.reload();
-              this.folio = res.body.Folio;
-              this.serie = res.body.Serie;
-            }
-          })
+          
+            Swal.fire({
+              icon: 'warning',
+              text: 'Guardado',
+              showCancelButton: false,
+              confirmButtonColor: '#3085d6',
+              confirmButtonText: 'Ok',
+              html: '<p>Folio <b>' + res.body.Folio + '</b> </p>' +
+                '<p>Fecha <b>' + res.body.RespuestaTimbrado.fechaTimbre + '</b></p> ' +
+                '<p>uuid <b>' + res.body.RespuestaTimbrado.uuid + '</b></p>' +
+                '<p>Mensage' + res.body.RespuestaTimbrado.error + '</p>',
+            }).then((result) => {
+              if (result.isConfirmed) {
+                //window.location.reload();
+                this.folio = res.body.Folio;
+                this.serie = res.body.Serie;
+              }
+            })
+          
         }
 
       }
     } else {
-      this.isSaving = false;
-      if (this.auxSave) {
-        this.auxSave.emit(false);
-      }
+      if (res.body.Folio) {
+        Swal.fire({
+          icon: 'success',
+          text: 'Guardado',
+          showCancelButton: false,
+          confirmButtonColor: '#3085d6',
+          confirmButtonText: 'Ok',
+          html: '<p>Folio <b>' + res.body.Folio + '</b> </p>' ,
+        }).then((result) => {
+          if (result.isConfirmed) {
+            //window.location.reload();
+            this.folio = res.body.Folio;
+            this.serie = res.body.Serie;
+          }
+        })
+      }else{
+        this.isSaving = false;
+        if (this.auxSave) {
+          this.auxSave.emit(false);
+        }
 
-      Swal.fire({
-        title: 'No se pudo realizar la acción',
-        text: 'No fue Posible Realizar la Acción',
-        icon: 'warning',
-        showCloseButton: true,
-      });
+      
+
+        Swal.fire({
+          title: 'No se pudo realizar la acción',
+          text: 'No fue Posible Realizar la Acción',
+          icon: 'warning',
+          showCloseButton: true,
+        });
+      }
+      
     }
 
 

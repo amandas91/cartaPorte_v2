@@ -20,6 +20,7 @@ import { SessionStorageService, LocalStorageService } from 'ngx-webstorage';
 import { LoginService } from "app/shared/auth/login.service";
 import { Router } from '@angular/router';
 import { AuthServerProvider } from './shared/auth/auth-jwt.service';
+import { moveCursor } from 'readline';
 
 
 
@@ -41,6 +42,12 @@ export class AppComponent implements OnInit, OnDestroy
     title = 'Tu sesión esta por vencer';
     idleTimer:boolean//this.localStorage.retrieve('Verified')
     modalTimeOut = "modalTimeOut"
+
+
+    //Refresh
+    fechaActual:any;
+    fechaExpired:any;
+    canRefreshToken:boolean;
 
     // Private
     private _unsubscribeAll: Subject<any>;
@@ -177,15 +184,59 @@ export class AppComponent implements OnInit, OnDestroy
                 this.document.body.classList.add(this.fuseConfig.colorTheme);
             });
 
-             setInterval(() => {
-                // console.log("Aqui")
-                // console.log(this.localStorage.retrieve('Verified'))
-                if(this.localStorage.retrieve('Verified'))
-                    this.idleTimer = this.localStorage.retrieve('Verified')
-                else
-                this.idleTimer = false
+            var timeout;
+            var moveCursor;
+            this.canRefreshToken = false;
+            console.log(document.onmousemove)
+            document.onmousemove = function(){
+                /**
+                 * Aqui el cursor esta en mivimiento
+                 */
 
-             }, 2000);
+                clearTimeout(timeout);
+                console.log("Si se mueve el cursor")
+                moveCursor = true
+                timeout = setTimeout(function(){
+                    //No m ueve el cursor
+                    console.log("No se mueve el cursor")
+                    moveCursor = false
+                }, 5000);
+            }
+
+             setInterval(() => {
+                let fechaActual = Math.floor(Date.now()/1000);
+                let fechaExpired = Date.parse(this.localStorage.retrieve('ExpirationDate')) /1000
+                let fechaExpiredRefresh = (Date.parse(this.localStorage.retrieve('ExpirationDate')) /1000) + 500000
+                if(this.localStorage.retrieve('Verified') && moveCursor){
+                    if(fechaActual > fechaExpired && fechaExpiredRefresh > fechaActual){
+                        this.refreshToken()
+                    }
+                }else{
+                    if(this.localStorage.retrieve('Verified'))
+                        this.idleTimer = true
+
+                    if(fechaActual  > fechaExpired ){
+                        this.loginService.logout()
+                        this.localStorage.clear('authenticationToken')
+                        this.localStorage.clear('Username');
+                        this.localStorage.clear('UserId');
+                        this.localStorage.clear('ExpirationDate');
+                        this.localStorage.clear('Verified');
+                        sessionStorage.removeItem('authenticationToken')
+                        sessionStorage.removeItem('Username')
+                        sessionStorage.removeItem('UserId')
+                        sessionStorage.removeItem('ExpirationDate')
+                        sessionStorage.removeItem('Verified')
+                        this.router.navigate(['/login']);
+                    }
+
+
+                }
+               
+             }, 15000);
+
+
+             
     }
 
     ngAfterViewInit() {
@@ -231,6 +282,7 @@ export class AppComponent implements OnInit, OnDestroy
                         sessionStorage.removeItem('Verified')
                         this.router.navigate(['/login']);
                 }else if(val === IdleWarningStates.SecondaryTimerCancelled){
+                    console.log("aqui que pasa")
                     const credentials = {
                         refreshToken: this.localStorage.retrieve('RefreshToken'),
                         userid: this.localStorage.retrieve('UserId')
@@ -243,6 +295,19 @@ export class AppComponent implements OnInit, OnDestroy
             }
         );
     } 
+
+
+    refreshToken(){
+        console.log("Hace el refresh")
+        const credentials = {
+            refreshToken: this.localStorage.retrieve('RefreshToken'),
+            userid: this.localStorage.retrieve('UserId')
+        }
+
+        this.AuthServerProviderService.refreshToken(credentials).subscribe(result => {
+            console.log(result)
+        });
+    }
 
     /**
      * On destroy
