@@ -2103,7 +2103,7 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
           .subscribe((resBodyCp: ICatCP[]) => (
             this.searchBodega = resBodyCp[0],
             //estado
-            this.catEstadosService.find(resBodyCp[0])
+            this.catEstadosService.find('MEX')
               .pipe(
                 map((res: HttpResponse<ICatEstados[]>) => {
                   return res.body ? res.body : [];
