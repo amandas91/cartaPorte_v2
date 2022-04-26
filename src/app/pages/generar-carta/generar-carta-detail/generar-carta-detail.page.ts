@@ -649,7 +649,7 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
 
       this.cargaElementList = {
         ClaveProdServ: value.BienesTransp,
-        TipoProducto: value.ClaveUnidad,//this.tipoProductoTable,
+        TipoProducto: this.tipoProductoTable,//this.tipoProductoTable,
         Cantidad: value.Cantidad,
         ClaveUnidad: value.ClaveUnidad,
         Unidad: value.Unidad,
@@ -1524,7 +1524,7 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
         Descripcion: value.Descripcion,
         ValorUnitario: 0,
         Importe: 0,
-        TipoProducto: this.conceptoClaveUnidad,
+        TipoProducto: this.tipoProductoTable,
         PesoBrut: 0,
         PesoUnidad: 0,
         PesoBrutoTotal: 0,
@@ -2095,13 +2095,15 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
         this.catCPsService.findByCodigoPostal(src.CodigoPostal)
           .pipe(
             map((res: HttpResponse<any>) => {
+              console.log('CP...: ', res.body);
               return res.body ? res.body : [];
+              
             })
           )
           .subscribe((resBodyCp: ICatCP[]) => (
             this.searchBodega = resBodyCp[0],
             //estado
-            this.catEstadosService.find('MEX')
+            this.catEstadosService.find(resBodyCp[0])
               .pipe(
                 map((res: HttpResponse<ICatEstados[]>) => {
                   return res.body ? res.body : [];
