@@ -5,6 +5,7 @@ export interface ICatTipoProducto {
     CreateDate?: string;
     Descripcion?: string;
     MaterialPeligroso?: string;
+    TipoProducto?: string;
   
   }
   
@@ -17,6 +18,7 @@ export interface ICatTipoProducto {
         public CreateDate?: string,
         public Descripcion?: string,
         public MaterialPeligroso?: string,
+        public TipoProducto?: string,
     ) { }
   }
   

@@ -3,6 +3,7 @@ export interface IOperador {
     RFCFigura?: string;
     NumLicencia?: string;
     NombreFigura?: number;
+    NumeroEmpleado?: string;
 }
 
 export class Operador implements IOperador {
@@ -11,6 +12,7 @@ export class Operador implements IOperador {
     public RFCFigura?: string,
     public NumLicencia?: string,
     public NombreFigura?: number,
+    public NumeroEmpleado?: string,
   ) {
     
   }

@@ -127,8 +127,6 @@ export interface CataPorte {
   Mercancias?: any;
   FiguraTransporte?: any;
   Autotransporte?: any;
-  ClaveBodega?: any;
-  ClaveCliente?: any;
 }
 
 export interface TiposFigura {
@@ -709,7 +707,10 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
         IDUbicacion: element.IDUbicacion,
         FechaHoraSalidaLlegada: element.FechaHoraSalidaLlegada,
         DistanciaRecorrida: this.round(element.DistanciaRecorrida),
-        Domicilio: auxdomicilio
+        Domicilio: auxdomicilio,
+        BodegaCedis: this.editForm.controls['bodega'].value,
+        ClaveBodega: this.editForm.controls['ClaveBodega'].value,
+        ClaveCliente: this.editForm.controls['ClaveCliente'].value,
       };
 
       auxubicacionElementList = {
@@ -808,7 +809,7 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
       this.editForm.controls['Eco'].setValue(this.generarCarta.CartaPorte.Mercancias.Autotransporte.eco),
       this.Eco = this.generarCarta.CartaPorte.Mercancias.Autotransporte.eco,
       this.PermSCT = this.generarCarta.CartaPorte.Mercancias.Autotransporte.PermSCT;
-    this.editForm.controls['PermSCT'].setValue(this.generarCarta.CartaPorte.Mercancias.Autotransporte.PermSCT),
+      this.editForm.controls['PermSCT'].setValue(this.generarCarta.CartaPorte.Mercancias.Autotransporte.PermSCT),
       this.editForm.controls['AnioModeloVM'].setValue(this.generarCarta.CartaPorte.Mercancias.Autotransporte.IdentificacionVehicular.AnioModeloVM),
       this.editForm.controls['PlacaVM'].setValue(this.generarCarta.CartaPorte.Mercancias.Autotransporte.IdentificacionVehicular.PlacaVM),
       this.editForm.controls['ConfigVehicular'].setValue(this.generarCarta.CartaPorte.Mercancias.Autotransporte.IdentificacionVehicular.ConfigVehicular),
@@ -870,7 +871,7 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
 
       this.cargaElementList = {
         ClaveProdServ: "" + this.ClaveProdServ,
-        TipoProducto: '',
+        TipoProducto: this.tipoProductoTable,
         Cantidad: Number(this.editForm.controls['Cantidad'].value),
         ClaveUnidad: this.ClaveUnidad,
         Unidad: this.Unidad,
@@ -911,7 +912,7 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
       || Number(this.editForm.controls['DistanciaRecorrida'].value) <= 0 || this.editForm.controls['FechaSalidaLlegada'].value == null || this.editForm.controls['HoraLlegada'].value == null
       || this.editForm.controls['RFCDestino'].value == null || this.paisUbicacion == undefined || this.municipioUbicacion == undefined || this.estadoUbicacion == undefined) {
 
-      console.log("length: ", this.editForm.controls['CodigoPostalUbicacion'].value.length)
+      //console.log("length: ", this.editForm.controls['CodigoPostalUbicacion'].value.length)
 
       this.validacionUbicacion = " * Error al agregar ubicacion, por favor valide los campos"
 
@@ -925,6 +926,10 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
       this.domicilio.Estado = this.estadoUbicacion;
       this.domicilio.CodigoPostal = this.editForm.controls['CodigoPostalUbicacion'].value;
 
+      this.municipioExpedido= this.municipioUbicacion;
+      this.estadoExpedido = this.estadoUbicacion;
+      this.paisExpedido = this.paisUbicacion;
+
       if (this.origen == false) {
 
         let tmpDate = this.editForm.controls['FechaSalida'].value;
@@ -937,7 +942,10 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
           IDUbicacion: 0,
           FechaHoraSalidaLlegada: formattedDate,
           DistanciaRecorrida: null,
-          Domicilio: this.domicilio
+          Domicilio: this.domicilio,
+          BodegaCedis: this.editForm.controls['bodega'].value,
+          ClaveBodega: this.editForm.controls['ClaveBodega'].value,
+          ClaveCliente: this.editForm.controls['ClaveCliente'].value
         };
 
         this.ubicacionOrigen.push(aux);
@@ -955,7 +963,10 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
           IDUbicacion: 0,
           FechaHoraSalidaLlegada: formattedDate,
           DistanciaRecorrida: this.round(Number(this.editForm.controls['DistanciaRecorrida'].value)),
-          Domicilio: this.domicilio
+          Domicilio: this.domicilio,
+          BodegaCedis: this.editForm.controls['bodega'].value,
+          ClaveBodega: this.editForm.controls['ClaveBodega'].value,
+          ClaveCliente: this.editForm.controls['ClaveCliente'].value
         };
 
         this.ubicacionElementList = {
@@ -1334,6 +1345,7 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
           )
           .subscribe((resBody: ICatTipoProducto[]) => (
             this.tipoProducto = resBody,
+            this.tipoProductoTable = this.tipoProducto[0].TipoProducto,
             //this.editForm.controls['BienesTransp'].setValue(value.Descripcion),
             Swal.close()
           ));
@@ -1522,7 +1534,7 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
         Descripcion: value.Descripcion,
         ValorUnitario: 0,
         Importe: 0,
-        TipoProducto: '',
+        TipoProducto: value.TipoProducto,
         PesoBrut: 0,
         PesoUnidad: 0,
         PesoBrutoTotal: 0,
@@ -1556,10 +1568,11 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
     /**
      * OPERADOR
      */
-    this.operador.TipoFigura = this.editForm.controls['TipoFigura'].value;
-    this.operador.RFCFigura = this.editForm.controls['RFCFigura'].value;
-    this.operador.NombreFigura = this.editForm.controls['NombreFigura'].value;
-    this.operador.NumLicencia = this.editForm.controls['NumLicencia'].value;
+    this.operador.TipoFigura = this.editForm.controls['TipoFigura'].value
+    this.operador.RFCFigura = this.editForm.controls['RFCFigura'].value
+    this.operador.NombreFigura = this.editForm.controls['NombreFigura'].value
+    this.operador.NumLicencia = this.editForm.controls['NumLicencia'].value
+    this.operador.NumeroEmpleado = this.editForm.controls['NumeroEmpleado'].value
     this.TiposFigura = this.operador;
 
     /**
@@ -1638,8 +1651,6 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
       Ubicaciones: aux,
       Mercancias: auxMerc,
       FiguraTransporte: auxFigura,
-      ClaveBodega: this.editForm.controls['ClaveBodega'].value,
-      ClaveCliente: this.editForm.controls['ClaveCliente'].value,
 
     };
 
@@ -1845,8 +1856,6 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
       Ubicaciones: aux,
       Mercancias: auxMerc,
       FiguraTransporte: auxFigura,
-      ClaveBodega: this.editForm.controls['ClaveBodega'].value,
-      ClaveCliente: this.editForm.controls['ClaveCliente'].value,
     };
 
     console.log("this.CartaPorte: ", this.CartaPorte)
