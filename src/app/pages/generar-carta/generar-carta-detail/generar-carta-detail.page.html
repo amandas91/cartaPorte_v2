@@ -351,23 +351,11 @@
            
         <div class="mt-4" fxLayout="column" fxLayoutGap="8px" [formGroup]="editForm" >
             
-            <div fxLayout="column" fxLayout.gt-xs="row" fxLayoutGap="8px" fxLayoutGap.gt-xs="24px" fxLayoutAlign="end">
-                <div fxFlex="30%">
-                    <button mat-flat-button color="primary" (click)="buscarBodega(1,$event)">
-                        <mat-icon>search</mat-icon>Buscar por “Bodega/Cedis” 
-                    </button>
-                </div>
-                <div fxFlex="70%">
-                </div>
-            </div>
+           
             
             <div fxLayout="column" fxLayout.gt-xs="row" fxLayoutGap="8px" fxLayoutGap.gt-xs="24px" fxLayoutAlign="end">
                
-                <mat-form-field fxFlex="30%" appearance="outline" style="display: none;">
-                    <mat-label >Bodega</mat-label>
-                    <input style="color: black;" autocomplete="off" matInput formControlName="bodega" (click)="buscarBodega(1,$event)" />
-                </mat-form-field>
-
+               
                 <mat-form-field fxFlex="30%" appearance="outline">
                     <mat-label >Fecha Salida</mat-label>
                     <input matInput [matDatepicker]="FechaSalida" formControlName="FechaSalida" >
@@ -395,6 +383,20 @@
                     </mat-select>
                 </mat-form-field>
             </div>
+            <div fxLayout="column" fxLayout.gt-xs="row" fxLayoutGap="8px" fxLayoutGap.gt-xs="24px" fxLayoutAlign="end">
+                <div fxFlex="20%">
+                    <button mat-flat-button color="primary" (click)="buscarBodega(1,$event)">
+                        <mat-icon>search</mat-icon>Buscar por “Bodega/Cedis” 
+                    </button>
+                </div>
+                <div fxFlex="80%">
+                    <mat-form-field fxFlex="100%" appearance="outline">
+                        <mat-label >Bodega</mat-label>
+                        <input style="color: black;" autocomplete="off" matInput formControlName="bodega" />
+                    </mat-form-field>    
+                </div>
+            </div>
+
 
             <div fxLayout="column" fxLayout.gt-xs="row" fxLayoutGap="8px" fxLayoutGap.gt-xs="24px" fxLayoutAlign="end" *ngIf="showDetailOrigen">
                 <div fxFlex="100%">
