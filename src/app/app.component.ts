@@ -184,36 +184,38 @@ export class AppComponent implements OnInit, OnDestroy
                 this.document.body.classList.add(this.fuseConfig.colorTheme);
             });
 
-            var timeout;
-            var moveCursor;
             this.canRefreshToken = false;
-            document.onmousemove = function(){
-                /**
-                 * Aqui el cursor esta en mivimiento
-                 */
+            
+            // var timeout;
+            // var moveCursor;
+            // document.onmousemove = function(){
+            //     /**
+            //      * Aqui el cursor esta en mivimiento
+            //      */
 
-                clearTimeout(timeout);
+            //     clearTimeout(timeout);
                 
-                moveCursor = true
-                timeout = setTimeout(function(){
-                    //No m ueve el cursor
-                    moveCursor = false
-                }, 5000);
-            }
+            //     moveCursor = true
+            //     timeout = setTimeout(function(){
+            //         //No m ueve el cursor
+            //         moveCursor = false
+            //     }, 5000);
+            // }
 
              setInterval(() => {
                 let fechaActual = Math.floor(Date.now()/1000);
                 let fechaExpired = Date.parse(this.localStorage.retrieve('ExpirationDate')) /1000
                 let fechaExpiredRefresh = (Date.parse(this.localStorage.retrieve('ExpirationDate')) /1000) + 500000
-                if(this.localStorage.retrieve('Verified') && moveCursor){
-                    if(fechaActual > fechaExpired && fechaExpiredRefresh > fechaActual){
-                        this.refreshToken()
-                    }
-                }else{
-                    if(this.localStorage.retrieve('Verified'))
+                if(this.localStorage.retrieve('Verified')){
+                    if(this.idleTimer = false){
                         this.idleTimer = true
-
-                    if(fechaActual  > fechaExpired ){
+                    }
+                    
+                    
+                    if(fechaActual > fechaExpired && fechaExpiredRefresh > fechaActual){
+                        //console.log("refresh token")
+                        this.refreshToken()
+                    }else if(fechaActual > fechaExpired && fechaActual > fechaExpiredRefresh){
                         this.loginService.logout()
                         this.localStorage.clear('authenticationToken')
                         this.localStorage.clear('Username');
@@ -227,9 +229,26 @@ export class AppComponent implements OnInit, OnDestroy
                         sessionStorage.removeItem('Verified')
                         this.router.navigate(['/login']);
                     }
+                 }
+                //else{
+
+                //     if(fechaActual  > fechaExpired ){
+                //         this.loginService.logout()
+                //         this.localStorage.clear('authenticationToken')
+                //         this.localStorage.clear('Username');
+                //         this.localStorage.clear('UserId');
+                //         this.localStorage.clear('ExpirationDate');
+                //         this.localStorage.clear('Verified');
+                //         sessionStorage.removeItem('authenticationToken')
+                //         sessionStorage.removeItem('Username')
+                //         sessionStorage.removeItem('UserId')
+                //         sessionStorage.removeItem('ExpirationDate')
+                //         sessionStorage.removeItem('Verified')
+                //         this.router.navigate(['/login']);
+                //     }
 
 
-                }
+                // }
                
              }, 15000);
 
@@ -246,19 +265,6 @@ export class AppComponent implements OnInit, OnDestroy
         this.timerSubscribe();
       }
     
-    //   private timerSubscribe(): void {
-    //     this._idleService
-    //       .idleStateChanged()
-    //       .subscribe(
-    //         val => {
-    //           if (val === IdleWarningStates.SecondaryTimerExpired) {
-    //             this._idleService.stopTimer();
-    //             this.idleTimer = false;
-    //           }
-    //         }
-    //       );
-    //   }
-
     private timerSubscribe(): void {
         this._idleService
         .idleStateChanged()
@@ -280,15 +286,7 @@ export class AppComponent implements OnInit, OnDestroy
                         sessionStorage.removeItem('Verified')
                         this.router.navigate(['/login']);
                 }else if(val === IdleWarningStates.SecondaryTimerCancelled){
-                    console.log("aqui que pasa")
-                    const credentials = {
-                        refreshToken: this.localStorage.retrieve('RefreshToken'),
-                        userid: this.localStorage.retrieve('UserId')
-                    }
-                
-                    this.AuthServerProviderService.refreshToken(credentials).subscribe(result => {
-                        console.log(result)
-                    });
+                   this.refreshToken()
                 }
             }
         );
@@ -296,7 +294,6 @@ export class AppComponent implements OnInit, OnDestroy
 
 
     refreshToken(){
-        console.log("Hace el refresh")
         const credentials = {
             refreshToken: this.localStorage.retrieve('RefreshToken'),
             userid: this.localStorage.retrieve('UserId')

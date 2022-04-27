@@ -363,7 +363,7 @@
             
             <div fxLayout="column" fxLayout.gt-xs="row" fxLayoutGap="8px" fxLayoutGap.gt-xs="24px" fxLayoutAlign="end">
                
-                <mat-form-field fxFlex="30%" appearance="outline" >
+                <mat-form-field fxFlex="30%" appearance="outline" style="display: none;">
                     <mat-label >Bodega</mat-label>
                     <input style="color: black;" autocomplete="off" matInput formControlName="bodega" (click)="buscarBodega(1,$event)" />
                 </mat-form-field>
@@ -572,8 +572,6 @@
                     <tr mat-header-row *matHeaderRowDef="displayedColumns1"></tr>
                     <tr mat-row *matRowDef="let row; columns: displayedColumns1;"></tr>
                 </table>
-
-                
             </div>
 
             <div class="mt-4" fxLayout="column" fxLayoutGap="8px">

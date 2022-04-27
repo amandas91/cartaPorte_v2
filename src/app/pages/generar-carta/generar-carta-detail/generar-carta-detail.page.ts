@@ -466,6 +466,7 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
   ngOnInit(): void {
     let fechaActual = Math.floor(Date.now()/1000);
     let fechaExpired = Date.parse(this.localStorage.retrieve('ExpirationDate')) /1000
+    
     if(fechaActual  >= fechaExpired ){
       this.loginService.logout()
       this.localStorage.clear('authenticationToken')
@@ -2050,6 +2051,7 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
       }
     } else {
       if (value.checked) {
+
         this.editForm.controls['ClaveBodega'].disable()
         this.editForm.controls['ClaveCliente'].disable()
       } else {
@@ -2090,7 +2092,12 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
                 if(res[0]){
                   this.estadoExpedido = res[0].Estado,
                   this.municipioExpedido = res[0].Municipio,
-                  Swal.close()
+                  Swal.fire({
+                    icon: 'success',
+                    title: 'Agregado',
+                    showConfirmButton: false,
+                    timer: 1500
+                  })
                 }else{
                   
                   Swal.fire({
