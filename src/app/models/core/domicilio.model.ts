@@ -6,7 +6,7 @@ export interface IDomicilio {
   Localidad?: string;
   Municipio?: string;
   Estado?: string;
-  Pais?: number;
+  Pais?: any;
   CodigoPostal?: string;
 }
 export class Domicilio implements IDomicilio {
@@ -16,7 +16,7 @@ export class Domicilio implements IDomicilio {
     public Localidad?: string,
     public Municipio?: string,
     public Estado?: string,
-    public Pais?: number,
+    public Pais?: any,
     public CodigoPostal?: string,
 
   ) {
