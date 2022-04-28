@@ -14,10 +14,22 @@
                 <input autocomplete="off" matInput formControlName="Username" />
             </mat-form-field>
 
-            <mat-form-field fxFlex="33%" appearance="outline">
+            <!-- <mat-form-field fxFlex="33%" appearance="outline">
                 <mat-label>Rol</mat-label>
                 <input autocomplete="off" matInput formControlName="Role" />
-            </mat-form-field>
+            </mat-form-field> -->
+
+            <mat-form-field fxFlex="30%" appearance="outline">
+                <mat-label>Rol</mat-label>
+                <mat-select name="Role" formControlName="Role">
+                  <mat-option  [value]="'ROLE_ADMIN'">
+                    ROLE_ADMIN
+                  </mat-option>
+                  <mat-option  [value]="'ROLE_USER'">
+                    ROLE_USER
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
 
 
         </div>

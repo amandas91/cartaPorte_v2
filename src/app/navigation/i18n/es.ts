@@ -10,7 +10,7 @@ export const locale = {
                 'COLLECTIONS': 'COLECCIONES',
                 'COMMISSIONS': 'COMISIONES',
                 'COMMISSIONS_DCM': 'DMC COMISIONES',
-                'CLIENTS': 'CLIENTES',
+                'CLIENTS': 'Usuarios',
                 'RFC': 'RFC',
                 'DMC':{
                     'TITLE': 'DMC',

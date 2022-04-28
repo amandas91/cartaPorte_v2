@@ -110,6 +110,7 @@ export class ClientsDetailPage implements OnInit {
   }
 
   protected onSaveSuccess(res): void {
+    console.log("GUARDAR")
     if(res.body.status == 400){
       this.isSaving = false;
       if (this.auxSave) {
@@ -136,6 +137,7 @@ export class ClientsDetailPage implements OnInit {
         confirmButtonText: 'Ok',
         showCloseButton: true,
         })
+        this.loadPage();
     }
     // this.isSaving = false;
     // if (this.auxSave) {

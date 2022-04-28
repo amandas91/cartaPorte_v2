@@ -288,9 +288,10 @@ export class ClientsListPage implements OnInit {
         const dialogRef = this.dialog.open(ClientsDialogPage, { data: params });
         dialogRef.updateSize("100%");
         dialogRef.afterClosed().subscribe((src: any) => {
+            this.loadPage();
             if (src) {
-                this.loadPage();
-                // this.message('Creado');
+                
+               
             }
         });
     }
