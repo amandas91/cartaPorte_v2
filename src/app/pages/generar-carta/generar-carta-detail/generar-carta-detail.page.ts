@@ -640,6 +640,8 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
      */
 
     resBody.CartaPorte.Mercancias.Mercancia.forEach(value => {
+      console.log("EDICION")
+      console.log(value)
         this.tipoProductoTable = value.TipoProducto,
       
         this.cargaMercancia = {
@@ -692,55 +694,84 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
     /*
     * ORIGEN
     */
-    this.editForm.controls['bodega'].setValue(resBody.CartaPorte.Ubicaciones.Ubicacion[0].BodegaCedis)
-    this.editForm.controls['FechaSalida'].setValue(resBody.CartaPorte.Ubicaciones.Ubicacion[0].FechaHoraSalidaLlegada)
-    let tmpTime = this.editForm.controls['FechaSalida'].value;
-    let formattedDate = this.datepipe.transform(tmpTime, 'hh:mm')
-    this.editForm.controls['HoraSalida'].setValue(formattedDate)
-    this.editForm.controls['RFCRemitenteDestinatario'].setValue(resBody.CartaPorte.Ubicaciones.Ubicacion[0].RFCRemitenteDestinatario)
-    this.editForm.controls['TipoHorario'].setValue(this.tipoHorario[0].Descripcion)
+    
+    resBody.CartaPorte.Ubicaciones.Ubicacion.forEach(value => {
+      
+      if(value.TipoUbicacion == "Origen"){
+        this.origen = true
+        this.editForm.controls['bodega'].setValue(value.BodegaCedis)
+        this.editForm.controls['FechaSalida'].setValue(value.FechaHoraSalidaLlegada)
+        let tmpTime = this.editForm.controls['FechaSalida'].value;
+        let formattedDate = this.datepipe.transform(tmpTime, 'hh:mm')
+        this.editForm.controls['HoraSalida'].setValue(formattedDate)
+        this.editForm.controls['RFCRemitenteDestinatario'].setValue(value.RFCRemitenteDestinatario)
+        this.editForm.controls['TipoHorario'].setValue(value.Descripcion)
 
-    resBody.CartaPorte.Ubicaciones.Ubicacion.forEach(element => {
-      let auxubicacionElementList: any;
+        let aux = {
+          TipoUbicacion: "Origen",
+          RFCRemitenteDestinatario: value.RFCRemitenteDestinatario,
+          FechaHoraSalidaLlegada: value.FechaHoraSalidaLlegada,
+          DistanciaRecorrida: value.DistanciaRecorrida,
+          Domicilio: {
+            Calle: value.Domicilio.Calle,
+            Colonia: value.Domicilio.Colonia,
+            Municipio:  value.Domicilio.Municipio,
+            Estado: value.Domicilio.Estado,
+            Pais: value.Domicilio.Pais,
+            CodigoPostal:  value.Domicilio.CodigoPostal,
+          },
+          BodegaCedis: value.BodegaCedis,
+          ClaveBodega: value.ClaveBodega,
+          ClaveCliente: value.ClaveBodega
+        };
 
-      let auxdomicilio = {
-        CodigoPostal: element.Domicilio.CodigoPostal,
-        Colonia: element.Domicilio.Colonia,
-        Estado: element.Domicilio.Estado,
-        Localidad: element.Domicilio.Localidad,
-        Municipio: element.Domicilio.CodMunicipioigoPostal,
-        Pais: element.Domicilio.Pais
+        this.ubicacionOrigen.push(aux);
+        //this.ubicacionDestino.push(aux);
+      }else{
+        this.domicilio.Pais = value.Domicilio.Pais
+        this.domicilio.Municipio = value.Domicilio.Municipio
+        this.domicilio.Estado =  value.Domicilio.Estado
+        this.domicilio.CodigoPostal = value.Domicilio.CodigoPostal
+  
+        let auxDestino = {
+          TipoUbicacion: value.TipoUbicacion,
+          RFCRemitenteDestinatario: value.RFCRemitenteDestinatario,
+          FechaHoraSalidaLlegada: value.FechaHoraSalidaLlegada,
+          DistanciaRecorrida: value.DistanciaRecorrida,
+          Domicilio: {
+            Calle: value.Domicilio.Calle,
+            Colonia: value.Domicilio.Colonia,
+            Municipio:  value.Domicilio.Municipio,
+            Estado: value.Domicilio.Estado,
+            Pais: value.Domicilio.Pais,
+            CodigoPostal:  value.Domicilio.CodigoPostal,
+          },
+          BodegaCedis: value.BodegaCedis,
+          ClaveBodega: value.ClaveBodega,
+          ClaveCliente: value.ClaveBodega
+        };
+
+        this.ubicacionElementList = {
+          rfc: value.RFCRemitenteDestinatario,
+          fecha: value.FechaHoraSalidaLlegada,
+          direccion: this.domicilio.Estado,
+          cp:  value.Domicilio.CodigoPostal,
+          distancia: value.DistanciaRecorrida,
+          ubicacion: auxDestino
+        };
+        this.dataSource1.data.push(this.ubicacionElementList);
+        this.dataSource1.sort = this.sort;
+        this.ubicacionDestino.push(auxDestino);
+        
       }
 
-      let aux = {
-        TipoUbicacion: element.TipoUbicacion,
-        RFCRemitenteDestinatario: element.RFCRemitenteDestinatario,
-        IDUbicacion: element.IDUbicacion,
-        FechaHoraSalidaLlegada: element.FechaHoraSalidaLlegada,
-        DistanciaRecorrida: this.round(element.DistanciaRecorrida),
-        Domicilio: auxdomicilio,
-        BodegaCedis: this.editForm.controls['bodega'].value,
-        ClaveBodega: this.editForm.controls['ClaveBodega'].value,
-        ClaveCliente: this.editForm.controls['ClaveCliente'].value,
-      };
-
-      auxubicacionElementList = {
-        rfc: element.RFCRemitenteDestinatario,
-        fecha: element.FechaHoraSalidaLlegada,
-        direccion: element.Domicilio.Estado,
-        cp: element.Domicilio.CodigoPostal,
-        distancia: this.round(element.DistanciaRecorrida)
-      }
-
-
-      this.totalDistancia += this.round(Number(element.DistanciaRecorrida))
-
-      this.ubicacionDestino.push(aux);
-
-      if (element.TipoUbicacion == "Destino")
-        this.dataSource1.data.push(auxubicacionElementList);
-
+      this.totalDistancia += this.round(value.DistanciaRecorrida)
     })
+
+    console.log("Foreach de Ubicacion destino")
+    console.log(this.ubicacionDestino)
+    
+
 
 
     //this.dataSource1.data = resBody.CartaPorte.Ubicaciones.Ubicacion;
@@ -986,17 +1017,12 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
 
   onSelectEvent(value: any, type: string) {
     switch (type) {
-      case "expedicion":
-        this.datepipe.transform(Date.now(), 'yyyy-MM-ddThh:mm:ss');
-        this.LugarExpedicion = this.editForm.controls['CodigoPostal'].value;
-        break;
       case "eamFlota":
         Swal.fire({
           allowOutsideClick: false,
           text: 'Cargando...',
         });
         Swal.showLoading();
-
 
         this.eamFlotaService.find(this.editForm.controls['Eco'].value)
           .pipe(
@@ -1055,43 +1081,6 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
           });
 
 
-        break;
-      case "pais":
-        Swal.fire({
-          allowOutsideClick: false,
-          text: 'Cargando...',
-        });
-        Swal.showLoading();
-
-        this.catEstadosService.find(value.IdPais)
-          .pipe(
-            map((res: HttpResponse<ICatEstados[]>) => {
-              return res.body ? res.body : [];
-            })
-          )
-          .subscribe((resBody: ICatEstados[]) => (
-            this.paisExpedido = value.IdPais,
-            this.catEstados = resBody,
-            Swal.close()));
-        break;
-      case "estado":
-        Swal.fire({
-          allowOutsideClick: false,
-          text: 'Cargando...',
-        });
-        Swal.showLoading();
-        this.estadoExpedido = value.ClaveEstado;
-        this.catMunicipiosService.find(value.Nombre)
-          .pipe(
-            map((res: HttpResponse<ICatMunicipios[]>) => {
-              return res.body ? res.body : [];
-            })
-          )
-          .subscribe((resBody: ICatMunicipios[]) => (this.catMunicipios = resBody,
-            Swal.close()));
-        break;
-      case "municipio":
-        this.municipioExpedido = value.Municipio;
         break;
       case "paisUbicacion":
         Swal.fire({
@@ -1182,43 +1171,7 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
           ));
 
 
-        // this.receptorService
-        //   .query({ size: MaxItems }, (this.hasRol([Authority.DMC]) === true ? 2 : 1))
-        //   .pipe(
-        //     map((res: HttpResponse<IReceptor[]>) => {
-        //       return res.body ? res.body : [];
-        //     })
-        //   )
-        //   .subscribe((resBody: IReceptor[]) => (this.receptor = resBody));
-
-
-
         Swal.close()
-        break;
-      case "rfcreceptor":
-
-        //this.editForm.controls['RfcReceptor'].setValue(value.Rfc);
-        this.editForm.controls['NombreReceptor'].setValue(value.Nombre);
-        this.editForm.controls['UsoCFDI'].setValue(value.UsoCFDI);
-
-        this.receptor_g.Rfc = value.Rfc;
-        this.receptor_g.Nombre = value.Nombre;
-        this.receptor_g.UsoCFDI = value.UsoCFDI;
-        this.generarCarta.Receptor = this.receptor_g;
-
-        this.DomicilioFiscal = {
-          Calle: this.domFiscal[0].Calle,
-          NoExterior: this.domFiscal[0].NoExterior,
-          NoInterior: this.domFiscal[0].NoInterior,
-          Colonia: this.domFiscal[0].Colonia,
-          Localidad: this.domFiscal[0].Localidad,
-          Municipio: this.domFiscal[0].Municipio,
-          Estado: this.domFiscal[0].Estado,
-          Pais: this.domFiscal[0].Pais,
-          CodigoPostal: this.domFiscal[0].CodigoPostal,
-
-        };
-
         break;
       case "clavecliente":
         Swal.fire({
@@ -2080,6 +2033,9 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
                   this.estadoExpedido = res[0].Estado,
                   this.municipioExpedido = res[0].Municipio,
                   this.showDetailOrigen = false,
+                  /**
+                   * AGREGAR ORIGEN
+                   */
                   Swal.fire({
                     icon: 'success',
                     title: 'Agregado',
