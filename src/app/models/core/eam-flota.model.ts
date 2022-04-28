@@ -8,7 +8,7 @@ export interface IEamFlota {
     NoPermisoCP?: string ;
     ClaseVehSctCP?: string ;
     Propiedad?: string ;
-    PolizaCP?: string ;
+    PolizaCP?: number ;
     AseguradoraCP?: string ;
     EstatusEco?: string ;
     FechaCarga?: string ;
@@ -27,7 +27,7 @@ export class EamFlota implements IEamFlota {
     public NoPermisoCP?: string,
     public ClaseVehSctCP?: string,
     public Propiedad?: string,
-    public PolizaCP?: string,
+    public PolizaCP?: number,
     public AseguradoraCP?: string,
     public EstatusEco?: string,
     public FechaCarga?: string,

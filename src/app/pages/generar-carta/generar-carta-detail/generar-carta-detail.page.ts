@@ -169,7 +169,7 @@ export interface IdentificacionVehicular {
 
 export interface Seguros {
   AseguraRespCivil?: string;
-  PolizaRespCivil?: string;
+  PolizaRespCivil?: number;
   AseguraMedAmbiente?: string;
   PolizaMedAmbiente?: string
 }
@@ -791,7 +791,7 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
       this.editForm.controls['ConfigVehicular'].setValue(this.generarCarta.CartaPorte.Mercancias.Autotransporte.IdentificacionVehicular.ConfigVehicular),
       this.editForm.controls['Eco'].setValue(this.generarCarta.CartaPorte.Mercancias.Autotransporte.eco),
       this.editForm.controls['NumPermisoSCT'].setValue(this.generarCarta.CartaPorte.Mercancias.Autotransporte.NumPermisoSCT),
-      this.editForm.controls['PolizaRespCivil'].setValue(this.generarCarta.CartaPorte.Mercancias.Autotransporte.Seguros.PolizaRespCivil),
+      this.editForm.controls['PolizaRespCivil'].setValue(Math.trunc(this.generarCarta.CartaPorte.Mercancias.Autotransporte.Seguros.PolizaRespCivil)),
       this.editForm.controls['AseguraRespCivil'].setValue(this.generarCarta.CartaPorte.Mercancias.Autotransporte.Seguros.AseguraRespCivil),
 
       //METODO DE ENVIO 
@@ -891,10 +891,6 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
 
       if (this.origen == false) {
 
-        console.log("ORIGEN")
-        console.log("Lugar de expedicion" , this.LugarExpedicion)
-
-
         let tmpDate = this.editForm.controls['FechaSalida'].value;
         let tmpTime = this.editForm.controls['HoraSalida'].value;
         let formattedDate = this.datepipe.transform(tmpDate, 'YYYY-MM-dd') + 'T' + tmpTime + ':00';
@@ -920,9 +916,6 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
 
         this.ubicacionOrigen.push(aux);
         this.origen = true;
-        console.log("ORIGEN")
-        console.log("Lugar de expedicion" , this.LugarExpedicion)
-        console.log("Lugar de expedicion" , this.ubicacionOrigen)
       }
 
         this.domicilio.Pais = this.paisUbicacion;
@@ -960,8 +953,7 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
         this.ubicacionDestino.push(aux);
         this.dataSource1.data.push(this.ubicacionElementList);
         this.dataSource1.sort = this.sort;
-        // console.log("AGREGAR Destino");
-        // console.log(this.ubicacionDestino);
+
         this.editForm.controls['DistanciaRecorrida'].setValue('');
         this.editForm.controls['PaisUbicacion'].setValue('');
         this.editForm.controls['EstadoUbicacion'].setValue('');
@@ -969,12 +961,6 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
         this.editForm.controls['CodigoPostalUbicacion'].setValue('');
 
 
-        console.log("ORIGEN")
-        console.log("Lugar de expedicion" , this.LugarExpedicion)
-        console.log("Lugar de expedicion" , this.ubicacionOrigen)
-
-        console.log("DESTINO")
-        console.log("destino" , this.ubicacionDestino)
       
     }
   }
@@ -1023,7 +1009,7 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
               if (resBody.EstatusEco == 'ACTIVO') {
                 this.editForm.controls['AnioModeloVM'].setValue(resBody.AnioCP)
                 this.editForm.controls['PlacaVM'].setValue(resBody.PlacaCP)
-                this.editForm.controls['PolizaRespCivil'].setValue(resBody.PolizaCP)
+                this.editForm.controls['PolizaRespCivil'].setValue(Math.trunc(resBody.PolizaCP))
                 this.editForm.controls['AseguraRespCivil'].setValue(resBody.AseguradoraCP)
                 this.editForm.controls['NumPermisoSCT'].setValue(resBody.NoPermisoCP)
                 this.editForm.controls['PermSCT'].setValue(resBody.TipoPermisoCP)
@@ -1181,7 +1167,7 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
             this.domFiscal = resBody,
 
             this.DomicilioFiscal = {
-              Calle: '',
+              Calle: this.domFiscal[0].Calle,
               NoExterior: this.domFiscal[0].NoExterior,
               NoInterior: this.domFiscal[0].NoInterior,
               Colonia: this.domFiscal[0].Colonia,
@@ -1221,7 +1207,7 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
         this.generarCarta.Receptor = this.receptor_g;
 
         this.DomicilioFiscal = {
-          Calle: '',
+          Calle: this.domFiscal[0].Calle,
           NoExterior: this.domFiscal[0].NoExterior,
           NoInterior: this.domFiscal[0].NoInterior,
           Colonia: this.domFiscal[0].Colonia,
@@ -1568,7 +1554,7 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
     */
     this.Seguros = {
       AseguraRespCivil: this.editForm.controls['AseguraRespCivil'].value,
-      PolizaRespCivil: this.editForm.controls['PolizaRespCivil'].value,
+      PolizaRespCivil: Math.trunc(this.editForm.controls['PolizaRespCivil'].value),
 
     };
 
@@ -1774,7 +1760,7 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
     */
     this.Seguros = {
       AseguraRespCivil: this.editForm.controls['AseguraRespCivil'].value,
-      PolizaRespCivil: this.editForm.controls['PolizaRespCivil'].value,
+      PolizaRespCivil: Math.trunc(this.editForm.controls['PolizaRespCivil'].value),
 
     };
 
@@ -2119,7 +2105,7 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
       this.showDetailDestino = false;
       // this.paisUbicacion == undefined || this.municipioUbicacion == undefined || this.estadoUbicacion == undefined
       this.editForm.controls['RFCRemitenteDestinatario'].setValue("XAXX010101000")
-      this.editForm.controls['RFCDestino'].setValue("URE180429TM6")
+      this.editForm.controls['RFCDestino'].setValue("XAXX010101000")
       
       this.BodegaCedisDestino = src.Nombre
       if (src) {
