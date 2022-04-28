@@ -23,6 +23,10 @@ public resourceUrl = environment.apiUrlCartaPorte + '/municipio';
     return this.http.get<ICatMunicipios[]>(`${this.resourceUrl}?descripcionEstado=${nombre}`, { observe: 'response' });
   }
 
+  findEstados(nombre: string): Observable<EntityArrayResponseType> {
+    return this.http.get<ICatMunicipios[]>(`${this.resourceUrl}?estado=${nombre}`, { observe: 'response' });
+  }
+
   query(req?: any, type?:any): Observable<EntityArrayResponseType> {
     //console.log('---> test: ' )
     const options = createRequestOption(req);

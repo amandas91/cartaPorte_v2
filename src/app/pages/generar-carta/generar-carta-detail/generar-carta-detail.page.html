@@ -408,7 +408,7 @@
                <p *ngIf="NombrePropietario"><b>Propietario: </b>{{NombrePropietario}}</p> 
             </div>
             <div fxLayout="column" fxLayout.gt-xs="row" fxLayoutGap="8px" fxLayoutGap.gt-xs="24px" fxLayoutAlign="end">
-                <mat-slide-toggle (change)="buscarBodega(2,$event)">Buscar por “Bodega/Cedis” </mat-slide-toggle>
+                <mat-slide-toggle (change)="buscarBodega(2,$event)" [checked]="toolgle">Buscar por “Bodega/Cedis” </mat-slide-toggle>
             </div>
 
             <div fxLayout="column" fxLayout.gt-xs="row" fxLayoutGap="8px" fxLayoutGap.gt-xs="24px" fxLayoutAlign="end" *ngIf="showDetailDestino">

@@ -54,7 +54,7 @@ export const navigation: FuseNavigation[] = [
                 children: [
                     {
                         id: "clients",
-                        title: "Users",
+                        title: "Usuarios",
                         translate: "NAV.APP.CLIENTS",
                         type: "item",
                         icon: "people",

@@ -349,6 +349,9 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
   //FECHA ORIGEN
   FechaSalidaOrigen: any;
 
+  //TOLLGLE
+  toolgle:boolean = false;
+
   constructor(
     private fb: FormBuilder,
     private catPaisesService: CatPaisesService,
@@ -1988,10 +1991,11 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
       }
     } else {
       if (value.checked) {
-
+        this.toolgle = true
         this.editForm.controls['ClaveBodega'].disable()
         this.editForm.controls['ClaveCliente'].disable()
       } else {
+        this.toolgle = false
         this.editForm.controls['ClaveBodega'].enable()
         this.editForm.controls['ClaveCliente'].enable()
       }
@@ -2065,51 +2069,132 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
       
       this.BodegaCedisDestino = src.Nombre
       if (src) {
-        this.editForm.controls['PaisUbicacion'].setValue(this.catPaises[0]),
-          this.paisUbicacion = this.catPaises[0].IdPais,
+          this.editForm.controls['PaisUbicacion'].setValue(this.catPaises[0]),
+          this.paisUbicacion = 'MEX',
           this.editForm.controls['CodigoPostalUbicacion'].setValue(src.CodigoPostal),
           this.catCPsService.findByCodigoPostal(src.CodigoPostal)
             .pipe(
               map((res: HttpResponse<any>) => {
                 return res.body ? res.body : [];
               })
-            )
-            .subscribe((resBodyCp: ICatCP[]) => (
-              this.searchBodega = resBodyCp[0],
-              //estado
-              this.catEstadosService.find('MEX')
-                .pipe(
-                  map((res: HttpResponse<ICatEstados[]>) => {
-                    return res.body ? res.body : [];
-                  })
-                )
-                .subscribe((resBody: ICatEstados[]) => (
-                  this.catEstados = resBody,
-                  this.searchArray = this.catEstados.findIndex(x => x.ClaveEstado === this.searchBodega.Estado),
-                  this.editForm.controls['EstadoUbicacion'].setValue(this.catEstados[this.searchArray]),
-                  this.estadoUbicacion = this.catEstados[this.searchArray].ClaveEstado,
-                  //MUNICIPIO
+            ).subscribe(
+              (res: ICatCP[]) => {
+                if(res.length > 0){
+                  this.searchBodega = res[0],
+                  console.log( this.searchBodega),
+                  this.catEstadosService.find(this.paisUbicacion)
+                  .pipe(
+                    map((resEstado: HttpResponse<ICatEstados[]>) => {
+                      return resEstado.body ? resEstado.body : [];
+                    })
+                  ).subscribe(
+                    (resEstado: ICatEstados[]) => {
+                      if(resEstado.length > 0){
+                        this.catEstados = resEstado,
+                        this.searchArray = this.catEstados.findIndex(x => x.ClaveEstado ===  this.searchBodega.Estado),
+                        this.editForm.controls['EstadoUbicacion'].setValue(this.catEstados[this.searchArray]),
+                        this.estadoUbicacion = this.catEstados[this.searchArray].ClaveEstado,
+                        //MUNICIPIO
+                        this.catMunicipiosService.findEstados(this.searchBodega.Estado)
+                        .pipe(
+                          map((resMunicipio: HttpResponse<ICatMunicipios[]>) => {
+                            return resMunicipio.body ? resMunicipio.body : [];
+                          })
+                        ).subscribe(
+                          (resMunicipio: ICatMunicipios[]) => {
+                            if(resMunicipio.length > 0){
+                              this.catMunicipios = resMunicipio,
+                              this.searchArray = this.catMunicipios.findIndex(x => x.Municipio === this.searchBodega.Municipio),
+                              this.editForm.controls['MunicipioUbicacion'].setValue(this.catMunicipios[this.searchArray]),
+                              this.municipioUbicacion = this.catMunicipios[this.searchArray].Municipio,
+                              this.toolgle = false
+                               /**
+                               * AGREGAR DESTINO
+                               */
+                              Swal.fire({
+                                icon: 'success',
+                                title: 'Agregado',
+                                showConfirmButton: false,
+                                timer: 1500
+                              })
+                            }else{
+                              
+                              Swal.fire({
+                                title: 'Sin información',
+                                text: 'No se encontraron Municipios',
+                                icon: 'warning',
+                                showCloseButton: true,
+                              });
+                            }
+            
+                            },
+                            (err) => this.onError(err)
+                        )
+                      }else{
+                        
+                        Swal.fire({
+                          title: 'Sin información',
+                          text: 'No se encontraron  Estados',
+                          icon: 'warning',
+                          showCloseButton: true,
+                        });
+                      }
+      
+                      },
+                      (err) => this.onError(err)
+                  )
+                 
+                }else{
+                  
+                  Swal.fire({
+                    title: 'Sin información',
+                    text: 'No se encontraron  CP',
+                    icon: 'warning',
+                    showCloseButton: true,
+                  });
+                }
 
-                  this.catMunicipiosService.find(this.catEstados[this.searchArray].Nombre)
-                    .pipe(
-                      map((res: HttpResponse<ICatMunicipios[]>) => {
-                        return res.body ? res.body : [];
-                      })
-                    )
-                    .subscribe((resBody: ICatMunicipios[]) => (
-                      this.catMunicipios = resBody,
+              },
+              (err) => this.onError(err)
+          )
+            // .subscribe((resBodyCp: ICatCP[]) => (
+            //   console.log("buseque cp...."),
+            //   console.log(resBodyCp.length),
+            //   this.searchBodega = resBodyCp[0],
+            //   //estado
+            //   this.catEstadosService.find(src.Estado)
+            //     .pipe(
+            //       map((res: HttpResponse<ICatEstados[]>) => {
+            //         return res.body ? res.body : [];
+            //       })
+            //     )
+            //     .subscribe((resBody: ICatEstados[]) => (
+            //       this.catEstados = resBody,
+            //       this.searchArray = this.catEstados.findIndex(x => x.ClaveEstado === this.searchBodega.Estado),
+            //       this.editForm.controls['EstadoUbicacion'].setValue(this.catEstados[this.searchArray]),
+            //       this.estadoUbicacion = this.catEstados[this.searchArray].ClaveEstado,
+            //       //MUNICIPIO
 
-                      this.searchArray = this.catMunicipios.findIndex(x => x.Municipio === this.searchBodega.Municipio),
-                      this.editForm.controls['MunicipioUbicacion'].setValue(this.catMunicipios[this.searchArray]),
-                      this.municipioUbicacion = this.catMunicipios[this.searchArray].Municipio,
-                      Swal.close()
+            //       this.catMunicipiosService.find(this.catEstados[this.searchArray].Nombre)
+            //         .pipe(
+            //           map((res: HttpResponse<ICatMunicipios[]>) => {
+            //             return res.body ? res.body : [];
+            //           })
+            //         )
+            //         .subscribe((resBody: ICatMunicipios[]) => (
+            //           this.catMunicipios = resBody,
 
-                    ))
+            //           this.searchArray = this.catMunicipios.findIndex(x => x.Municipio === this.searchBodega.Municipio),
+            //           this.editForm.controls['MunicipioUbicacion'].setValue(this.catMunicipios[this.searchArray]),
+            //           this.municipioUbicacion = this.catMunicipios[this.searchArray].Municipio,
+            //           Swal.close()
 
-                ))
+            //         ))
+
+            //     ))
 
 
-            ))
+            // ))
 
       }
     }

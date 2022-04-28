@@ -2,7 +2,7 @@ export const locale = {
     lang: 'en',
     data: {
         CLIENTS: {
-            TITLE: 'Users',
+            TITLE: 'Usuarios',
             TITLE_DETAIL: 'Detail of client',
             TITLE_RFC: 'RFC',
             NEW: "New client",
