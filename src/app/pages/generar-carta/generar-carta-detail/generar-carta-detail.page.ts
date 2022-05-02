@@ -993,6 +993,9 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
         this.editForm.controls['EstadoUbicacion'].setValue('');
         this.editForm.controls['MunicipioUbicacion'].setValue('');
         this.editForm.controls['CodigoPostalUbicacion'].setValue('');
+        console.log( this.ubicacionOrigen)
+        console.log( this.ubicacionDestino)
+
 
 
       
@@ -1195,8 +1198,7 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
                 this.estadoUbicacionTem = resBody.Estado,
                 this.NombreCliente = resBody.NombreCliente,
                 this.NombrePropietario = resBody.NombrePropietario,
-                this.editForm.controls['RFCDestino'].setValue(this.emisor_g.Rfc),
-                this.editForm.controls['RFCRemitenteDestinatario'].setValue("XAXX010101000"),
+                this.editForm.controls['RFCDestino'].setValue("XAXX010101000"),
                 this.editForm.controls['PaisUbicacion'].setValue(this.catPaises[0]),
                 this.paisUbicacion = this.catPaises[0].IdPais;
               this.editForm.controls['CodigoPostalUbicacion'].setValue(resBody.CodigoPostal),
