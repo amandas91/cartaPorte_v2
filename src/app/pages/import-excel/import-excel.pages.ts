@@ -44,11 +44,11 @@ export class ImportExcelPages implements OnInit {
 
     this.importService.upload(params).subscribe((resBody: any) => {
       if(resBody.estatus >= 1){
-        let html = '<ul>'
+        let html = '<div>'
             resBody.mensajes.forEach(value => {
-              html += '<li><p>' + value + '</p></li>'
+              html += '<p><b>* </b>' + value + '</p>'
             }) 
-            html += '</ul>'
+            html += '</div>'
             console.log(html)
             Swal.fire({
               title: 'No se pudo realizar la acción',
