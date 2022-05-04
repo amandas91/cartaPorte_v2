@@ -720,7 +720,7 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
           },
           BodegaCedis: value.BodegaCedis,
           ClaveBodega: value.ClaveBodega,
-          ClaveCliente: value.ClaveBodega
+          ClaveCliente: value.ClaveCliente
         };
 
         this.ubicacionOrigen.push(aux);
@@ -734,7 +734,7 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
         let auxDestino = {
           TipoUbicacion: value.TipoUbicacion,
           RFCRemitenteDestinatario: value.RFCRemitenteDestinatario,
-          //FechaHoraSalidaLlegada: value.FechaHoraSalidaLlegada,
+          FechaHoraSalidaLlegada:  this.datepipe.transform(Date.now(), 'yyyy-MM-ddTh:mm:ss'),
           DistanciaRecorrida: value.DistanciaRecorrida,
           Domicilio: {
             Calle: value.Domicilio.Calle,
@@ -746,7 +746,7 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
           },
           BodegaCedis: value.BodegaCedis,
           ClaveBodega: value.ClaveBodega,
-          ClaveCliente: value.ClaveBodega
+          ClaveCliente: value.ClaveCliente
         };
 
         this.ubicacionElementList = {
@@ -983,9 +983,6 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
         this.editForm.controls['CodigoPostalUbicacion'].setValue('')
         this.editForm.controls['ClaveBodega'].setValue('')
         this.editForm.controls['ClaveCliente'].setValue('')
-
-
-
       
     }
   }

@@ -62,7 +62,8 @@ export class ImportExcelPages implements OnInit {
         if(resBody.RespuestaTimbrado != null){
           if(resBody.RespuestaTimbrado.error == null){
             if(resBody.RespuestaCancelacion == null){
-              let html ='<div>' + 
+              let html ='<div>' +
+              '<p>Folio Timbrado <b>' + resBody.FolioTimbrado + '</b> </p>' + 
               '<p>Folio <b>' + resBody.folio + '</b> </p>' +
               '<p>Fecha <b>' + resBody.RespuestaTimbrado.fechaTimbre + '</b></p> ' +
               '<p>uuid <b>' + resBody.RespuestaTimbrado.uuid + '</b></p></div>'
