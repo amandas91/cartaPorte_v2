@@ -347,50 +347,50 @@
            
         <div class="mt-4" fxLayout="column" fxLayoutGap="8px" [formGroup]="editForm" >
             
-           
-            
             <div fxLayout="column" fxLayout.gt-xs="row" fxLayoutGap="8px" fxLayoutGap.gt-xs="24px" fxLayoutAlign="end">
                
-               
-                <mat-form-field fxFlex="30%" appearance="outline">
+                <mat-form-field fxFlex="33%" appearance="outline">
                     <mat-label >Fecha Salida</mat-label>
                     <input matInput [matDatepicker]="FechaSalida" formControlName="FechaSalida" >
                     <mat-datepicker-toggle matSuffix [for]="FechaSalida"></mat-datepicker-toggle>
                     <mat-datepicker touchUi #FechaSalida></mat-datepicker>
                 </mat-form-field>
 
-                <mat-form-field fxFlex="30%" appearance="outline">
+                <!-- <mat-form-field fxFlex="30%" appearance="outline">
                     <mat-label >Hora Salida</mat-label>
                     <input [ngxTimepicker]="HoraSalida" matInput formControlName="HoraSalida" placeholder="24hr format" aria-label="24hr format" [format]="24">
                      <ngx-material-timepicker #HoraSalida></ngx-material-timepicker>
-                </mat-form-field>
-
-                <mat-form-field fxFlex="30%" appearance="outline">
-                    <mat-label >RFC Remitente Destinatario</mat-label>
-                    <input style="color: black;" autocomplete="off" matInput formControlName="RFCRemitenteDestinatario" (selectionChange)="onSelectEvent($event.value, 'rfcremitente')" />
-                </mat-form-field>
-
+                </mat-form-field> -->
                 <mat-form-field fxFlex="30%" appearance="outline">
                     <mat-label>Tipo de horario</mat-label>
                     <mat-select name="tipoHorario" formControlName="TipoHorario">
-                        <mat-option *ngFor="let item of tipoHorario" [value]="item.Descripcion">
+                        <mat-option *ngFor="let item of CatTipoHorario" [value]="item.Descripcion">
                             {{item.Descripcion}}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
+
+
+                <mat-form-field fxFlex="33%" appearance="outline">
+                    <mat-label >RFC Remitente Destinatario</mat-label>
+                    <input style="color: black;" autocomplete="off" matInput formControlName="RFCRemitenteDestinatario" (selectionChange)="onSelectEvent($event.value, 'rfcremitente')" />
+                </mat-form-field>
+
+               
             </div>
             <div fxLayout="column" fxLayout.gt-xs="row" fxLayoutGap="8px" fxLayoutGap.gt-xs="24px" fxLayoutAlign="end">
-                <div fxFlex="20%">
+                <div fxFlex="15%">
                     <button mat-flat-button color="primary" (click)="buscarBodega(1,$event)">
                         <mat-icon>search</mat-icon>Buscar por “Bodega/Cedis” 
                     </button>
                 </div>
-                <div fxFlex="80%">
+                <div fxFlex="30%">
                     <mat-form-field fxFlex="100%" appearance="outline">
                         <mat-label >Bodega</mat-label>
                         <input style="color: black;" autocomplete="off" matInput formControlName="bodega" />
                     </mat-form-field>    
                 </div>
+                <div fxFlex="55%"></div>
             </div>
 
 
@@ -420,23 +420,28 @@
             <div fxLayout="column" fxLayout.gt-xs="row" fxLayoutGap="8px" fxLayoutGap.gt-xs="24px" fxLayoutAlign="end" [formGroup]="editForm">
             
 
-                <mat-form-field fxFlex="33%" appearance="outline">
+                <mat-form-field fxFlex="25%" appearance="outline">
                     <mat-label >Clave Bodega</mat-label>
                     <input  type="number" style="color: black;" autocomplete="off" matInput formControlName="ClaveBodega"  />
                 </mat-form-field>
 
-                <mat-form-field fxFlex="33%" appearance="outline" (change)="onSelectEvent($event.value, 'clavecliente')">
+                <mat-form-field fxFlex="25%" appearance="outline" (change)="onSelectEvent($event.value, 'clavecliente')">
                     <mat-label >Clave Cliente</mat-label>
                     <input  type="number" style="color: black;" autocomplete="off" matInput formControlName="ClaveCliente" />
                 </mat-form-field>
 
-                <mat-form-field fxFlex="33%" appearance="outline">
+                <mat-form-field fxFlex="25%" appearance="outline">
+                    <mat-label >Distancia (Km)</mat-label>
+                    <input  type="number" style="color: black;" autocomplete="off" matInput formControlName="DistanciaRecorrida"  />
+                </mat-form-field>
+
+                <mat-form-field fxFlex="25%" appearance="outline">
                 
                     <mat-label >RFC</mat-label>
                     <input style="color: black;" autocomplete="off" matInput formControlName="RFCDestino" onkeyup="this.value = this.value.toUpperCase();"  />
                 </mat-form-field>
             </div>
-            <div fxLayout="column" fxLayout.gt-xs="row" fxLayoutGap="8px" fxLayoutGap.gt-xs="24px" fxLayoutAlign="end" [formGroup]="editForm" >
+            <!-- <div fxLayout="column" fxLayout.gt-xs="row" fxLayoutGap="8px" fxLayoutGap.gt-xs="24px" fxLayoutAlign="end" [formGroup]="editForm" >
                 
 
                 <mat-form-field  fxFlex="40%" appearance="outline">
@@ -453,14 +458,10 @@
                 </mat-form-field>
 
 
-                <mat-form-field fxFlex="40%" appearance="outline">
-                    <mat-label >Distancia (Km)</mat-label>
-                    <input  type="number" style="color: black;" autocomplete="off" matInput formControlName="DistanciaRecorrida"  />
-                </mat-form-field>
-
+               
                 
     
-            </div>
+            </div> -->
             <div fxLayout="column" fxLayout.gt-xs="row" fxLayoutGap="8px" fxLayoutGap.gt-xs="24px" fxLayoutAlign="end" [formGroup]="editForm" >
                 <mat-form-field fxFlex="35%" appearance="outline">
                     <mat-label>País</mat-label>
@@ -522,20 +523,20 @@
                     </ng-container>
 
                     <!-- Name Column -->
-                    <ng-container matColumnDef="fecha">
+                    <!-- <ng-container matColumnDef="fecha">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Fecha">
                             Fecha
                         </th>
                         <td mat-cell *matCellDef="let element"> {{element.fecha}} </td>
-                    </ng-container>
+                    </ng-container> -->
 
                     <!-- Weight Column -->
-                    <ng-container matColumnDef="hora">
+                    <!-- <ng-container matColumnDef="hora">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Hora">
                             Hora
                         </th>
                         <td mat-cell *matCellDef="let element"> {{element.hora}} </td>
-                    </ng-container>
+                    </ng-container> -->
 
                     <!-- Symbol Column -->
                     <ng-container matColumnDef="direccion">

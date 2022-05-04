@@ -83,7 +83,7 @@ export interface CargaElementTable {
 
 export interface UbicacionElementTable {
   rfc: string;
-  fecha: string;
+  //fecha: string;
   direccion: string;
   cp: number;
   distancia: number;
@@ -123,6 +123,7 @@ export interface CataPorte {
   Version?: string;
   TranspInternac?: string;
   TotalDistRec?: number;
+  TipoHorario?: string;
   Ubicaciones?: any;
   Mercancias?: any;
   FiguraTransporte?: any;
@@ -207,7 +208,7 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
   catTipoRemolque: ICatTipoRemolque[];
   catTipoProducto: ICatTipoProducto[];
   tipoProducto: ICatTipoProducto[];
-  tipoHorario: ICatLista[];
+  CatTipoHorario: ICatLista[];
   eamFlota: IEamFlota[];
   cliente: ICliente[];
   statusFlota = false;
@@ -264,7 +265,7 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
   Embalaje: string;
 
   displayedColumns: string[] = ['Linea', 'ClaveProdServ', 'Descripcion', 'Cantidad', 'Unidad', 'PesoEnKg', 'PesoBruto', 'action'];
-  displayedColumns1: string[] = ['index', 'rfc', 'fecha', 'direccion', 'cp', 'distancia', 'action'];
+  displayedColumns1: string[] = ['index', 'rfc', 'direccion', 'cp', 'distancia', 'action'];
   //# Linea	Tipo de Producto	Descripción	Cantidad	Tipo unidad	Peso por Unidad (Kg)	Peso Bruto (Kg)	Accion
   dataSource = [];
   dataSourceUbication = [];
@@ -346,6 +347,9 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
   //BODEGA
   BodegaCedisOrigen:string;
   BodegaCedisDestino:string;
+  //CLAVE BODEGA Y CLIENTE
+  ClaveBodega:string;
+  ClaveCliente:string;
   //FECHA ORIGEN
   FechaSalidaOrigen: any;
 
@@ -434,7 +438,7 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
       Eco: [null, []],
       FechaSalidaLlegada: [null, []],
       FechaSalida: [null, []],
-      HoraSalida: [null, []],
+      //HoraSalida: [null, []],
       HoraSalidaLlegada: [null, []],
       HoraLlegada: [null, []],
       ClaveBodega: [null, []],
@@ -443,7 +447,6 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
     });
 
     this.editForm.controls['CodigoPostal'].valueChanges.subscribe(data => {
-      console.log(data);
       var regexp = new RegExp(/(^\d{5}$)|(^\d{5}-\d{4}$)/)
       var isValid = regexp.test(data);
       if (isValid) {
@@ -502,7 +505,6 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
       });
       Swal.showLoading();
       this.FechaActual = this.datepipe.transform(Date.now(), 'yyyy-MM-ddTh:mm:ss');
-      console.log('params: ', params);
       if (params.excel) {
         this.importItem()
       }
@@ -584,7 +586,7 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
           })
         )
         .subscribe((resBody: ICatLista[]) => (
-          this.tipoHorario = resBody
+          this.CatTipoHorario = resBody
 
         ));
 
@@ -605,8 +607,6 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
       this.serie = params.id;
       this.folio = params.id;
 
-      // console.log("AQUI");
-      // console.log(params.folio);
       if (params.folio) {
         this.isEdit = true;
         this.monitorService.findMotivo('T', params.folio)
@@ -643,8 +643,6 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
      */
 
     resBody.CartaPorte.Mercancias.Mercancia.forEach(value => {
-      console.log("EDICION")
-      console.log(value)
         this.tipoProductoTable = value.TipoProducto,
       
         this.cargaMercancia = {
@@ -704,9 +702,6 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
         this.origen = true
         this.editForm.controls['bodega'].setValue(value.BodegaCedis)
         this.editForm.controls['FechaSalida'].setValue(value.FechaHoraSalidaLlegada)
-        let tmpTime = this.editForm.controls['FechaSalida'].value;
-        let formattedDate = this.datepipe.transform(tmpTime, 'hh:mm')
-        this.editForm.controls['HoraSalida'].setValue(formattedDate)
         this.editForm.controls['RFCRemitenteDestinatario'].setValue(value.RFCRemitenteDestinatario)
         this.editForm.controls['TipoHorario'].setValue(value.Descripcion)
 
@@ -739,7 +734,7 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
         let auxDestino = {
           TipoUbicacion: value.TipoUbicacion,
           RFCRemitenteDestinatario: value.RFCRemitenteDestinatario,
-          FechaHoraSalidaLlegada: value.FechaHoraSalidaLlegada,
+          //FechaHoraSalidaLlegada: value.FechaHoraSalidaLlegada,
           DistanciaRecorrida: value.DistanciaRecorrida,
           Domicilio: {
             Calle: value.Domicilio.Calle,
@@ -756,7 +751,7 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
 
         this.ubicacionElementList = {
           rfc: value.RFCRemitenteDestinatario,
-          fecha: value.FechaHoraSalidaLlegada,
+          //fecha: value.FechaHoraSalidaLlegada,
           direccion: this.domicilio.Estado,
           cp:  value.Domicilio.CodigoPostal,
           distancia: value.DistanciaRecorrida,
@@ -771,9 +766,6 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
       this.totalDistancia += this.round(value.DistanciaRecorrida)
     })
 
-    console.log("Foreach de Ubicacion destino")
-    console.log(this.ubicacionDestino)
-    
 
 
 
@@ -895,7 +887,6 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
 
   deleteRowData(index, element) {
     const data = this.dataSource;
-    console.log(data);
     data.splice(index, 1);
 
     this.dataSource = data;
@@ -913,21 +904,18 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
 
   addDataUbicacion() {
     if (this.editForm.controls['CodigoPostalUbicacion'].value == null || this.editForm.controls['CodigoPostalUbicacion'].value.length <= 4 || this.editForm.controls['DistanciaRecorrida'].value == null
-      || Number(this.editForm.controls['DistanciaRecorrida'].value) <= 0 || this.editForm.controls['FechaSalidaLlegada'].value == null || this.editForm.controls['HoraLlegada'].value == null
-      || this.editForm.controls['RFCDestino'].value == null || this.paisUbicacion == undefined || this.municipioUbicacion == undefined || this.estadoUbicacion == undefined) {
+      || Number(this.editForm.controls['DistanciaRecorrida'].value) <= 0 || this.editForm.controls['RFCDestino'].value == null || this.paisUbicacion == undefined || this.municipioUbicacion == undefined || this.estadoUbicacion == undefined) {
 
-      //console.log("length: ", this.editForm.controls['CodigoPostalUbicacion'].value.length)
 
       this.validacionUbicacion = "* Error al agregar ubicacion, por favor valide los campos"
 
     } else {
       this.validacionUbicacion = ""
+      let tmpDate = this.editForm.controls['FechaSalida'].value;
+      let formattedDate = this.datepipe.transform(tmpDate, 'yyyy-MM-ddTh:mm:ss');
 
       if (this.origen == false) {
 
-        let tmpDate = this.editForm.controls['FechaSalida'].value;
-        let tmpTime = this.editForm.controls['HoraSalida'].value;
-        let formattedDate = this.datepipe.transform(tmpDate, 'YYYY-MM-dd') + 'T' + tmpTime + ':00';
 
         let aux = {
           TipoUbicacion: "Origen",
@@ -944,8 +932,8 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
             CodigoPostal: this.LugarExpedicion,
           },
           BodegaCedis: this.BodegaCedisOrigen,
-          ClaveBodega: this.editForm.controls['ClaveBodega'].value,
-          ClaveCliente: this.editForm.controls['ClaveCliente'].value
+          ClaveBodega:this.ClaveBodega,
+          ClaveCliente:this.ClaveCliente,
         };
 
         this.ubicacionOrigen.push(aux);
@@ -957,9 +945,9 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
         this.domicilio.Estado = this.estadoUbicacion;
         this.domicilio.CodigoPostal = this.editForm.controls['CodigoPostalUbicacion'].value;
       
-        let tmpDate = this.editForm.controls['FechaSalidaLlegada'].value;
-        let tmpTime = this.editForm.controls['HoraLlegada'].value;
-        let formattedDate = this.datepipe.transform(tmpDate, 'YYYY-MM-dd') + 'T' + tmpTime + ':00';
+        // let tmpDate = this.editForm.controls['FechaSalidaLlegada'].value;
+        // let tmpTime = this.editForm.controls['HoraLlegada'].value;
+        // let formattedDate = this.datepipe.transform(tmpDate, 'YYYY-MM-dd') + 'T' + tmpTime + ':00';
   
         let aux = {
           TipoUbicacion: "Destino",
@@ -975,7 +963,7 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
 
         this.ubicacionElementList = {
           rfc: this.editForm.controls['RFCDestino'].value,
-          fecha: formattedDate,
+          //fecha: '',
           direccion: this.domicilio.Estado,
           cp: this.editForm.controls['CodigoPostalUbicacion'].value,
           distancia: this.round(this.editForm.controls['DistanciaRecorrida'].value),
@@ -988,13 +976,13 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
         this.dataSource1.data.push(this.ubicacionElementList);
         this.dataSource1.sort = this.sort;
 
-        this.editForm.controls['DistanciaRecorrida'].setValue('');
-        this.editForm.controls['PaisUbicacion'].setValue('');
-        this.editForm.controls['EstadoUbicacion'].setValue('');
-        this.editForm.controls['MunicipioUbicacion'].setValue('');
-        this.editForm.controls['CodigoPostalUbicacion'].setValue('');
-        console.log( this.ubicacionOrigen)
-        console.log( this.ubicacionDestino)
+        this.editForm.controls['DistanciaRecorrida'].setValue('')
+        this.editForm.controls['PaisUbicacion'].setValue('')
+        this.editForm.controls['EstadoUbicacion'].setValue('')
+        this.editForm.controls['MunicipioUbicacion'].setValue('')
+        this.editForm.controls['CodigoPostalUbicacion'].setValue('')
+        this.editForm.controls['ClaveBodega'].setValue('')
+        this.editForm.controls['ClaveCliente'].setValue('')
 
 
 
@@ -1015,7 +1003,6 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
     this.table.renderRows();
     this.totalDistancia = 0;
     this.dataSource1.data.forEach(element => {
-      console.log(element)
       this.totalDistancia += this.round(Number(element.distancia))
     })
 
@@ -1194,47 +1181,136 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
           )
           .subscribe((resBody: any) => {
             if (resBody.Estatus == 1) {
-              this.municipioTempUbicacion = resBody.Municipio,
-                this.estadoUbicacionTem = resBody.Estado,
-                this.NombreCliente = resBody.NombreCliente,
-                this.NombrePropietario = resBody.NombrePropietario,
-                this.editForm.controls['RFCDestino'].setValue("XAXX010101000"),
-                this.editForm.controls['PaisUbicacion'].setValue(this.catPaises[0]),
-                this.paisUbicacion = this.catPaises[0].IdPais;
-              this.editForm.controls['CodigoPostalUbicacion'].setValue(resBody.CodigoPostal),
-                //estado
-                this.catEstadosService.find("MEX")
+                console.log("Busqueda por clave bodega y clave cliente")
+                console.log(resBody)
+                this.municipioTempUbicacion = resBody.Municipio
+                this.estadoUbicacionTem = resBody.Estado
+                this.NombreCliente = resBody.NombreCliente
+                this.NombrePropietario = resBody.NombrePropietario
+                this.editForm.controls['RFCDestino'].setValue("XAXX010101000")
+                this.editForm.controls['PaisUbicacion'].setValue(this.catPaises[0])
+                this.paisUbicacion = this.catPaises[0].IdPais
+                this.editForm.controls['CodigoPostalUbicacion'].setValue(resBody.CodigoPostal)
+                // //estado
+                // this.catEstadosService.find("MEX")
+                //   .pipe(
+                //     map((res: HttpResponse<ICatEstados[]>) => {
+                //       return res.body ? res.body : [];
+                //     })
+                //   )
+                //   .subscribe((resBody: ICatEstados[]) => {
+
+                //     this.catEstados = resBody
+                //     if (this.estadoUbicacionTem != undefined) {
+
+                //       this.searchArray = this.catEstados.findIndex(x => x.Nombre === this.estadoUbicacionTem)
+
+                //       this.estadoUbicacion = this.catEstados[this.searchArray].ClaveEstado != undefined ? this.catEstados[this.searchArray].ClaveEstado : ""
+                //     }
+                //     this.editForm.controls['EstadoUbicacion'].setValue(this.catEstados[this.searchArray])
+                //     //MUNICIPIO
+                //     this.catMunicipiosService.find(this.estadoUbicacionTem)
+                //       .pipe(
+                //         map((res: HttpResponse<ICatMunicipios[]>) => {
+                //           return res.body ? res.body : [];
+                //         })
+                //       )
+                //       .subscribe((resBody: ICatMunicipios[]) => (
+                //         this.catMunicipios = resBody,
+                //         this.municipioUbicacion = this.municipioTempUbicacion,
+                //         this.searchArray = this.catMunicipios.findIndex(x => x.Municipio === this.municipioTempUbicacion),
+                //         this.editForm.controls['MunicipioUbicacion'].setValue(this.catMunicipios[this.searchArray]),
+                //         Swal.close()
+                //       ))
+
+                //   });
+
+                this.catCPsService.findByCodigoPostal(resBody.CodigoPostal)
                   .pipe(
-                    map((res: HttpResponse<ICatEstados[]>) => {
+                    map((res: HttpResponse<any>) => {
                       return res.body ? res.body : [];
                     })
-                  )
-                  .subscribe((resBody: ICatEstados[]) => {
+                  ).subscribe(
+                    (res: ICatCP[]) => {
+                      if(res.length > 0){
+                        this.searchBodega = res[0],
+                        this.catEstadosService.find(this.paisUbicacion)
+                        .pipe(
+                          map((resEstado: HttpResponse<ICatEstados[]>) => {
+                            return resEstado.body ? resEstado.body : [];
+                          })
+                        ).subscribe(
+                          (resEstado: ICatEstados[]) => {
+                            if(resEstado.length > 0){
+                              this.catEstados = resEstado,
+                              this.searchArray = this.catEstados.findIndex(x => x.ClaveEstado ===  this.searchBodega.Estado),
+                              this.editForm.controls['EstadoUbicacion'].setValue(this.catEstados[this.searchArray]),
+                              this.estadoUbicacion = this.catEstados[this.searchArray].ClaveEstado,
+                              //MUNICIPIO
+                              this.catMunicipiosService.findEstados(this.searchBodega.Estado)
+                              .pipe(
+                                map((resMunicipio: HttpResponse<ICatMunicipios[]>) => {
+                                  return resMunicipio.body ? resMunicipio.body : [];
+                                })
+                              ).subscribe(
+                                (resMunicipio: ICatMunicipios[]) => {
+                                  if(resMunicipio.length > 0){
+                                    this.catMunicipios = resMunicipio,
+                                    this.searchArray = this.catMunicipios.findIndex(x => x.Municipio === this.searchBodega.Municipio),
+                                    this.editForm.controls['MunicipioUbicacion'].setValue(this.catMunicipios[this.searchArray]),
+                                    this.municipioUbicacion = this.catMunicipios[this.searchArray].Municipio,
+                                    this.ClaveBodega =  this.editForm.controls['ClaveBodega'].value
+                                    this.ClaveCliente = this.editForm.controls['ClaveCliente'].value
+                                    
+                                    /**
+                                     * AGREGAR DESTINO
+                                     */
+                                    Swal.fire({
+                                      icon: 'success',
+                                      title: 'Agregado',
+                                      showConfirmButton: false,
+                                      timer: 1500
+                                    })
+                                  }else{
+                                    
+                                    Swal.fire({
+                                      title: 'Sin información',
+                                      text: 'No se encontraron Municipios',
+                                      icon: 'warning',
+                                      showCloseButton: true,
+                                    });
+                                  }
+                  
+                                  },
+                                  (err) => this.onError(err)
+                              )
+                            }else{
+                              
+                              Swal.fire({
+                                title: 'Sin información',
+                                text: 'No se encontraron  Estados',
+                                icon: 'warning',
+                                showCloseButton: true,
+                              });
+                            }
+            
+                            },
+                            (err) => this.onError(err)
+                        )
+                      
+                      }else{
+                        
+                        Swal.fire({
+                          title: 'Sin información',
+                          text: 'No se encontraron  CP',
+                          icon: 'warning',
+                          showCloseButton: true,
+                        });
+                      }
 
-                    this.catEstados = resBody
-                    if (this.estadoUbicacionTem != undefined) {
-
-                      this.searchArray = this.catEstados.findIndex(x => x.Nombre === this.estadoUbicacionTem)
-
-                      this.estadoUbicacion = this.catEstados[this.searchArray].ClaveEstado != undefined ? this.catEstados[this.searchArray].ClaveEstado : ""
-                    }
-                    this.editForm.controls['EstadoUbicacion'].setValue(this.catEstados[this.searchArray])
-                    //MUNICIPIO
-                    this.catMunicipiosService.find(this.estadoUbicacionTem)
-                      .pipe(
-                        map((res: HttpResponse<ICatMunicipios[]>) => {
-                          return res.body ? res.body : [];
-                        })
-                      )
-                      .subscribe((resBody: ICatMunicipios[]) => (
-                        this.catMunicipios = resBody,
-                        this.municipioUbicacion = this.municipioTempUbicacion,
-                        this.searchArray = this.catMunicipios.findIndex(x => x.Municipio === this.municipioTempUbicacion),
-                        this.editForm.controls['MunicipioUbicacion'].setValue(this.catMunicipios[this.searchArray]),
-                        Swal.close()
-                      ))
-
-                  });
+                    },
+                    (err) => this.onError(err)
+                )
 
 
 
@@ -1254,7 +1330,6 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
 
         break
       case "catTipoProducto":
-        console.log(value);
         Swal.fire({
           allowOutsideClick: false,
           text: 'Cargando...',
@@ -1277,15 +1352,11 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
           ));
         break;
       case "descripcion":
-        // console.log("DESCRIPCION");
-        // console.log(value);
         this.ClaveProdServ = value.ClaveProducto;
         this.descripcion = value.Descripcion;
         //this.ClaveUnidad = value.ClaveProducto;
 
         if (value.MaterialPeligroso == "Sí") {
-          console.log("Material Peligroso");
-          console.log(value.MaterialPeligroso);
           this.materialPeligrosoService
             .query({ size: MaxItems }, (this.hasRol([Authority.DMC]) === true ? 2 : 1))
             .pipe(
@@ -1294,8 +1365,6 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
               })
             )
             .subscribe((resBody: IMaterialPeligroso[]) => (
-              console.log("Datos de Material Peligroso"),
-              console.log(resBody),
               this.materialPeligroso = resBody,
               this.MaterialPeligroso = "Sí",
               this.CveMaterialPeligroso = this.materialPeligroso[0].CveMaterialPeligroso,
@@ -1308,13 +1377,10 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
         }
         break;
       case "unidad":
-        console.log("UNIDAD");
         this.ClaveUnidad = value.ClaveUnidad;
         this.Unidad = value.Nombre;
         break;
       case "numpermisosct":
-        console.log("PERMISO SCT");
-        console.log(value);
         //this.PermSCT = value;
         this.PermSCT = value.Clave;//this.editForm.controls['PermSCT'].value;
         break;
@@ -1560,7 +1626,8 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
      */
     let ubicacionesTemp: Array<any> = [];
 
-    const ubicacionesTotal = this.ubicacionDestino.concat(this.ubicacionOrigen[0]);
+    const ubicacionesTotal = this.ubicacionOrigen.concat(this.ubicacionDestino);
+    //const ubicacionesTotal = this.ubicacionDestino.concat(this.ubicacionOrigen[0]);
 
     ubicacionesTemp.push(ubicacionesTotal);
 
@@ -1581,6 +1648,7 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
       Version: "2.0",
       TranspInternac: "No",
       TotalDistRec: this.totalDistancia,
+      TipoHorario: this.editForm.controls['TipoHorario'].value,
       Ubicaciones: aux,
       Mercancias: auxMerc,
       FiguraTransporte: auxFigura,
@@ -1591,18 +1659,17 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
 
     this.generarCarta.CartaPorte = this.CartaPorte;
     let tmpDateFechaSalida = this.editForm.controls['FechaSalida'].value;
-    let tmpTimeSalida = this.editForm.controls['HoraSalida'].value;
-    let tmpDateFechaLlegada = this.editForm.controls['FechaSalidaLlegada'].value;
+    //let tmpDateFechaLlegada = this.editForm.controls['FechaSalidaLlegada'].value;
     let tmpTime = this.editForm.controls['HoraLlegada'].value;
 
 
-    let formattedDateFechaSalida = this.datepipe.transform(tmpDateFechaSalida, 'YYYY-MM-dd') + 'T' + tmpTimeSalida + ':00';
-    let formattedDateFechaLlegada = this.datepipe.transform(tmpDateFechaLlegada, 'YYYY-MM-dd') + 'T' + tmpTime + ':00';
+    let formattedDateFechaSalida = this.datepipe.transform(tmpDateFechaSalida, 'yyyy-MM-ddTh:mm:ss');
+    //let formattedDateFechaLlegada = this.datepipe.transform(tmpDateFechaLlegada, 'YYYY-MM-dd') + 'T' + tmpTime + ':00';
     //console.log(this.editForm.controls['HoraLlegada'].value);
     let generarCataAux = {
       UsuarioCreador: this.localStorage.retrieve('UserId'),
       FechaSalidaOrigen: formattedDateFechaSalida,
-      FechaLlegadaDestino: formattedDateFechaLlegada,
+      FechaLlegadaDestino: null,//formattedDateFechaLlegada,
       CartaPorte: this.generarCarta
     };
 
@@ -1740,8 +1807,6 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
     * ubicaciones 
     */
     let ubicacionesTemp: Array<any> = [];
-    console.log("UBICACIONES")
-    console.log(this.ubicacionOrigen)
     const ubicacionesTotal = this.ubicacionDestino.concat(this.ubicacionOrigen);
     ubicacionesTemp.push(ubicacionesTotal);
 
@@ -1768,11 +1833,9 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
 
 
     let aux = { Ubicacion: ubicacionesTemp[0] };
-    console.log("Pintar fecha ultima")
     let FechaSalidaOrigen = aux.Ubicacion[0].FechaHoraSalidaLlegada
-    console.log(FechaSalidaOrigen)
     let FechaLlegadaDestino = aux.Ubicacion[aux.Ubicacion.length - 1].FechaHoraSalidaLlegada
-    console.log(FechaSalidaOrigen)
+    
 
     let auxFigura = { TiposFigura: [this.TiposFigura] };
     let auxMerc = {
@@ -1838,8 +1901,6 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
   }
 
   protected onSaveSuccess(res): void {
-    console.log("Respuesta");
-    console.log(res.body);
     if (res.body.RespuestaTimbrado != null) {
       if (res.body.Serie == "" && res.body.Folio == "") {
         this.isSaving = false;
@@ -1959,9 +2020,6 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
   }
 
   importItem(): void {
-    console.log("AQUI ENTRA");
-    // console.log(value);
-    // value.trip_id = this.trip_id;
     const params = {
 
       title: "CLIENTS.NEW"
@@ -1977,7 +2035,6 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
   }
 
   changedBodega(value: any) {
-    console.log("entro", value)
 
   }
 
@@ -2083,7 +2140,6 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
               (res: ICatCP[]) => {
                 if(res.length > 0){
                   this.searchBodega = res[0],
-                  console.log( this.searchBodega),
                   this.catEstadosService.find(this.paisUbicacion)
                   .pipe(
                     map((resEstado: HttpResponse<ICatEstados[]>) => {
@@ -2159,44 +2215,6 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
               },
               (err) => this.onError(err)
           )
-            // .subscribe((resBodyCp: ICatCP[]) => (
-            //   console.log("buseque cp...."),
-            //   console.log(resBodyCp.length),
-            //   this.searchBodega = resBodyCp[0],
-            //   //estado
-            //   this.catEstadosService.find(src.Estado)
-            //     .pipe(
-            //       map((res: HttpResponse<ICatEstados[]>) => {
-            //         return res.body ? res.body : [];
-            //       })
-            //     )
-            //     .subscribe((resBody: ICatEstados[]) => (
-            //       this.catEstados = resBody,
-            //       this.searchArray = this.catEstados.findIndex(x => x.ClaveEstado === this.searchBodega.Estado),
-            //       this.editForm.controls['EstadoUbicacion'].setValue(this.catEstados[this.searchArray]),
-            //       this.estadoUbicacion = this.catEstados[this.searchArray].ClaveEstado,
-            //       //MUNICIPIO
-
-            //       this.catMunicipiosService.find(this.catEstados[this.searchArray].Nombre)
-            //         .pipe(
-            //           map((res: HttpResponse<ICatMunicipios[]>) => {
-            //             return res.body ? res.body : [];
-            //           })
-            //         )
-            //         .subscribe((resBody: ICatMunicipios[]) => (
-            //           this.catMunicipios = resBody,
-
-            //           this.searchArray = this.catMunicipios.findIndex(x => x.Municipio === this.searchBodega.Municipio),
-            //           this.editForm.controls['MunicipioUbicacion'].setValue(this.catMunicipios[this.searchArray]),
-            //           this.municipioUbicacion = this.catMunicipios[this.searchArray].Municipio,
-            //           Swal.close()
-
-            //         ))
-
-            //     ))
-
-
-            // ))
 
       }
     }
