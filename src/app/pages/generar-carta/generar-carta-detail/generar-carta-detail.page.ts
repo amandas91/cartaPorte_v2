@@ -766,7 +766,8 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
       this.totalDistancia += this.round(value.DistanciaRecorrida)
     })
 
-
+    this.editForm.controls['TipoHorario'].setValue(resBody.CartaPorte.TipoHorario),
+    
 
 
     //this.dataSource1.data = resBody.CartaPorte.Ubicaciones.Ubicacion;

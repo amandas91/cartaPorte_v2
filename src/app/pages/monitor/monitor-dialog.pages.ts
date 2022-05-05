@@ -183,11 +183,22 @@ export class MonitorDialogPages implements OnInit {
       let message:string;
       message=res.body.Error;
       if(res.body.Estatus != null){
-        Swal.fire({
-          icon: 'success',
-          html: '<p> <b>' + message + '</b> </p>',
-          showCloseButton: true,
-        });
+        if(message == null){
+          Swal.fire({
+            icon: 'success',
+            html: '<p><b>Fecha de Cancelación:</b>'+ res.body.FechaCancelacion + '</p>'+
+            '<p><b>Estatus:</b>'+ res.body.Estatus + '</p>',
+            showCloseButton: true,
+          });
+        }else{
+          Swal.fire({
+            icon: 'success',
+            html: '<p><b>Fecha de Cancelación:</b>'+ res.body.FechaCancelacion + '</p>'+
+             '<p> <b>' + message + '</b> </p>',
+            showCloseButton: true,
+          });
+        }
+        
       }else{
         Swal.fire({
           icon: 'warning',
