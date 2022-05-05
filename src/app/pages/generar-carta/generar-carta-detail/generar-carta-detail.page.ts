@@ -1531,9 +1531,9 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
         ValorUnitario: 0,
         Importe: 0,
         TipoProducto: value.TipoProducto,
-        PesoBrut: this.PesoBrutoTotal,
+        PesoBrut: 0,
         PesoUnidad: 0,
-        PesoBrutoTotal: this.PesoBrutoTotal,
+        PesoBrutoTotal:0,
         NumTotalMercancias: 0
       };
       conceptosTemp.push(auxConcepto);
