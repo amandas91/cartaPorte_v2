@@ -393,7 +393,7 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
   createForm() {
     this.editForm = this.fb.group({
       Nombre: [null, [Validators.required]],
-      bodega: [null, [Validators.required]],
+      bodega: [null, []],
       Rfc: [null, [Validators.required]],
       RegimenFiscal: [null, [Validators.required]],
       Pais: [null, []],
@@ -652,7 +652,7 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
           Unidad: value.Unidad,
           Descripcion: value.Descripcion,
           ClaveUnidad: value.ClaveUnidad,
-          PesoEnKg: Number(value.PesoEnKg),
+          PesoEnKg: this.round(Number(value.PesoEnKg)),
           MaterialPeligroso: value.MaterialPeligroso,
           CveMaterialPeligroso: value.MaterialPeligroso,
           Embalaje: value.Embalaje,
@@ -670,12 +670,12 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
         ValorUnitario: 0,
         Importe: 0,
         carga: this.cargaMercancia,
-        PesoEnKg: Number(value.PesoEnKg),
-        PesoBruto: Number(value.PesoEnKg) * Number(value.Cantidad)
+        PesoEnKg: this.round(Number(value.PesoEnKg)),
+        PesoBruto: this.round(Number(value.PesoEnKg) * Number(value.Cantidad))
       };
 
       
-      this.PesoBrutoTotal += Number(value.PesoEnKg) * Number(value.Cantidad)
+      this.PesoBrutoTotal += this.round(Number(value.PesoEnKg) * Number(value.Cantidad))
       this.NumTotalMercancias += Number(value.Cantidad);
       //this.dataSource = resBody.Conceptos;
       //this.dataSource = resBody.CartaPorte.Mercancias
@@ -850,8 +850,8 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
 
       var pesoBrutoPoducto = 0;
 
-      pesoBrutoPoducto += Number(this.editForm.controls['PesoEnKg'].value) * Number(this.editForm.controls['Cantidad'].value);
-      this.PesoBrutoTotal += Number(pesoBrutoPoducto);
+      pesoBrutoPoducto += this.round(Number(this.editForm.controls['PesoEnKg'].value) * Number(this.editForm.controls['Cantidad'].value));
+      this.PesoBrutoTotal += this.round(Number(pesoBrutoPoducto));
       this.cargaMercancia = {
         BienesTransp: "" + this.ClaveProdServ,
         Cantidad: parseInt(this.editForm.controls['Cantidad'].value),
@@ -896,7 +896,7 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
     this.PesoBrutoTotal = 0;
     this.dataSource.forEach(element => {
       this.NumTotalMercancias += Number(element.Cantidad)
-      this.PesoBrutoTotal += Number(element.PesoBruto)
+      this.PesoBrutoTotal += this.round(Number(element.PesoBruto))
     })
 
   }
@@ -1530,9 +1530,9 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
         ValorUnitario: 0,
         Importe: 0,
         TipoProducto: value.TipoProducto,
-        PesoBrut: 0,
+        PesoBrut: this.PesoBrutoTotal,
         PesoUnidad: 0,
-        PesoBrutoTotal: 0,
+        PesoBrutoTotal: this.PesoBrutoTotal,
         NumTotalMercancias: 0
       };
       conceptosTemp.push(auxConcepto);
@@ -1598,7 +1598,7 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
      * Mercancias
      */
     let mercanciaTemp: Array<any> = [];
-    let pesoBrutoTemp = 0;
+    let pesoBrutoTemp = this.PesoBrutoTotal;
     this.dataSource.forEach(function (value) {
 
       let cargaMercanciaTemp = {
@@ -1634,7 +1634,7 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
 
 
     let auxMerc = {
-      PesoBrutoTotal: pesoBrutoTemp,
+      PesoBrutoTotal: this.round(pesoBrutoTemp),
       UnidadPeso: "KGM",
       NumTotalMercancias: this.NumTotalMercancias,
       Mercancia: mercanciaTemp,
@@ -1824,7 +1824,7 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
         Embalaje: this.Embalaje,
 
       };
-      pesoBrutoTemp += Number(value.PesoEnKg);
+      pesoBrutoTemp += this.round(Number(value.PesoEnKg));
       mercanciaTemp.push(cargaMercanciaTemp);
     });
 
@@ -1836,7 +1836,7 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
 
     let auxFigura = { TiposFigura: [this.TiposFigura] };
     let auxMerc = {
-      PesoBrutoTotal: pesoBrutoTemp,
+      PesoBrutoTotal: this.round(pesoBrutoTemp),
       UnidadPeso: "KGM",
       NumTotalMercancias: mercanciaTemp.length,
       Mercancia: mercanciaTemp,

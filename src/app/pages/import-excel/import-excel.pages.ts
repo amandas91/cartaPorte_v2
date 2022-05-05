@@ -49,7 +49,6 @@ export class ImportExcelPages implements OnInit {
               html += '<p><b>* </b>' + value + '</p>'
             }) 
             html += '</div>'
-            console.log(html)
             Swal.fire({
               title: 'No se pudo realizar la acción',
               text: '',
@@ -63,7 +62,7 @@ export class ImportExcelPages implements OnInit {
           if(resBody.RespuestaTimbrado.error == null){
             if(resBody.RespuestaCancelacion == null){
               let html ='<div>' +
-              '<p>Folio Timbrado <b>' + resBody.FolioTimbrado + '</b> </p>' + 
+              '<p>Folio Timbrado <b>' + resBody.folioTimbrado + '</b> </p>' + 
               '<p>Folio <b>' + resBody.folio + '</b> </p>' +
               '<p>Fecha <b>' + resBody.RespuestaTimbrado.fechaTimbre + '</b></p> ' +
               '<p>uuid <b>' + resBody.RespuestaTimbrado.uuid + '</b></p></div>'
@@ -79,25 +78,53 @@ export class ImportExcelPages implements OnInit {
                 html:html,
                 showCloseButton: true,
                 })
+                this.editForm.controls['fileInput'].setValue("")
             }else{
-              let html ='<div>' + 
-              '<p>Folio <b>' + resBody.folio + '</b> </p>' +
-              '<p>Fecha <b>' + resBody.RespuestaTimbrado.fechaTimbre + '</b></p> ' +
-              '<p>uuid <b>' + resBody.RespuestaTimbrado.uuid + '</b></p>'+
-              '<p>Fecha de Cancelación <b>' + resBody.RespuestaCancelacion.FechaCancelacion + '</b></p>'+
-              '<p>Error <b>' +  resBody.RespuestaCancelacion.Error + '</b></p></div>'
+              if(resBody.RespuestaCancelacion.Error != null){
+                let html ='<div>' + 
+                '<p>Folio <b>' + resBody.folio + '</b> </p>' +
+                '<p>Fecha <b>' + resBody.RespuestaTimbrado.fechaTimbre + '</b></p> ' +
+                '<p>uuid <b>' + resBody.RespuestaTimbrado.uuid + '</b></p>'+
+                '<p>Fecha de Cancelación <b>' + resBody.RespuestaCancelacion.FechaCancelacion + '</b></p>'+
+                '<p>Error <b>' +  resBody.RespuestaCancelacion.Error + '</b></p></div>'
 
-              Swal.close()
-              Swal.fire({
-                icon: 'success',
-                title: 'Guardado',
-                text: '',
-                showCancelButton: false,
-                confirmButtonColor: '#3085d6',
-                confirmButtonText: 'Ok',
-                html:html,
-                showCloseButton: true,
-                })
+                Swal.close()
+                Swal.fire({
+                  icon: 'success',
+                  title: 'Guardado',
+                  text: '',
+                  showCancelButton: false,
+                  confirmButtonColor: '#3085d6',
+                  confirmButtonText: 'Ok',
+                  html:html,
+                  showCloseButton: true,
+                  })
+                  this.editForm.controls['fileInput'].setValue("")
+
+              }else{
+                let html ='<div>' + 
+                '<p>Folio <b>' + resBody.folio + '</b> </p>' +
+                '<p>Fecha <b>' + resBody.RespuestaTimbrado.fechaTimbre + '</b></p> ' +
+                '<p>uuid <b>' + resBody.RespuestaTimbrado.uuid + '</b></p>'+
+                '<p>Fecha de Cancelación <b>' + resBody.RespuestaCancelacion.FechaCancelacion + '</b></p>'
+
+
+                Swal.close()
+                Swal.fire({
+                  icon: 'success',
+                  title: 'Guardado',
+                  text: '',
+                  showCancelButton: false,
+                  confirmButtonColor: '#3085d6',
+                  confirmButtonText: 'Ok',
+                  html:html,
+                  showCloseButton: true,
+                  })
+                  this.editForm.controls['fileInput'].setValue("")
+              }
+              
+
+             
             }
            
 
