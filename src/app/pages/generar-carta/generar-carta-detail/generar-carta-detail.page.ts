@@ -652,7 +652,7 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
           Unidad: value.Unidad,
           Descripcion: value.Descripcion,
           ClaveUnidad: value.ClaveUnidad,
-          PesoEnKg: this.round(Number(value.PesoEnKg)),
+          PesoEnKg: Number(value.PesoEnKg),
           MaterialPeligroso: value.MaterialPeligroso,
           CveMaterialPeligroso: value.MaterialPeligroso,
           Embalaje: value.Embalaje,
@@ -670,7 +670,7 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
         ValorUnitario: 0,
         Importe: 0,
         carga: this.cargaMercancia,
-        PesoEnKg: this.round(Number(value.PesoEnKg)),
+        PesoEnKg: value.PesoEnKg,
         PesoBruto: this.round(Number(value.PesoEnKg) * Number(value.Cantidad))
       };
 
@@ -860,7 +860,7 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
         TipoProducto: this.tipoProductoTable,
         Descripcion: this.descripcion,
         ClaveUnidad: this.ClaveUnidad,
-        PesoEnKg: parseInt(this.editForm.controls['PesoEnKg'].value),
+        PesoEnKg: this.editForm.controls['PesoEnKg'].value,
         MaterialPeligroso: this.MaterialPeligroso,
         CveMaterialPeligroso: this.CveMaterialPeligroso,
         Embalaje: this.Embalaje,
@@ -876,7 +876,7 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
         ValorUnitario: 0,
         Importe: 0,
         carga: this.cargaMercancia,
-        PesoEnKg: parseInt(this.editForm.controls['PesoEnKg'].value),
+        PesoEnKg: this.editForm.controls['PesoEnKg'].value,
         PesoBruto: pesoBrutoPoducto
       };
 
@@ -1814,7 +1814,7 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
         Embalaje: this.Embalaje,
 
       };
-      pesoBrutoTemp += this.round(Number(value.PesoEnKg));
+      pesoBrutoTemp += Number(value.PesoEnKg);
       mercanciaTemp.push(cargaMercanciaTemp);
     });
 
