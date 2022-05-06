@@ -1463,8 +1463,7 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
   }
 
   saveData(timbrado: boolean) {
-    console.log(this.dataSource.length)
-    console.log(this.dataSource1.data.length)
+
     if(this.dataSource.length <= 0 || this.dataSource1.data.length <= 0){
       Swal.fire({
         title: 'Conflicto',
@@ -1954,7 +1953,7 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
               html: '<p>Folio <b>' + res.body.Folio + '</b> </p>' +
                 '<p>Fecha <b>' + res.body.RespuestaTimbrado.fechaTimbre + '</b></p> ' +
                 '<p>uuid <b>' + res.body.RespuestaTimbrado.uuid + '</b></p>' +
-                '<p>Mensage' + res.body.RespuestaTimbrado.error + '</p>',
+                '<p>Mensaje <b>' + res.body.RespuestaTimbrado.error + '<b></p>',
             }).then((result) => {
               if (result.isConfirmed) {
                 //window.location.reload();
