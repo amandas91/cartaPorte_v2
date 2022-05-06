@@ -1408,15 +1408,15 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
           .subscribe((resBody: CatIOperador) => {
             if (resBody) {
               if (resBody.NumeroLicencia == null || resBody.NumeroLicencia == undefined || resBody.RFC == null || resBody.RFC == undefined || resBody.Nombre == null || resBody.Nombre == undefined) {
-                this.editForm.controls['RFCFigura'].setValue(resBody.RFC),
-                  this.editForm.controls['NumLicencia'].setValue(resBody.NumeroLicencia),
-                  this.editForm.controls['NombreFigura'].setValue(resBody.ApellidoPaterno + ' ' + resBody.ApellidoPaterno + ' ' + resBody.Nombre),
+                this.editForm.controls['RFCFigura'].disable(),
+                  this.editForm.controls['NumLicencia'].disable(),
+                  this.editForm.controls['NombreFigura'].disable(),
                   this.editForm.controls['RFCFigura'].disable(),
                   this.editForm.controls['NumLicencia'].disable(),
                   this.editForm.controls['NombreFigura'].disable(),
                   Swal.fire({
-                    title: 'No se pudieron cargar todos los datos del operador',
-                    text: '',
+                    title: 'Conflicto',
+                    text: 'No se pudieron cargar todos los datos del operador',
                     icon: 'warning',
                     showCloseButton: true,
                   });
@@ -1515,45 +1515,8 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
 
     this.generarCarta.Receptor = this.receptor_g;
 
-
-    // /**
-    //  * CONCEPTOS
-    // */
-
-    let conceptosTemp: Array<any> = [];
-    this.dataSource.forEach(function (value) {
-      let auxConcepto = {
-        ClaveProdServ: value.ClaveProdServ,
-        Cantidad: value.Cantidad,
-        ClaveUnidad: value.ClaveUnidad,
-        Unidad: value.Unidad,
-        Descripcion: value.Descripcion,
-        ValorUnitario: 0,
-        Importe: 0,
-        TipoProducto: value.TipoProducto,
-        PesoBrut: 0,
-        PesoUnidad: 0,
-        PesoBrutoTotal:0,
-        NumTotalMercancias: 0
-      };
-      conceptosTemp.push(auxConcepto);
-
-    });
-
-    this.generarCarta.Conceptos = conceptosTemp;
-
-
     //this.generarCarta.Conceptos = this.conceptos;
 
-    // /**
-    //  * OBSERVACIONES
-    // */
-    this.Observaciones = [{
-      Numero: 1,
-      Tema: 'PAG',
-      Texto: '',
-
-    }];
     this.generarCarta.Observaciones = this.Observaciones;
 
     //METODO DE ENVIO 
@@ -1600,7 +1563,7 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
      */
     let mercanciaTemp: Array<any> = [];
     let pesoBrutoTemp = this.PesoBrutoTotal;
-    this.dataSource.forEach(function (value) {
+    this.dataSource.forEach(value => {
 
       let cargaMercanciaTemp = {
         BienesTransp: value.carga.BienesTransp,
@@ -1618,6 +1581,32 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
       pesoBrutoTemp += Number(value.carga.PesoEnKg);
       mercanciaTemp.push(cargaMercanciaTemp);
     });
+
+    // /**
+    //  * CONCEPTOS
+    // */
+
+    let conceptosTemp: Array<any> = [];
+    this.dataSource.forEach(value => {
+      let auxConcepto = {
+        ClaveProdServ: value.ClaveProdServ,
+        Cantidad: value.Cantidad,
+        ClaveUnidad: value.ClaveUnidad,
+        Unidad: value.Unidad,
+        Descripcion: value.Descripcion,
+        ValorUnitario: 0,
+        Importe: 0,
+        TipoProducto: value.TipoProducto,
+        PesoBrut: 0,
+        PesoUnidad: 0,
+        PesoBrutoTotal: this.round(pesoBrutoTemp),
+        NumTotalMercancias: 0
+      };
+      conceptosTemp.push(auxConcepto);
+
+    });
+
+    this.generarCarta.Conceptos = conceptosTemp;
 
     /**
      * ubicaciones 
