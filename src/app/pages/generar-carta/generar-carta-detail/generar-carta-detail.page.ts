@@ -707,7 +707,7 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
         this.editForm.controls['bodega'].setValue(value.BodegaCedis)
         this.editForm.controls['FechaSalida'].setValue(value.FechaHoraSalidaLlegada)
         this.editForm.controls['RFCRemitenteDestinatario'].setValue(value.RFCRemitenteDestinatario)
-        this.editForm.controls['TipoHorario'].setValue(value.Descripcion)
+        
 
         let aux = {
           TipoUbicacion: "Origen",
@@ -1857,6 +1857,7 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
       Version: "2.0",
       TranspInternac: "No",
       TotalDistRec: this.totalDistancia,
+      TipoHorario: this.editForm.controls['TipoHorario'].value,
       Ubicaciones: aux,
       Mercancias: auxMerc,
       FiguraTransporte: auxFigura,
