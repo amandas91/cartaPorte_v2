@@ -255,7 +255,7 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
   localidad: string;
   clave_estado: string;
 
-  PesoBrutoTotal = 0;
+  PesoBrutoTotal:number;
 
   ClaveProdServ: string;
   descripcion: string;
@@ -475,6 +475,7 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
 
 
   ngOnInit(): void {
+    this.PesoBrutoTotal = 0;
     let fechaActual = Math.floor(Date.now()/1000);
     let fechaExpired = Date.parse(this.localStorage.retrieve('ExpirationDate')) /1000
     this.origen = false;
@@ -643,6 +644,8 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
      */
 
     resBody.CartaPorte.Mercancias.Mercancia.forEach(value => {
+        let PesoBrutoTemp = Number(value.PesoEnKg) * Number(value.Cantidad)
+        PesoBrutoTemp = Number(PesoBrutoTemp.toFixed(2))
         this.tipoProductoTable = value.TipoProducto,
       
         this.cargaMercancia = {
@@ -671,11 +674,12 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
         Importe: 0,
         carga: this.cargaMercancia,
         PesoEnKg: value.PesoEnKg,
-        PesoBruto: this.round(Number(value.PesoEnKg) * Number(value.Cantidad))
+        PesoBruto: PesoBrutoTemp,
       };
 
       
-      this.PesoBrutoTotal += this.round(Number(value.PesoEnKg) * Number(value.Cantidad))
+      this.PesoBrutoTotal += Number(value.PesoEnKg) * Number(value.Cantidad)
+      this.PesoBrutoTotal = Number(this.PesoBrutoTotal.toFixed(2))
       this.NumTotalMercancias += Number(value.Cantidad);
       //this.dataSource = resBody.Conceptos;
       //this.dataSource = resBody.CartaPorte.Mercancias
@@ -849,10 +853,12 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
 
       this.NumTotalMercancias += Number(this.editForm.controls['Cantidad'].value);
 
-      var pesoBrutoPoducto = 0;
+      var pesoBrutoPoducto=0;
 
-      pesoBrutoPoducto += this.round(Number(this.editForm.controls['PesoEnKg'].value) * Number(this.editForm.controls['Cantidad'].value));
-      this.PesoBrutoTotal += this.round(Number(pesoBrutoPoducto));
+      pesoBrutoPoducto += Number(this.editForm.controls['PesoEnKg'].value) * Number(this.editForm.controls['Cantidad'].value);
+      this.PesoBrutoTotal += pesoBrutoPoducto
+      this.PesoBrutoTotal = Number(this.PesoBrutoTotal.toFixed(2))
+      pesoBrutoPoducto = Number(pesoBrutoPoducto.toFixed(2))
       this.cargaMercancia = {
         BienesTransp: "" + this.ClaveProdServ,
         Cantidad: parseInt(this.editForm.controls['Cantidad'].value),
@@ -897,8 +903,10 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
     this.PesoBrutoTotal = 0;
     this.dataSource.forEach(element => {
       this.NumTotalMercancias += Number(element.Cantidad)
-      this.PesoBrutoTotal += this.round(Number(element.PesoBruto))
+      this.PesoBrutoTotal += Number(element.PesoBruto)
     })
+
+    this.PesoBrutoTotal = Number(this.PesoBrutoTotal.toFixed(2))
 
   }
 
@@ -1562,7 +1570,7 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
      * Mercancias
      */
     let mercanciaTemp: Array<any> = [];
-    let pesoBrutoTemp = this.PesoBrutoTotal;
+    let pesoBrutoTemp = 0;
     this.dataSource.forEach(value => {
 
       let cargaMercanciaTemp = {
@@ -1599,7 +1607,7 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
         TipoProducto: value.TipoProducto,
         PesoBrut: 0,
         PesoUnidad: 0,
-        PesoBrutoTotal: this.round(pesoBrutoTemp),
+        PesoBrutoTotal: pesoBrutoTemp,
         NumTotalMercancias: 0
       };
       conceptosTemp.push(auxConcepto);
@@ -1624,7 +1632,7 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
 
 
     let auxMerc = {
-      PesoBrutoTotal: this.round(pesoBrutoTemp),
+      PesoBrutoTotal: Number(pesoBrutoTemp.toFixed(2)),
       UnidadPeso: "KGM",
       NumTotalMercancias: this.NumTotalMercancias,
       Mercancia: mercanciaTemp,
@@ -1826,7 +1834,7 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
 
     let auxFigura = { TiposFigura: [this.TiposFigura] };
     let auxMerc = {
-      PesoBrutoTotal: this.round(pesoBrutoTemp),
+      PesoBrutoTotal: Number(pesoBrutoTemp).toFixed(2),
       UnidadPeso: "KGM",
       NumTotalMercancias: mercanciaTemp.length,
       Mercancia: mercanciaTemp,

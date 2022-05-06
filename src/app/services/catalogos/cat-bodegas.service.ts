@@ -22,7 +22,11 @@ export class BodegasService {
   }
 
   findByNombreDireccion(nombre: string, direccion:string): Observable<EntityArrayResponseType> {
-    return this.http.get<any[]>(`${this.resourceUrl}?nombre=${nombre}&direccion=`, { observe: 'response' });
+    if(direccion == null){
+      direccion=''
+    }
+    return this.http.get<any[]>(`${this.resourceUrl}?nombre=${nombre}&direccion=${direccion}`
+    , { observe: 'response' });
   }
 
   query(req?: any, type?: string): Observable<EntityArrayResponseType> {
