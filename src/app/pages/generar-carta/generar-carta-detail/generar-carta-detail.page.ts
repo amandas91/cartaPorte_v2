@@ -1925,16 +1925,30 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
         this.isSaving = true;
         Swal.close();
         if (res.body.RespuestaTimbrado.error == null) {
+          var  html = '<div>'
+          if(res.body.FolioTimbrado !=null){
+            html += '<p>Folio Timbrado <b>' + res.body.FolioTimbrado + '</b> </p>'
+          }
+
+          if( res.body.Folio != null){
+            html += '<p>Folio <b>' + res.body.Folio + '</b> </p>' 
+          }
+          
+          if( res.body.RespuestaTimbrado.fechaTimbre != null){
+            html +='<p>Fecha <b>' + res.body.RespuestaTimbrado.fechaTimbre + '</b></p> ' 
+          }
+          
+          if(res.body.RespuestaTimbrado.uuid  != null){
+            html +='<p>uuid <b>' + res.body.RespuestaTimbrado.uuid + '</b></p>'
+          }
+          html += '</div>'
           Swal.fire({
             icon: 'success',
             text: 'Guardado y Timbrado',
             showCancelButton: false,
             confirmButtonColor: '#3085d6',
             confirmButtonText: 'Ok',
-            html: '<p>Folio Timbrado <b>' + res.body.FolioTimbrado + '</b> </p>' +
-              '<p>Folio <b>' + res.body.Folio + '</b> </p>' +
-              '<p>Fecha <b>' + res.body.RespuestaTimbrado.fechaTimbre + '</b></p> ' +
-              '<p>uuid <b>' + res.body.RespuestaTimbrado.uuid + '</b></p>',
+            html: html,
           }).then((result) => {
             if (result.isConfirmed) {
               //window.location.reload();
@@ -1943,17 +1957,40 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
             }
           })
         } else {
+          var  html = '<div>'
+
+          if( res.body.Folio != null){
+            html += '<p>Folio <b>' + res.body.Folio + '</b> </p>' 
+          }
           
+          if( res.body.RespuestaTimbrado.fechaTimbre != null){
+            html +='<p>Fecha <b>' + res.body.RespuestaTimbrado.fechaTimbre + '</b></p> ' 
+          }
+          
+          if(res.body.RespuestaTimbrado.uuid  != null){
+            html +='<p>uuid <b>' + res.body.RespuestaTimbrado.uuid + '</b></p>'
+          }
+
+          if(res.body.RespuestaTimbrado.error !=null){
+            html += '<p>Mensaje <b>'
+            res.body.RespuestaTimbrado.error.forEach(value => {
+              html += '<p><b>* </b>' + value + '</p>'
+            })
+
+            html +=  '<b></p>'
+            
+          }
+
+         
+          
+          html += '</div>'
             Swal.fire({
               icon: 'warning',
               text: 'Guardado',
               showCancelButton: false,
               confirmButtonColor: '#3085d6',
               confirmButtonText: 'Ok',
-              html: '<p>Folio <b>' + res.body.Folio + '</b> </p>' +
-                '<p>Fecha <b>' + res.body.RespuestaTimbrado.fechaTimbre + '</b></p> ' +
-                '<p>uuid <b>' + res.body.RespuestaTimbrado.uuid + '</b></p>' +
-                '<p>Mensaje <b>' + res.body.RespuestaTimbrado.error + '<b></p>',
+              html: html
             }).then((result) => {
               if (result.isConfirmed) {
                 //window.location.reload();
