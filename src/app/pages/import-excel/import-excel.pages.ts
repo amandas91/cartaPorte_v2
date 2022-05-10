@@ -2,6 +2,9 @@ import { Component, OnInit, OnDestroy, Input, ViewChild, AfterContentInit, Outpu
 import { ImportarExcelService } from 'app/services/core/import-excel.service';
 import Swal from 'sweetalert2';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { MatDialog, MatDialogRef } from "@angular/material/dialog";
+
 
 @Component({
   selector: 'app-import-excel',
@@ -11,12 +14,16 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 
 export class ImportExcelPages implements OnInit {
+  private dialog: MatDialog;
+
+  
   editForm = this.fb.group({
     fileInput: [null, []]
   })
 
   fileToUpload:File | null = null;
-  constructor(private fb: FormBuilder, private importService:ImportarExcelService) { }
+  constructor(private fb: FormBuilder, private importService:ImportarExcelService, private router: Router, 
+     public dialogRef: MatDialogRef<ImportExcelPages>) { }
 
   ngOnInit(): void {
   }
@@ -101,8 +108,6 @@ export class ImportExcelPages implements OnInit {
           }
         }
 
-
-
         if(resBody.RespuestaCancelacion != null){
           html += '<p>Fecha de Cancelación <b>' + resBody.RespuestaCancelacion.FechaCancelacion + '</b></p>'
           if(resBody.RespuestaCancelacion.Estatus != null){
@@ -122,7 +127,14 @@ export class ImportExcelPages implements OnInit {
           confirmButtonColor: '#3085d6',
           confirmButtonText: 'Ok',
           html:html,
-          showCloseButton: true,
+          //showCloseButton: true,
+          }).then((result) => {
+            if (result.isConfirmed) {
+              
+              this.dialogRef.close()
+
+              this.router.navigate(['/','monitor-carta'])
+            } 
           })
           this.editForm.controls['fileInput'].setValue("")
         
