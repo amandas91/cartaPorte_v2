@@ -589,11 +589,11 @@
                     <input style="color: black;" autocomplete="off" matInput formControlName="Correo"  />
                 </mat-form-field>    
             </div>
-            <button mat-flat-button color="primary" (click)="save(false)" [disabled]="!editForm.valid">
+            <button mat-flat-button color="primary" (click)="save(false)" [disabled]="!editForm.valid || PesoBrutoTotal == 0 || totalDistancia == 0">
                 <mat-icon>save</mat-icon> Guardar
               </button>
               &nbsp;&nbsp;
-              <button mat-flat-button color="primary" (click)="save(true)" [disabled]="!editForm.valid">
+              <button mat-flat-button color="primary" (click)="save(true)" [disabled]="!editForm.valid || PesoBrutoTotal == 0 || totalDistancia == 0">
                 <mat-icon>settings</mat-icon>Guardar y Timbrar
               </button>
             <div fxLayout="column" >

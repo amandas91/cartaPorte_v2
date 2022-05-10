@@ -46,10 +46,22 @@ export class ImportExcelPages implements OnInit {
       if(resBody.estatus > 0){
         let html = '<div>'
           if(resBody.RespuestaTimbrado != null){
-            html += '<p>Folio Timbrado <b>' + resBody.folioTimbrado + '</b> </p>' + 
-            '<p>Folio <b>' + resBody.folio + '</b> </p>' +
-            '<p>Fecha <b>' + resBody.RespuestaTimbrado.fechaTimbre + '</b></p> ' +
-            '<p>uuid <b>' + resBody.RespuestaTimbrado.uuid + '</b></p></div>'
+            if( resBody.folioTimbrado != null){
+              html += '<p>Folio Timbrado <b>' + resBody.folioTimbrado + '</b> </p>'
+            }
+            if( resBody.folio != null){
+              html += '<p>Folio <b>' + resBody.folio + '</b> </p>'
+            } 
+
+            if( resBody.fechaTimbre != null){
+              html += '<p>Fecha <b>' + resBody.RespuestaTimbrado.fechaTimbre + '</b></p> ' 
+            }
+            
+            if( resBody.fechaTimbre != null){
+              html += '<p>uuid <b>' + resBody.RespuestaTimbrado.fechaTimbre + '</b></p>'
+            }
+           
+            
           }
 
           resBody.mensajes.forEach(value => {
@@ -68,11 +80,28 @@ export class ImportExcelPages implements OnInit {
       }else if(resBody.estatus == 0){
         let html ='<div>' 
         if(resBody.RespuestaTimbrado != null){
-          html += '<p>Folio Timbrado <b>' + resBody.folioTimbrado + '</b> </p>' + 
-          '<p>Folio <b>' + resBody.folio + '</b> </p>' +
-          '<p>Fecha <b>' + resBody.RespuestaTimbrado.fechaTimbre + '</b></p> ' +
-          '<p>uuid <b>' + resBody.RespuestaTimbrado.uuid + '</b></p></div>'
+
+          if( resBody.folioTimbrado != null){
+            html += '<p>Folio Timbrado <b>' + resBody.folioTimbrado + '</b> </p>'
+          }
+          if( resBody.folio != null){
+            html += '<p>Folio <b>' + resBody.folio + '</b> </p>'
+          } 
+
+          if( resBody.fechaTimbre != null){
+            html += '<p>Fecha <b>' + resBody.RespuestaTimbrado.fechaTimbre + '</b></p> ' 
+          }
+          
+          if( resBody.fechaTimbre != null){
+            html += '<p>uuid <b>' + resBody.RespuestaTimbrado.uuid + '</b></p>'
+          }
+
+          if( resBody.RespuestaTimbrado.error != null){
+            html += '<p>uuid <b>' + resBody.RespuestaTimbrado.error + '</b></p>'
+          }
         }
+
+
 
         if(resBody.RespuestaCancelacion != null){
           html += '<p>Fecha de Cancelación <b>' + resBody.RespuestaCancelacion.FechaCancelacion + '</b></p>'
