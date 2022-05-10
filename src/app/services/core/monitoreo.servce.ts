@@ -60,7 +60,7 @@ public resourceUrlUser = environment.apiUrlCartaPorte + '/cartaPorteMonitor';
       text: 'Solicitando documento...',
     });
     Swal.showLoading();
-    return this.http.post<any>(`${this.resourceUrl}/obtener/pdf?uuid=${id}`, { observe: 'response', responseType: 'blob' });
+    return this.http.post<any>(`${this.resourceUrl}/obtener/xml?uuid=${id}`, { observe: 'response', responseType: 'blob' });
   }
 
 
