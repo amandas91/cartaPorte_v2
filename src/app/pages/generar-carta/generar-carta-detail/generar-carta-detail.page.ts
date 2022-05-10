@@ -772,8 +772,6 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
 
     this.editForm.controls['TipoHorario'].setValue(resBody.CartaPorte.TipoHorario),
     
-
-
     //this.dataSource1.data = resBody.CartaPorte.Ubicaciones.Ubicacion;
     this.dataSource1.sort = this.sort;
 
@@ -794,7 +792,7 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
 
       this.municipioExpedido= this.generarCarta.Emisor.ExpedidoEn.Municipio;
       this.estadoExpedido = this.generarCarta.Emisor.ExpedidoEn.Estado;
-      this.paisExpedido = this.generarCarta.Emisor.ExpedidoEn.CodigoPostal;
+      this.paisExpedido = this.generarCarta.Emisor.ExpedidoEn.Pais;
 
       //Receptor
       this.editForm.controls['RfcReceptor'].setValue(this.generarCarta.Receptor.Rfc),
@@ -1810,20 +1808,26 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
       Seguros: this.Seguros
     };
 
-    /**
-    * ubicaciones 
-    */
-    let ubicacionesTemp: Array<any> = [];
-    const ubicacionesTotal = this.ubicacionDestino.concat(this.ubicacionOrigen);
-    ubicacionesTemp.push(ubicacionesTotal);
+    //////////////////////////77
 
-
+     /**
+       * ubicaciones 
+       */
+      let ubicacionesTemp: Array<any> = [];
+  
+      const ubicacionesTotal = this.ubicacionOrigen.concat(this.ubicacionDestino);
+      //const ubicacionesTotal = this.ubicacionDestino.concat(this.ubicacionOrigen[0]);
+  
+      ubicacionesTemp.push(ubicacionesTotal);
+  
+  
     let mercanciaTemp: Array<any> = [];
     let pesoBrutoTemp = 0;
 
     this.dataSource.forEach(value => {
       let cargaMercanciaTemp = {
         BienesTransp: value.ClaveProdServ,
+        TipoProducto: value.TipoProducto,
         Cantidad: value.Cantidad,
         Unidad: value.Unidad,
         Descripcion: value.Descripcion,
