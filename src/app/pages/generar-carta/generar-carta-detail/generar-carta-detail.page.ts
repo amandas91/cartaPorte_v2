@@ -990,8 +990,6 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
         this.editForm.controls['EstadoUbicacion'].setValue('')
         this.editForm.controls['MunicipioUbicacion'].setValue('')
         this.editForm.controls['CodigoPostalUbicacion'].setValue('')
-        this.editForm.controls['ClaveBodega'].setValue('')
-        this.editForm.controls['ClaveCliente'].setValue('')
       
     }
   }
@@ -1275,7 +1273,7 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
                                       icon: 'success',
                                       title: 'Agregado',
                                       showConfirmButton: false,
-                                      timer: 1500
+                                      timer: 2500
                                     })
                                   }else{
                                     
@@ -1706,6 +1704,9 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
     this.generarCartaUpdate.LugarExpedicion = this.LugarExpedicion;
 
 
+    
+
+
     /**
     * expedido
     */
@@ -1972,6 +1973,7 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
           }
 
           if(res.body.RespuestaTimbrado.error !=null){
+            
             html += '<p>Mensaje <b>'
             res.body.RespuestaTimbrado.error.forEach(value => {
               html += '<p><b>* </b>' + value + '</p>'
@@ -2147,7 +2149,7 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
                     icon: 'success',
                     title: 'Agregado',
                     showConfirmButton: false,
-                    timer: 1500
+                    timer: 2500
                   })
                 }else{
                   
@@ -2217,7 +2219,7 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
                                 icon: 'success',
                                 title: 'Agregado',
                                 showConfirmButton: false,
-                                timer: 1500
+                                timer: 2500
                               })
                             }else{
                               
