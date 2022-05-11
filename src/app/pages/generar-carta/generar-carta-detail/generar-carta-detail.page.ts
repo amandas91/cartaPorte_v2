@@ -1977,12 +1977,8 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
 
           if(res.body.RespuestaTimbrado.error !=null){
             
-            html += '<p>Mensaje <b>'
-            res.body.RespuestaTimbrado.error.forEach(value => {
-              html += '<p><b>* </b>' + value + '</p>'
-            })
-
-            html +=  '<b></p>'
+            html += '<p><b>* </b>' + res.body.RespuestaTimbrado.error + '</p>'
+          
             
           }
 
