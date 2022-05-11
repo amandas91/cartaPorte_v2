@@ -1741,6 +1741,8 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
 
     let conceptosTemp: Array<any> = [];
     this.dataSource.forEach(element => {
+      console.log(element)
+      console.log("imprimiendo elemnt")
       let auxConcepto = {
         ClaveProdServ: element.ClaveProdServ,
         Cantidad: element.Cantidad,
@@ -1749,7 +1751,7 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
         Descripcion: element.Descripcion,
         ValorUnitario: 0,
         Importe: 0,
-        TipoProducto: this.conceptoClaveUnidad,
+        TipoProducto: element.TipoProducto,
         pesoCarga: 0,
         PesoBruto: 0,
         PesoUnidad: 0
@@ -1759,9 +1761,6 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
     });
 
     this.generarCartaUpdate.Conceptos = conceptosTemp;
-
-
-
     // /**
     //  * OBSERVACIONES
     // */
