@@ -1962,6 +1962,10 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
           })
         } else {
           var  html = '<div>'
+          
+          if(res.body.FolioTimbrado !=null){
+            html += '<p>Folio Timbrado <b>' + res.body.FolioTimbrado + '</b> </p>'
+          }
 
           if( res.body.Folio != null){
             html += '<p>Folio <b>' + res.body.Folio + '</b> </p>' 
@@ -1982,8 +1986,6 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
             
           }
 
-         
-          
           html += '</div>'
             Swal.fire({
               icon: 'warning',

@@ -53,19 +53,23 @@ export class ImportExcelPages implements OnInit {
       if(resBody.estatus > 0){
         let html = '<div>'
           if(resBody.RespuestaTimbrado != null){
+
             if( resBody.folioTimbrado != null){
               html += '<p>Folio Timbrado <b>' + resBody.folioTimbrado + '</b> </p>'
             }
             if( resBody.folio != null){
               html += '<p>Folio <b>' + resBody.folio + '</b> </p>'
             } 
+            if( resBody.folio != null){
+              html += '<p>Folio <b>' + resBody.folio + '</b> </p>'
+            } 
 
-            if( resBody.fechaTimbre != null){
+            if( resBody.RespuestaTimbrado.fechaTimbre != null){
               html += '<p>Fecha <b>' + resBody.RespuestaTimbrado.fechaTimbre + '</b></p> ' 
             }
             
-            if( resBody.fechaTimbre != null){
-              html += '<p>uuid <b>' + resBody.RespuestaTimbrado.fechaTimbre + '</b></p>'
+            if( resBody.RespuestaTimbrado.uuid != null){
+              html += '<p>uuid <b>' + resBody.RespuestaTimbrado.uuid + '</b></p>'
             }
            
             
@@ -95,16 +99,16 @@ export class ImportExcelPages implements OnInit {
             html += '<p>Folio <b>' + resBody.folio + '</b> </p>'
           } 
 
-          if( resBody.fechaTimbre != null){
+          if( resBody.RespuestaTimbrado.fechaTimbre != null){
             html += '<p>Fecha <b>' + resBody.RespuestaTimbrado.fechaTimbre + '</b></p> ' 
           }
           
-          if( resBody.fechaTimbre != null){
+          if( resBody.RespuestaTimbrado.uuid != null){
             html += '<p>uuid <b>' + resBody.RespuestaTimbrado.uuid + '</b></p>'
           }
 
           if( resBody.RespuestaTimbrado.error != null){
-            html += '<p>uuid <b>' + resBody.RespuestaTimbrado.error + '</b></p>'
+            html += '<p>Error <b>' + resBody.RespuestaTimbrado.error + '</b></p>'
           }
         }
 
