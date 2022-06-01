@@ -55,17 +55,7 @@ export class ClientsDetailPage implements OnInit {
 
   loadPage() {
 
-    // // console.log(this.value);
-    // if (this.value.GeppId) {
-    //   this.valueService.find(this.value.GeppId)
-    //     .pipe(map((res: HttpResponse<IClients>) => {
-    //       return res.body ? res.body : new Clients();
-    //     }))
-    //     .subscribe((resBody: IClients) => {
-    //       this.value = resBody;
-    //       this.updateForm(this.value);
-    //     });
-    // }
+  
 
   }
 
@@ -139,11 +129,6 @@ export class ClientsDetailPage implements OnInit {
         })
         this.loadPage();
     }
-    // this.isSaving = false;
-    // if (this.auxSave) {
-    //   this.auxSave.emit(true);
-    //   Swal.close();
-    // }
   }
 
   protected onSaveError(res): void {

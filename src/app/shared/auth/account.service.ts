@@ -113,7 +113,7 @@ export class AccountService {
       picture: "",
       name: this.localStorage.retrieve('Username'),
       admin: "SABINO",
-      rol: 'Admin',
+      rol:  this.localStorage.retrieve('Roles'),//'Admin',
       id: 1,
       verified: this.localStorage.retrieve('Verified'),
       occupation_name: ""

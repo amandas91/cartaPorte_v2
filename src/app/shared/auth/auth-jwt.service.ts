@@ -61,6 +61,7 @@ export class AuthServerProvider {
         this.$localStorage.store('UserId', response.UserId)
         this.$localStorage.store('ExpirationDate', response.ExpirationDate)
         this.$localStorage.store('RefreshToken', response.RefreshToken)
+        this.$localStorage.store('Roles', response.Roles[0])
       } else {
         this.$localStorage.store('Verified', true)
         this.$sessionStorage.store('authenticationToken', jwt)
@@ -68,6 +69,7 @@ export class AuthServerProvider {
         this.$localStorage.store('UserId', response.UserId)
         this.$localStorage.store('ExpirationDate', response.ExpirationDate)
         this.$localStorage.store('RefreshToken', response.RefreshToken)
+        this.$localStorage.store('Roles', response.Roles[0])
       }
     }else{
       this.$localStorage.store('Verified', false)

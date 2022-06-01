@@ -6,7 +6,7 @@
 
             <mat-form-field fxFlex="33%" appearance="outline">
                 <mat-label>ID</mat-label>
-                <input autocomplete="off" matInput formControlName="GeppId" />
+                <input autocomplete="off" matInput formControlName="GeppId" min="0" type="number" />
             </mat-form-field>
 
             <mat-form-field fxFlex="33%" appearance="outline">
@@ -27,6 +27,9 @@
                   </mat-option>
                   <mat-option  [value]="'ROLE_USER'">
                     ROLE_USER
+                  </mat-option>
+                  <mat-option  [value]="'ROLE_ADC'">
+                    ROLE_ADC
                   </mat-option>
                 </mat-select>
               </mat-form-field>

@@ -486,11 +486,13 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
       this.localStorage.clear('UserId');
       this.localStorage.clear('ExpirationDate');
       this.localStorage.clear('Verified');
+      this.localStorage.clear('Roles');
       sessionStorage.removeItem('authenticationToken')
       sessionStorage.removeItem('Username')
       sessionStorage.removeItem('UserId')
       sessionStorage.removeItem('ExpirationDate')
       sessionStorage.removeItem('Verified')
+      sessionStorage.removeItem('Roles')
       this.router.navigate(['/login']);
     }else{
       this.cargaServicios()

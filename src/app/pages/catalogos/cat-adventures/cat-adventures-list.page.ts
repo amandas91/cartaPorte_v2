@@ -186,19 +186,7 @@ export class CatAdventuresListPage implements OnInit {
       buttons.push({ title: 'Borrar', actionType: 'delete', icon: 'delete' });
     }
 
-    // if (this.hasRol([Authority.ADMIN, Authority.COORDINADOR]) && this.origen === CatOrigen.EXPEDIENTE) {
-    // buttons.push({
-    //     title: "Asignar",
-    //     actionType: "assign",
-    //     icon: "people_alt",
-    // });
-    // }
-    // buttons.push({ title: 'Solo lectura', actionType: 'readOnly', icon: 'chrome_reader_mode' });
-
-    // if (this.origen !== CatOrigen.CONCLUIDOS) {
-    //   buttons.push({ title: 'Tiene mensajes no Leídos', canDisplay: 'leidos', actionType: 'none', icon: 'notifications' });
-    // }
-
+   
     return buttons;
   }
 

@@ -8,15 +8,7 @@ export const navigation: FuseNavigation[] = [
         translate: "NAV.APPLICATIONS",
         type: "group",
         children: [
-            {
-                id: "sample",
-                title: "HOME",
-                translate: "NAV.APP.HOME",
-                type: "item",
-                icon: "home",
-                url: "/home",
-                roles: [Authority.LEISURE, Authority.LEISURE_DMC,]
-            },
+            
             {
                 id: "generar_carta",
                 title: "Generar Carta / CFDI Traslado",
@@ -24,7 +16,8 @@ export const navigation: FuseNavigation[] = [
                 type: "item",
                 icon: "post_add",
                 url: "/generar-carta",
-                roles: ALL_ROLES
+                //roles: ALL_ROLES
+                roles: [Authority.ROLE_ADMIN, Authority.ROLE_USER]
             },
             
             {
@@ -35,6 +28,7 @@ export const navigation: FuseNavigation[] = [
                 icon: "find_in_page",
                 url: "/monitor-carta",
                 roles: ALL_ROLES
+                //roles:  [Authority.ROLE_ADMIN, Authority.ROLE_USER, Authority.ROLE_ADC]
             },
             {
                 id: "importar_excel",
@@ -43,14 +37,14 @@ export const navigation: FuseNavigation[] = [
                 type: "item",
                 icon: "import_export",
                 url: "/importar-excel/excel",
-                roles: ALL_ROLES
+                roles:  [Authority.ROLE_ADMIN, Authority.ROLE_ADC]
             },
             {
                 id: "administation",
                 title: "ADMINISTRACIÓN",
                 translate: "NAV.APP.ADMINISTRATION.TITLE",
                 type: "collapsable",
-                roles: [Authority.ADMIN],
+                roles: [Authority.ROLE_ADMIN],
                 children: [
                     {
                         id: "clients",
@@ -60,7 +54,7 @@ export const navigation: FuseNavigation[] = [
                         icon: "people",
                         url: "/users",
                         // roles: [Authority.LEISURE_DMC, Authority.LEISURE]
-                        roles: [Authority.ADMIN]
+                        roles: [Authority.ROLE_ADMIN]
                     },
                     
                    

@@ -186,22 +186,6 @@ export class AppComponent implements OnInit, OnDestroy
 
             this.canRefreshToken = false;
             
-            // var timeout;
-            // var moveCursor;
-            // document.onmousemove = function(){
-            //     /**
-            //      * Aqui el cursor esta en mivimiento
-            //      */
-
-            //     clearTimeout(timeout);
-                
-            //     moveCursor = true
-            //     timeout = setTimeout(function(){
-            //         //No m ueve el cursor
-            //         moveCursor = false
-            //     }, 5000);
-            // }
-
              setInterval(() => {
                 let fechaActual = Math.floor(Date.now()/1000);
                 let fechaExpired = Date.parse(this.localStorage.retrieve('ExpirationDate')) /1000
@@ -222,33 +206,17 @@ export class AppComponent implements OnInit, OnDestroy
                         this.localStorage.clear('UserId');
                         this.localStorage.clear('ExpirationDate');
                         this.localStorage.clear('Verified');
+                        this.localStorage.clear('Roles');
                         sessionStorage.removeItem('authenticationToken')
                         sessionStorage.removeItem('Username')
                         sessionStorage.removeItem('UserId')
                         sessionStorage.removeItem('ExpirationDate')
                         sessionStorage.removeItem('Verified')
+                        sessionStorage.removeItem('Roles')
                         this.router.navigate(['/login']);
                     }
                  }
-                //else{
-
-                //     if(fechaActual  > fechaExpired ){
-                //         this.loginService.logout()
-                //         this.localStorage.clear('authenticationToken')
-                //         this.localStorage.clear('Username');
-                //         this.localStorage.clear('UserId');
-                //         this.localStorage.clear('ExpirationDate');
-                //         this.localStorage.clear('Verified');
-                //         sessionStorage.removeItem('authenticationToken')
-                //         sessionStorage.removeItem('Username')
-                //         sessionStorage.removeItem('UserId')
-                //         sessionStorage.removeItem('ExpirationDate')
-                //         sessionStorage.removeItem('Verified')
-                //         this.router.navigate(['/login']);
-                //     }
-
-
-                // }
+                
                
              }, 15000);
 
