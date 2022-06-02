@@ -1875,7 +1875,7 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
     //console.log(this.editForm.controls['HoraLlegada'].value);
 
     let generarCataAux = {
-      UsuarioCreador: "4",
+      UsuarioCreador: this.localStorage.retrieve('UserId'),
       FechaSalidaOrigen: FechaSalidaOrigen,
       FechaLlegadaDestino: FechaLlegadaDestino,
       MetodoEnvio: { Email: this.editForm.controls['Correo'].value },
