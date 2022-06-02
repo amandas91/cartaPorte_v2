@@ -18,6 +18,7 @@ import { FormBuilder } from '@angular/forms';
 @Component({
     selector: "app-clients-list",
     templateUrl: "./clients-list.page.html",
+    styleUrls: ['./clients-list.page.scss']
 })
 export class ClientsListPage implements OnInit {
     editForm = this.fb.group({
@@ -139,8 +140,8 @@ export class ClientsListPage implements OnInit {
                 break;
             case "view":
                 console.log("VIEW");
-                // this.view(value);
-                this.router.navigate([`/client`]);
+                this.view(value);
+                //this.router.navigate([`/client`]);
                 break;
             case "update":
                 console.log("UPDATE");
@@ -203,6 +204,13 @@ export class ClientsListPage implements OnInit {
             type: "text",
             visible: true,
         });
+
+        columns.push({
+            label: "Rol",
+            property: "role",
+            type: "text",
+            visible: true,
+        });
         
       
         // columns.push({
@@ -217,33 +225,25 @@ export class ClientsListPage implements OnInit {
 
     getButtons(): ButtonProperties[] {
         const buttons: ButtonProperties[] = [];
-        if( this.origen !== CatOrigen.BUDGET ){
             buttons.push({
                 title: "Ver Detalle",
                 actionType: "view",
                 icon: "edit",
             });
-        }
-
-        if( this.origen === CatOrigen.BUDGET ){
+            
             buttons.push({
-                title: "Seleccionar",
-                actionType: "select",
-                icon: "touch_app",
+                title: "Eliminar",
+                actionType: "delete",
+                icon: "delete",
             });
-        }
+        
 
-        // if (this.hasRol([Authority.ADMIN, Authority.COORDINADOR]) && this.origen === CatOrigen.EXPEDIENTE) {
-        // buttons.push({
-        //     title: "Asignar",
-        //     actionType: "assign",
-        //     icon: "people_alt",
-        // });
-        // }
-        // buttons.push({ title: 'Solo lectura', actionType: 'readOnly', icon: 'chrome_reader_mode' });
-
-        // if (this.origen !== CatOrigen.CONCLUIDOS) {
-        //   buttons.push({ title: 'Tiene mensajes no Leídos', canDisplay: 'leidos', actionType: 'none', icon: 'notifications' });
+        // if( this.origen === CatOrigen.BUDGET ){
+        //     buttons.push({
+        //         title: "Seleccionar",
+        //         actionType: "select",
+        //         icon: "touch_app",
+        //     });
         // }
 
         return buttons;
