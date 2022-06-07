@@ -316,7 +316,7 @@ export class ClientsListPage implements OnInit {
             /* Read more about isConfirmed, isDenied below */
             if (result.isConfirmed) {
              
-                this.valueService.delete(value.UserId).subscribe(() => {
+                this.valueService.delete(value.GeppId).subscribe(() => {
                     // this.eventManager.broadcast('actividadListModification');
                     Swal.fire({
                         icon: 'success',
