@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { LATIN_PATTERNS, ALPHA_NUMERIC_PATTERNS } from 'app/shared/constant/input.constants';
 import { Clients, IClients } from 'app/models/core/clients.model';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, Validators } from '@angular/forms';
 import { ClientsService } from '../../services/operacion/client.service';
 import { map } from 'rxjs/operators';
 import { HttpResponse } from '@angular/common/http';
@@ -20,15 +20,15 @@ const MaxItems = 2000;
 export class ClientsDetailPage implements OnInit {
 
   editForm = this.fb.group({
-    GeppId:  [null, []],
-    Username:  [null, []],
-    Role:  [null, []],
-    Password:  [null, []],
-    FirstName:  [null, []],
+    GeppId:  [null, [Validators.required]],
+    Username:  [null, [Validators.required]],
+    Role:  [null, [Validators.required]],
+    Password:  [null, [Validators.required]],
+    FirstName:  [null, [Validators.required]],
     MiddleName:  [null, []],
     LastName:  [null, []],
     SecondLastName:  [null, []],
-    Email:  [null, []]
+    Email:  [null,[Validators.required]]
   });
 
   Authority = Authority;
@@ -51,28 +51,43 @@ export class ClientsDetailPage implements OnInit {
 
   ngOnInit(): void {
     this.loadPage();
+    if (this.value) {
+      this.updateForm(this.value);
+      this.editForm.controls['Role'].setValue(this.value.role)
+    }
   }
 
   loadPage() {
 
-  
-
-  }
+ }
 
   save() {
-    Swal.fire({
-      allowOutsideClick: false,
-      text: 'Cargando...',
-    });
-    Swal.showLoading();
-    const value = this.createFromForm();
-    value.Role = [value.Role]
-    console.log('save: ', JSON.stringify(value));
-    if (this.value.GeppId === undefined) {
-      this.subscribeToSaveResponse(this.valueService.create(value));
-    } else {
-      //this.subscribeToSaveResponse(this.valueService.update(value));
-      this.subscribeToSaveResponse(this.valueService.create(value));
+    if(this.editForm.controls['Password'].value == null){
+      Swal.fire({
+        icon: 'warning',
+        title: 'Conflicto',
+        text: 'Contraseña Obligatoria',
+        showCancelButton: false,
+        confirmButtonColor: '#3085d6',
+        confirmButtonText: 'Ok',
+        showCloseButton: true,
+        })
+    }else{
+      Swal.fire({
+        allowOutsideClick: false,
+        text: 'Cargando...',
+      });
+      Swal.showLoading();
+      const value = this.createFromForm();
+      value.Role = [value.Role]
+      value.UserId = this.value.UserId
+    
+      if (this.value.UserId) {
+        this.subscribeToSaveResponse(this.valueService.update(value));
+        
+      } else {
+        this.subscribeToSaveResponse(this.valueService.create(value));
+      }
     }
 
   }
@@ -137,7 +152,6 @@ export class ClientsDetailPage implements OnInit {
     //   this.auxSave.emit(false);
     // }
 
-    console.log(res)
     Swal.fire({
       icon: 'warning',
       title: 'Conflicto al Guardar',

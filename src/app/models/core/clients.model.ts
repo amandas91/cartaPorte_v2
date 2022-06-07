@@ -2,6 +2,7 @@ import { Moment } from 'moment';
 
 
 export interface IClients {
+  UserId?:number;
   GeppId?: number;
   Usernam?: string;
   Role?: any;
@@ -11,10 +12,12 @@ export interface IClients {
   LastName?: string;
   SecondLastName?: string;
   Email?: string;
+  role?: string;
 }
 
 export class Clients implements IClients {
   constructor(
+  public UserId?:number,
   public GeppId?: number,
   public Usernam?: string,
   public Role?: any,
@@ -24,6 +27,7 @@ export class Clients implements IClients {
   public LastName?: string,
   public SecondLastName?: string,
   public Email?: string,
+  public role?: string,
 
   
   ) {

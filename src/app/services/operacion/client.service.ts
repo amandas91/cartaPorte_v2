@@ -17,6 +17,7 @@ type EntityArrayResponseType = HttpResponse<IClients[]>;
 export class ClientsService {
   public resourceUrl = environment.apiUrlCartaPorte  + '/auth/signup';
   public resourceUrlUsuers = environment.apiUrlCartaPorte  + '/usuarios';
+  public resourceUrlUpdate = environment.apiUrlCartaPorte  + '/auth/signupdate';
 
   constructor(protected http: HttpClient) {}
 
@@ -25,10 +26,17 @@ export class ClientsService {
       return this.http
       .post<IClients>(`${this.resourceUrl}`, client, { observe: 'response' })
       .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
-
-
       
   }
+
+
+  update(client: IClients): Observable<EntityResponseType> {
+      
+    return this.http
+    .post<IClients>(`${this.resourceUrlUpdate}`, client, { observe: 'response' })
+    .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
+    
+}
 
 
   query(req?: any): Observable<EntityArrayResponseType> {
@@ -36,6 +44,11 @@ export class ClientsService {
     return this.http
       .get<IClients[]>(this.resourceUrlUsuers, { params: options, observe: 'response' })
       .pipe(map((res: EntityArrayResponseType) => this.convertDateArrayFromServer(res)));
+  }
+
+
+  delete(id: number): Observable<HttpResponse<{}>> {
+    return this.http.delete(`${this.resourceUrlUsuers}/${id}`, { observe: 'response' });
   }
 
   protected convertDateFromClient(client: IClients): IClients {

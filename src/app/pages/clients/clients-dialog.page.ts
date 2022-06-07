@@ -35,6 +35,7 @@ export class ClientsDialogPage implements OnInit {
       console.log('#### DATA: ', data);
       this.title = data.title;
       this.value = data.value;
+      this.value.Role = data.role;
     }
   }
   ngOnInit(): void {

@@ -15,6 +15,7 @@ import { locale as spanish } from "app/i18n/es/clients";
 import { ClientsService } from '../../services/operacion/client.service';
 import { HttpResponse, HttpHeaders } from "@angular/common/http";
 import { FormBuilder } from '@angular/forms';
+import Swal from "sweetalert2";
 @Component({
     selector: "app-clients-list",
     templateUrl: "./clients-list.page.html",
@@ -133,10 +134,11 @@ export class ClientsListPage implements OnInit {
     buttonsEvents(event: any): void {
         console.log("Event: " + JSON.stringify(event));
         const value = event?.row;
+        
         switch (event?.actionType) {
             case "delete":
-                // this.delete(value);
-                console.log("DELTE");
+                this.delete(value);
+                //console.log("DELTE");
                 break;
             case "view":
                 console.log("VIEW");
@@ -144,11 +146,11 @@ export class ClientsListPage implements OnInit {
                 //this.router.navigate([`/client`]);
                 break;
             case "update":
-                console.log("UPDATE");
+                //console.log("UPDATE");
                 // this.update(value.id);
                 break;
             case "select":
-                console.log("select");
+                //console.log("select");
                 this.select(value);
                 break;
             default:
@@ -213,12 +215,12 @@ export class ClientsListPage implements OnInit {
         });
         
       
-        // columns.push({
-        //     label: this.translate.instant('CLIENTS.COLUMNS.ACTIONS'),
-        //     property: "buttonsActions",
-        //     type: "button",
-        //     visible: true,
-        // });
+        columns.push({
+            label: this.translate.instant('CLIENTS.COLUMNS.ACTIONS'),
+            property: "buttonsActions",
+            type: "button",
+            visible: true,
+        });
         
         return columns;
     }
@@ -263,7 +265,8 @@ export class ClientsListPage implements OnInit {
     const params = {
       value,
       title: "CLIENTS.UPDATE"
-    };
+    }
+    
     const dialogRef = this.dialog.open(ClientsDialogPage, { data: params });
         dialogRef.updateSize('100%');
         dialogRef.afterClosed().subscribe((src: any) => {
@@ -273,6 +276,7 @@ export class ClientsListPage implements OnInit {
             }
         });
     }
+
 
     select(value: Clients): void {
         this.clientSelect.emit(value);
@@ -298,5 +302,34 @@ export class ClientsListPage implements OnInit {
 
     search(){
         console.log("search")
+    }
+
+    delete(value:Clients){
+        Swal.fire({
+            title: `¿Estás Seguro de Borrar '${value.Email}'?`,
+            text: 'No Podrás Revertir esta Acción',
+            icon: 'warning',
+            showDenyButton: true,
+            confirmButtonText: 'Si',
+            denyButtonText: `No`,
+          }).then((result) => {
+            /* Read more about isConfirmed, isDenied below */
+            if (result.isConfirmed) {
+             
+                this.valueService.delete(value.UserId).subscribe(() => {
+                    // this.eventManager.broadcast('actividadListModification');
+                    Swal.fire({
+                        icon: 'success',
+                        title: "Eliminado",
+                        showConfirmButton: false,
+                        showCloseButton: true,
+                        timer: 1500,
+                      });
+                    this.loadPage();
+                  });
+            } else  {
+              Swal.fire('Los cambios no se guardaron', '', 'info')
+            }
+          })
     }
 }

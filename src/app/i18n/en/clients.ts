@@ -6,7 +6,7 @@ export const locale = {
             TITLE_DETAIL: 'Detail of client',
             TITLE_RFC: 'RFC',
             NEW: "New client",
-            UPDATE: "Update client",
+            UPDATE: "Actualizar Usuario",
             COLUMNS: {
                 NAME: 'Name',
                 LAST_NAME:'Last name',
