@@ -94,9 +94,9 @@ export class LoginComponent implements OnInit {
       this.propagar.emit(true)
       this.message = true
       let loginPage = 'generar-carta'
-      // if (!this.hasRol( [ Authority.LEISURE, Authority.LEISURE_DMC, ] )) {
-        loginPage = 'generar-carta';
-      //} 
+      if (this.hasRol( [ Authority.ROLE_ADC ] )) {
+        loginPage = 'monitor-carta';
+      } 
       // console.log('loginPage: ' , loginPage);
       this.router.navigate([loginPage]);
       this.isLoading = false;
