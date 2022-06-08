@@ -3,9 +3,9 @@ export const locale = {
     data: {
         CLIENTS: {
             TITLE: 'Usuarios',
-            TITLE_DETAIL: 'Detail of client',
+            TITLE_DETAIL: 'Detalle del Usuario',
             TITLE_RFC: 'RFC',
-            NEW: "New client",
+            NEW: "Nuevo Usuario",
             UPDATE: "Actualizar Usuario",
             COLUMNS: {
                 NAME: 'Name',
@@ -22,8 +22,8 @@ export const locale = {
                 ID_NAME:'ID_Name',
             },
             BUTTONS:{
-                CANCEL:'Cancel',
-                ADD:'Add',
+                CANCEL:'Cancelar',
+                ADD:'Guardar',
             },
         },
     }
