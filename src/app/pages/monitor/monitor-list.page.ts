@@ -418,7 +418,6 @@ export class MonitorListPage implements OnInit {
   }
 
   observacion(observacion){
-    console.log(observacion);
     Swal.fire({
         title: 'Observación',
         text: observacion,
