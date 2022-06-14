@@ -19,6 +19,7 @@ import { FormBuilder } from "@angular/forms";
 import { map } from "rxjs/operators";
 import Swal from "sweetalert2";
 import { DatePipe } from "@angular/common";
+import { property } from "lodash";
 
 
 
@@ -213,6 +214,10 @@ export class MonitorListPage implements OnInit {
               console.log("select");
               this.select(value);
               break;
+            case "observacion":
+                this.observacion(value.Observacion);
+                break;
+
           default:
               break;
       }
@@ -244,20 +249,22 @@ export class MonitorListPage implements OnInit {
             visible: true,
         });
 
-        columns.push({
-            label: "Origen",
-            property: "CPDRP",
-            type: "text",
-            visible: true,
-        });
+        // columns.push({
+        //     label: "Origen",
+        //     property: "CPDRP",
+        //     type: "text",
+        //     visible: true,
+        // });
 
         columns.push({
             label: "Estatus",
-            property: "Estatus",
+            property:  "Estatus",
             type: "text",
-            visible: true,
+            visible: true
+           
         });
-
+        
+       
         columns.push({
             label: "Fecha Creación ",
             property: "CreateDate",
@@ -265,12 +272,12 @@ export class MonitorListPage implements OnInit {
             visible: true,
         });
 
-        columns.push({
-            label: "Observación",
-            property: "Observacion",
-            type: "text",
-            visible: true,
-        });
+        // columns.push({
+        //     label: "Observación",
+        //     property: "Observacion",
+        //     type: "text",
+        //     visible: true,
+        // });
 
       
       columns.push({
@@ -311,6 +318,13 @@ export class MonitorListPage implements OnInit {
             icon: "cancel",
             canDisplay: "Referencia"
         });
+        
+        buttons.push({
+            title: "Observación",
+            actionType: "observacion",
+            icon: "contact_support",
+            canDisplay: "Observacion"
+        });
 
 
       return buttons;
@@ -346,6 +360,8 @@ export class MonitorListPage implements OnInit {
       this.clientSelect.emit(value);
      
   }
+
+ 
 
   newItem(value: Monitoreo): void {
     //   console.log("AQUI ENTRA");
@@ -399,5 +415,15 @@ export class MonitorListPage implements OnInit {
         (res: HttpResponse<any[]>) => this.onSuccess(res.body, res.headers, pageToLoad),
         (err) => this.onError(err)
       );
+  }
+
+  observacion(observacion){
+    console.log(observacion);
+    Swal.fire({
+        title: 'Observación',
+        text: observacion,
+        icon: 'warning',
+        showCloseButton: true,
+      });
   }
 }

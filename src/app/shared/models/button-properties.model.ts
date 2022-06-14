@@ -19,7 +19,8 @@ export class ButtonProperties {
     | 'payments'
     | 'pdf'
     | 'xml'
-    | 'cancel';
+    | 'cancel'
+    | 'observacion';
   icon: string;
   iconType?: string;
   canDisplay?: string;
