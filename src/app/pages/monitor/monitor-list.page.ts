@@ -418,13 +418,21 @@ export class MonitorListPage implements OnInit {
   }
 
   observacion(observacion){
+    let html = `<p>Id Comprobante: ${observacion.idComprobante}</p>
+    <p>Fecha Cancelación: ${observacion.fechaCancelacion}</p>`
+
+    if(observacion.folioSustitucion != null){
+       
+        html +=  `<p>Folio Sustitución: ${observacion.folioSustitucion}</p>`
+    }
+
+    if(observacion.error != null){
+        html += `<p>${observacion.error}</p>`
+    }
     Swal.fire({
         title: 'Observación',
         text: '',
-        html: `<p>Id Comprobante:  ${observacion.idComprobante}</p>
-        <p>Folio Sustitución: ${observacion.folioSustitucion}</p>
-        <p>Fecha Cancelación: ${observacion.fechaCancelacion}</p>
-        <p>${observacion.error}</p>`,
+        html: html,
         icon: 'warning',
         showCloseButton: true,
       });
