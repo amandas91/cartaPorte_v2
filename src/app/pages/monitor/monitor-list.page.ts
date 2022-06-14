@@ -215,7 +215,7 @@ export class MonitorListPage implements OnInit {
               this.select(value);
               break;
             case "observacion":
-                this.observacion(value.Observacion);
+                this.observacion(value.Cancelacion);
                 break;
 
           default:
@@ -272,12 +272,12 @@ export class MonitorListPage implements OnInit {
             visible: true,
         });
 
-        // columns.push({
-        //     label: "Observación",
-        //     property: "Observacion",
-        //     type: "text",
-        //     visible: true,
-        // });
+        columns.push({
+            label: "Cancelación",
+            property: "Cancelacion.estatus",
+            type: "text",
+            visible: true,
+        });
 
       
       columns.push({
@@ -323,7 +323,7 @@ export class MonitorListPage implements OnInit {
             title: "Observación",
             actionType: "observacion",
             icon: "contact_support",
-            canDisplay: "Observacion"
+            canDisplay: "Cancelacion"
         });
 
 
@@ -420,7 +420,11 @@ export class MonitorListPage implements OnInit {
   observacion(observacion){
     Swal.fire({
         title: 'Observación',
-        text: observacion,
+        text: '',
+        html: `<p>Id Comprobante:  ${observacion.idComprobante}</p>
+        <p>Folio Sustitución: ${observacion.folioSustitucion}</p>
+        <p>Fecha Cancelación: ${observacion.fechaCancelacion}</p>
+        <p>${observacion.error}</p>`,
         icon: 'warning',
         showCloseButton: true,
       });
