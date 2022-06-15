@@ -27,6 +27,8 @@ export interface Cancelacion {
   Total: number;
   Motivo: string;
   FolioSustitucion: string;
+  Serie: string;
+  Folio: string;
   
 }
 
@@ -148,7 +150,9 @@ export class MonitorDialogPages implements OnInit {
       UUID: this.monitoreo.Referencia,
       Total: 0,
       Motivo:  this.editForm.controls['motivo'].value,
-      FolioSustitucion: this.editForm.controls['FolioSustitucion'].value
+      FolioSustitucion: this.editForm.controls['FolioSustitucion'].value,
+      Serie: this.monitoreo.SerieTimbrado,
+      Folio: this.monitoreo.FolioTimbrado
     };
 
     let aux = {Cancelacion: this.cancelacion};

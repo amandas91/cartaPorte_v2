@@ -154,7 +154,6 @@ export class MonitorListPage implements OnInit {
             case "delete":
                 // this.delete(value);
                 this.newItem(value);
-                console.log("DELTE");
                 break;
             case "view":
                 console.log("VIEW");
@@ -374,6 +373,7 @@ export class MonitorListPage implements OnInit {
       const dialogRef = this.dialog.open(MonitorDialogPages, { data: params });
       dialogRef.updateSize("100%");
       dialogRef.afterClosed().subscribe((src: any) => {
+        this.loadPage();
           if (src) {
               this.loadPage();
               // this.message('Creado');
