@@ -308,7 +308,8 @@ export class MonitorListPage implements OnInit {
         buttons.push({
             title: "Ver Detalle",
             actionType: "view",
-            icon: "edit"
+            icon: "edit",
+            canDisplay: "!Historico"
         });
 
         buttons.push({

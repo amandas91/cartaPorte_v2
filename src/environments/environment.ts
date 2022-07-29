@@ -4,8 +4,7 @@
 
 export const environment = {
     appName: 'GEPP',
-    // apiUrl:  `${window.location.protocol}//nvoyage.nubamexico.com/public`,
-    apiUrl:  `https://api.nubamexico.mx/public`,
+    apiUrl:  `urlproxy`,
     apiUrlCartaPorte:  `urlproxy`,
     //apiUrlCartaPorte: `/carta-porte-oracle-api`,
     production: false,

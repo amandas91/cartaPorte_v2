@@ -92,3 +92,8 @@ testem.log
 Thumbs.db
 
 
+.firebaserc
+.firebaserc
+.gitignore
+package-lock.json
+package.json
