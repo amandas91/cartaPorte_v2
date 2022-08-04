@@ -20,6 +20,8 @@ import { map } from "rxjs/operators";
 import Swal from "sweetalert2";
 import { DatePipe } from "@angular/common";
 import { property } from "lodash";
+import { SessionStorageService, LocalStorageService } from 'ngx-webstorage';
+
 
 
 
@@ -75,7 +77,8 @@ export class MonitorListPage implements OnInit {
       private dialog: MatDialog,
       private _fuseTranslationLoaderService: FuseTranslationLoaderService,
       private translate: TranslateService,
-      private valueService:MonitoreoService
+      private valueService:MonitoreoService,
+      private localStorage: LocalStorageService
   ) {
       this._fuseTranslationLoaderService.loadTranslations(english, spanish);
   }
@@ -118,7 +121,7 @@ export class MonitorListPage implements OnInit {
           sort: this.sort(),
       };
 
-      this.valueService.findByUser(params).subscribe(
+      this.valueService.findByUser(params, this.localStorage.retrieve('UserId'),).subscribe(
         (res: HttpResponse<any[]>) => this.onSuccess(res.body, res.headers, pageToLoad),
         (err) => this.onError(err)
       );

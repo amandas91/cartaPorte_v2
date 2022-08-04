@@ -85,7 +85,6 @@ export class MonitorDialogPages implements OnInit {
       this.title = data.title;
       this.value = data.value;
       this.monitoreo = this.value;
-      console.log('#### DATOS: ', this.monitoreo);
     }
   }
   ngOnInit(): void {
@@ -109,8 +108,7 @@ export class MonitorDialogPages implements OnInit {
         })
     )
     .subscribe((resBody: any) => (
-      this.getPac = resBody,
-      console.log(this.getPac.Emisor.Rfc) 
+      this.getPac = resBody
     ));
 
 
@@ -143,7 +141,7 @@ export class MonitorDialogPages implements OnInit {
     let formattedDate = datepipe.transform(tmpDate, 'dd/MM/YYYY');
     this.cancelacion  = {
       IdComprobante: this.monitoreo.SerieTimbrado+this.monitoreo.FolioTimbrado,
-      TipoComprobante: this.getPac.Serie,
+      TipoComprobante: 'T',//this.getPac.Serie,
       RfcEmisor: this.getPac.Emisor.Rfc,
       RfcReceptor: this.getPac.Receptor.Rfc,
       FechaCFDI: formattedDate,
@@ -162,7 +160,6 @@ export class MonitorDialogPages implements OnInit {
   }
 
   onSelectEvent(value: any){
-    console.log(value);
     this.monitoreo.Motivo = value.Valor;
     if(value == 1){
       this.editForm.controls['FolioSustitucion'].enable();
