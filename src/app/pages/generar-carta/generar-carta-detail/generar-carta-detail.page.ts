@@ -1429,7 +1429,7 @@ export class GenerarCartaDetailPage implements OnInit, AfterViewInit {
               } else {
                 this.editForm.controls['RFCFigura'].setValue(resBody.RFC),
                   this.editForm.controls['NumLicencia'].setValue(resBody.NumeroLicencia),
-                  this.editForm.controls['NombreFigura'].setValue(resBody.ApellidoPaterno + ' ' + resBody.ApellidoPaterno + ' ' + resBody.Nombre),
+                  this.editForm.controls['NombreFigura'].setValue(resBody.ApellidoPaterno + ' ' + resBody.Nombre),
                   this.editForm.controls['RFCFigura'].disable(),
                   this.editForm.controls['NumLicencia'].disable(),
                   this.editForm.controls['NombreFigura'].disable(),
